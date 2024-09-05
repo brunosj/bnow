@@ -26,7 +26,6 @@ interface MapComponentProps {
     index: number
   ) => void;
   onPopupClose: () => void;
-  onRemoveLocation: (index: number) => void;
 }
 
 const MapComponent = ({
@@ -39,7 +38,6 @@ const MapComponent = ({
   onMarkerClick,
   onMarkerSelect,
   onPopupClose,
-  onRemoveLocation,
 }: MapComponentProps) => (
   <Map
     mapboxAccessToken={mapboxToken}
@@ -106,7 +104,6 @@ const MapComponent = ({
           latitude={
             selectedMarker.coordinates?.latitude || selectedMarker.loc.latitude
           }
-          onRemoveLocation={() => onRemoveLocation(selectedMarker.index)}
         />
       </Popup>
     )}

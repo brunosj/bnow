@@ -14,9 +14,6 @@ interface MapViewProps {
 
 const MapView = ({ soundbites }: MapViewProps) => {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
-  const [locs, setLocs] = useState<{ latitude: number; longitude: number }[]>(
-    []
-  );
   const [selectedMarker, setSelectedMarker] = useState<Soundbite | null>(null);
   const [newLocation, setNewLocation] = useState<{
     latitude: number;
@@ -28,18 +25,10 @@ const MapView = ({ soundbites }: MapViewProps) => {
 
   // Adds a new location when clicking on the map
   const addLocation = (e: { lngLat: { lat: number; lng: number } }) => {
-    if (locs.length < 3) {
-      setNewLocation({ latitude: e.lngLat.lat, longitude: e.lngLat.lng });
-      setSidebarVisible('newLocation');
-    } else {
-      alert('No more than three locations');
-    }
-  };
-
-  // Removes a selected location from the locs state
-  const removeLocation = (index: number) => {
-    setLocs(locs.filter((_, i) => i !== index));
-    setSelectedMarker(null);
+    if (newLocation) return; // Prevent adding multiple new locations
+    setNewLocation({ latitude: e.lngLat.lat, longitude: e.lngLat.lng });
+    setSidebarVisible('newLocation');
+    console.log('New Location:', e.lngLat);
   };
 
   // Handles the click event on a soundbite marker
@@ -55,38 +44,42 @@ const MapView = ({ soundbites }: MapViewProps) => {
     setNewLocation(null);
   };
 
-  // Saves a new location to the locs state
-  const handleSaveNewLocation = (newLocation: {
-    latitude: number;
-    longitude: number;
-    title: string;
-  }) => {
-    const updatedLocs = [
-      ...locs,
-      { latitude: newLocation.latitude, longitude: newLocation.longitude },
-    ];
-    setLocs(updatedLocs);
-    setNewLocation(null);
-    console.log('Updated Locations:', updatedLocs); // Log updated locs state to verify changes
-  };
+  // No need for this function anymore if we're not saving new locations
+  // const handleSaveNewLocation = (newLocation: {
+  //   latitude: number;
+  //   longitude: number;
+  //   title: string;
+  // }) => {
+  //   const updatedLocs = [
+  //     ...locs,
+  //     { latitude: newLocation.latitude, longitude: newLocation.longitude },
+  //   ];
+  //   setLocs(updatedLocs);
+  //   setNewLocation(null);
+  //   console.log('Updated Locations:', updatedLocs);
+  // };
+
+  const publishedSoundbites = soundbites.filter(
+    (soundbite) => soundbite.status === 'published'
+  );
 
   return (
     <div className={classes.mainStyle}>
-      {/* Sidebar displaying the list of soundbites and user-added locations */}
-      <SidebarList soundbites={soundbites} locs={locs} />
+      {/* Sidebar displaying the list of soundbites */}
+      <SidebarList soundbites={publishedSoundbites} locs={[]} />
 
       {/* Map component handling map rendering, markers, and popups */}
       <MapComponent
         mapboxToken={mapboxToken}
-        soundbites={soundbites}
-        locs={locs}
+        soundbites={publishedSoundbites}
+        locs={[]} // No need to pass locs since we aren't using them
         selectedMarker={selectedMarker}
         newLocation={newLocation}
         onAddLocation={addLocation}
         onMarkerClick={handleMarkerClick}
         onMarkerSelect={(loc, index) => setSelectedMarker({ loc, index })}
         onPopupClose={() => setSelectedMarker(null)}
-        onRemoveLocation={removeLocation}
+        // No need to pass onRemoveLocation if we aren't managing locs
       />
 
       {/* Sidebar for soundbite details */}
@@ -103,7 +96,10 @@ const MapView = ({ soundbites }: MapViewProps) => {
           lat={newLocation.latitude}
           lng={newLocation.longitude}
           onClose={handleCloseSidebar}
-          onSave={handleSaveNewLocation}
+          onSave={(newSoundbite) => {
+            // Handle new soundbite form submission
+            // Possibly notify or refresh the map if needed
+          }}
         />
       )}
     </div>

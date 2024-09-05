@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import classes from './index.module.css';
+import NewLocationForm from '../SoundbiteUpload';
 
 interface SidebarNewLocationProps {
   onClose: () => void;
-  onSave: (newLocation: {
-    latitude: number;
-    longitude: number;
-    title: string;
-  }) => void;
+  onSave: (newSoundbite: any) => void;
   lat: number;
   lng: number;
 }
@@ -18,10 +15,11 @@ const SidebarNewLocation = ({
   lat,
   lng,
 }: SidebarNewLocationProps) => {
-  const [title, setTitle] = useState('');
+  const [isFormVisible, setFormVisible] = useState(true);
 
-  const handleSave = () => {
-    onSave({ latitude: lat, longitude: lng, title });
+  const handleFormSave = (newSoundbite: any) => {
+    onSave(newSoundbite);
+    setFormVisible(false);
     onClose();
   };
 
@@ -30,16 +28,17 @@ const SidebarNewLocation = ({
       <button onClick={onClose} className={classes.closeBtn}>
         Close
       </button>
-      <h3>Add New Location</h3>
-      <label>
-        Title:
-        <input
-          type='text'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+      {/* <h3>Add New Location</h3> */}
+      {isFormVisible ? (
+        <NewLocationForm
+          onClose={onClose}
+          onSave={handleFormSave}
+          lat={lat}
+          lng={lng}
         />
-      </label>
-      <button onClick={handleSave}>Save</button>
+      ) : (
+        <p>Location added successfully!</p>
+      )}
     </div>
   );
 };

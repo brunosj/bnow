@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Soundbite } from '../../../payload/payload-types';
+import SoundbiteAudioPlayer from '../SoundbiteAudioPlayer';
 import classes from './index.module.css';
 
 interface SidebarSoundbiteProps {
@@ -9,7 +10,6 @@ interface SidebarSoundbiteProps {
 
 const SidebarSoundbite = ({ soundbite, onClose }: SidebarSoundbiteProps) => (
   <div className={`${classes.sidebar} ${classes.newLocationSidebar}`}>
-    {' '}
     <button onClick={onClose} className={classes.closeBtn}>
       Close
     </button>
@@ -23,6 +23,9 @@ const SidebarSoundbite = ({ soundbite, onClose }: SidebarSoundbiteProps) => (
     <p>
       <strong>Longitude:</strong> {soundbite.coordinates?.longitude}
     </p>
+
+    {/* Add the audio player here */}
+    <SoundbiteAudioPlayer audioGroup={soundbite.audioGroup} />
   </div>
 );
 

@@ -47,7 +47,7 @@ const SoundbiteAudioPlayer: React.FC<SoundbiteAudioPlayerProps> = ({
       customAdditionalControls={[]}
       layout='horizontal'
       style={{
-        borderRadius: '0px',
+        borderRadius: '5px',
         border: '1px solid #ddd',
         marginTop: '5px',
         boxShadow:

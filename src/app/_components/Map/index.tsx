@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import type { Soundbite } from '../../../payload/payload-types';
+
+import { useState, useCallback } from 'react';
 import MapComponent from '../MapComponent';
 import SidebarList from '../SidebarList';
 import SidebarSoundbite from '../SidebarSoundbite';
 import SidebarNewLocation from '../SidebarNewLocation';
-import type { Soundbite } from '../../../payload/payload-types';
-import classes from './index.module.css';
+import Header from '../Header';
 
 interface MapViewProps {
   soundbites: Soundbite[];
@@ -19,87 +20,128 @@ const MapView = ({ soundbites }: MapViewProps) => {
     latitude: number;
     longitude: number;
   } | null>(null);
-  const [sidebarVisible, setSidebarVisible] = useState<
-    'soundbite' | 'newLocation' | null
-  >(null);
+  const [visibleSidebars, setVisibleSidebars] = useState<
+    Set<'soundbite' | 'newLocation' | 'list'>
+  >(new Set());
+  const [center, setCenter] = useState<{ lat: number; lng: number }>({
+    lat: 52.489471,
+    lng: -1.898575,
+  });
 
   // Adds a new location when clicking on the map
   const addLocation = (e: { lngLat: { lat: number; lng: number } }) => {
     if (newLocation) return; // Prevent adding multiple new locations
     setNewLocation({ latitude: e.lngLat.lat, longitude: e.lngLat.lng });
-    setSidebarVisible('newLocation');
+    setVisibleSidebars(new Set(visibleSidebars).add('newLocation'));
     console.log('New Location:', e.lngLat);
   };
 
   // Handles the click event on a soundbite marker
   const handleMarkerClick = (soundbite: Soundbite) => {
     setSelectedMarker(soundbite);
-    setSidebarVisible('soundbite');
+    setVisibleSidebars(new Set(visibleSidebars).add('soundbite'));
   };
 
-  // Closes any sidebar that is currently open
-  const handleCloseSidebar = () => {
-    setSidebarVisible(null);
-    setSelectedMarker(null);
-    setNewLocation(null);
+  // Closes the specified sidebar
+  const handleCloseSidebar = (
+    sidebar: 'soundbite' | 'newLocation' | 'list'
+  ) => {
+    const updatedSidebars = new Set(visibleSidebars);
+    updatedSidebars.delete(sidebar);
+    setVisibleSidebars(updatedSidebars);
+
+    // Optionally reset other states if needed
+    if (sidebar === 'soundbite') {
+      setSelectedMarker(null);
+    } else if (sidebar === 'newLocation') {
+      setNewLocation(null);
+    }
   };
 
-  // No need for this function anymore if we're not saving new locations
-  // const handleSaveNewLocation = (newLocation: {
-  //   latitude: number;
-  //   longitude: number;
-  //   title: string;
-  // }) => {
-  //   const updatedLocs = [
-  //     ...locs,
-  //     { latitude: newLocation.latitude, longitude: newLocation.longitude },
-  //   ];
-  //   setLocs(updatedLocs);
-  //   setNewLocation(null);
-  //   console.log('Updated Locations:', updatedLocs);
-  // };
+  // Handles soundbite selection from the list sidebar
+  const handleSoundbiteSelect = (soundbite: Soundbite) => {
+    setSelectedMarker(soundbite);
+    setVisibleSidebars(new Set(visibleSidebars).add('soundbite'));
+  };
+
+  // Handles the drag end event for the new location marker
+  const handleLocationDragEnd = (lat: number, lng: number) => {
+    if (newLocation) {
+      setNewLocation({ latitude: lat, longitude: lng });
+    }
+  };
+
+  // For the latitude and longitude info box
+  const handleCenterChange = useCallback((lat: number, lng: number) => {
+    setCenter({ lat, lng });
+  }, []);
 
   const publishedSoundbites = soundbites.filter(
     (soundbite) => soundbite.status === 'published'
   );
 
   return (
-    <div className={classes.mainStyle}>
-      {/* Sidebar displaying the list of soundbites */}
-      <SidebarList soundbites={publishedSoundbites} locs={[]} />
+    <div className='h-[100vh] flex z-100 max-w-full relative'>
+      {/* Conditionally render the Header based on visibleSidebars */}
+      <Header />
+
+      {/* Button to toggle the soundbite list sidebar */}
+      <button
+        className='absolute top-2 left-4 btn btn-primary  z-20 '
+        onClick={() => setVisibleSidebars(new Set(visibleSidebars).add('list'))}
+      >
+        Soundbites List
+      </button>
 
       {/* Map component handling map rendering, markers, and popups */}
       <MapComponent
         mapboxToken={mapboxToken}
         soundbites={publishedSoundbites}
-        locs={[]} // No need to pass locs since we aren't using them
+        locs={[]}
         selectedMarker={selectedMarker}
         newLocation={newLocation}
         onAddLocation={addLocation}
         onMarkerClick={handleMarkerClick}
         onMarkerSelect={(loc, index) => setSelectedMarker({ loc, index })}
         onPopupClose={() => setSelectedMarker(null)}
-        // No need to pass onRemoveLocation if we aren't managing locs
+        onCenterChange={handleCenterChange}
+        onLocationDragEnd={handleLocationDragEnd}
       />
 
+      {/* Latitude and Longitude info box */}
+      <div className='absolute bottom-8 left-4 text-primary p-2 shadow-lg rounded-md z-10 bg-neutral bg-opacity-95'>
+        {/* <p className='text-sm font-semibold'>Center:</p> */}
+        <p className='text-xs font-mono'>
+          Latitude: {center.lat.toFixed(6)}
+          <br />
+          Longitude: {center.lng.toFixed(6)}
+        </p>
+      </div>
+
+      {/* Sidebar displaying the list of soundbites */}
+      {visibleSidebars.has('list') && (
+        <SidebarList
+          soundbites={publishedSoundbites}
+          onClose={() => handleCloseSidebar('list')}
+          onSelectSoundbite={handleSoundbiteSelect}
+        />
+      )}
+
       {/* Sidebar for soundbite details */}
-      {sidebarVisible === 'soundbite' && selectedMarker && (
+      {visibleSidebars.has('soundbite') && selectedMarker && (
         <SidebarSoundbite
           soundbite={selectedMarker}
-          onClose={handleCloseSidebar}
+          onClose={() => handleCloseSidebar('soundbite')}
         />
       )}
 
       {/* Sidebar for adding a new location */}
-      {sidebarVisible === 'newLocation' && newLocation && (
+      {visibleSidebars.has('newLocation') && newLocation && (
         <SidebarNewLocation
           lat={newLocation.latitude}
           lng={newLocation.longitude}
-          onClose={handleCloseSidebar}
-          onSave={(newSoundbite) => {
-            // Handle new soundbite form submission
-            // Possibly notify or refresh the map if needed
-          }}
+          onClose={() => handleCloseSidebar('newLocation')}
+          onSave={() => {}}
         />
       )}
     </div>

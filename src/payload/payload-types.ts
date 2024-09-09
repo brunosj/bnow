@@ -17,7 +17,6 @@ export interface Config {
     categories: Category;
     users: User;
     comments: Comment;
-    redirects: Redirect;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
@@ -197,15 +196,6 @@ export interface Media {
 export interface Category {
   id: string;
   title?: string | null;
-  parent?: (string | null) | Category;
-  breadcrumbs?:
-    | {
-        doc?: (string | null) | Category;
-        url?: string | null;
-        label?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -451,11 +441,6 @@ export interface Post {
     | null;
   relatedPosts?: (string | Post)[] | null;
   slug?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: string | Media | null;
-  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -612,11 +597,6 @@ export interface Project {
   )[];
   relatedProjects?: (string | Project)[] | null;
   slug?: string | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    image?: string | Media | null;
-  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -652,6 +632,7 @@ export interface Soundbite {
   };
   title?: string | null;
   description?: string | null;
+  contributorName?: string | null;
   year?: number | null;
   category?: ('music' | 'speech' | 'sound_effects') | null;
   license?: ('cc' | 'public_domain' | 'all_rights_reserved') | null;
@@ -661,7 +642,6 @@ export interface Soundbite {
         id?: string | null;
       }[]
     | null;
-  contributorName?: string | null;
   status?: ('draft' | 'published' | 'archived') | null;
   coordinates?: {
     latitude?: number | null;
@@ -686,29 +666,6 @@ export interface Comment {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "redirects".
- */
-export interface Redirect {
-  id: string;
-  from: string;
-  to?: {
-    type?: ('reference' | 'custom') | null;
-    reference?:
-      | ({
-          relationTo: 'pages';
-          value: string | Page;
-        } | null)
-      | ({
-          relationTo: 'posts';
-          value: string | Post;
-        } | null);
-    url?: string | null;
-  };
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -802,9 +759,4 @@ export interface Footer {
     | null;
   updatedAt?: string | null;
   createdAt?: string | null;
-}
-
-
-declare module 'payload' {
-  export interface GeneratedTypes extends Config {}
 }

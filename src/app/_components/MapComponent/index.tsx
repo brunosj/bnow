@@ -1,17 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import type { Soundbite } from '../../../payload/payload-types';
-import Map, {
-  Marker,
-  Popup,
-  NavigationControl,
-  GeolocateControl,
-} from 'react-map-gl';
-import { HiLocationMarker } from 'react-icons/hi';
+import Map, { Marker, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import classes from './index.module.css';
-import PopupInfo from '../PopUpInfo';
+import CustomMarker from '../CustomMarker';
 
 interface MapComponentProps {
   mapboxToken: string;
@@ -26,6 +19,8 @@ interface MapComponentProps {
     index: number
   ) => void;
   onPopupClose: () => void;
+  onCenterChange: (lat: number, lng: number) => void;
+  onLocationDragEnd?: (lat: number, lng: number) => void; // Add this line
 }
 
 const MapComponent = ({
@@ -38,76 +33,113 @@ const MapComponent = ({
   onMarkerClick,
   onMarkerSelect,
   onPopupClose,
-}: MapComponentProps) => (
-  <Map
-    mapboxAccessToken={mapboxToken}
-    mapStyle='mapbox://styles/mapbox/streets-v12'
-    initialViewState={{
-      latitude: 52.489471,
-      longitude: -1.898575,
-      zoom: 10,
-    }}
-    onClick={(e) => onAddLocation(e)}
-    onMouseOver={(e) => (e.target.getCanvas().style.cursor = 'crosshair')}
-  >
-    <GeolocateControl position='top-left' />
-    <NavigationControl position='top-left' />
+  onCenterChange,
+  onLocationDragEnd, // Add this line
+}: MapComponentProps) => {
+  const [map, setMap] = useState<any>(null);
+  const mapRef = useRef<any>(null);
 
-    {soundbites.map((soundbite) => (
-      <Marker
-        key={soundbite.id}
-        latitude={soundbite.coordinates.latitude}
-        longitude={soundbite.coordinates.longitude}
+  // Effect to handle map view updates
+  useEffect(() => {
+    if (selectedMarker && map) {
+      map.flyTo({
+        center: [
+          selectedMarker.coordinates.longitude,
+          selectedMarker.coordinates.latitude,
+        ],
+        zoom: 15,
+        essential: true,
+      });
+    }
+  }, [selectedMarker, map]);
+
+  const handleMapMove = useCallback(() => {
+    if (mapRef.current) {
+      const center = mapRef.current.getCenter();
+      onCenterChange(center.lat, center.lng);
+    }
+  }, [onCenterChange]);
+
+  // Handle drag end for draggable markers
+  const handleDragEnd = (e: any) => {
+    const { lngLat } = e;
+    if (onLocationDragEnd) {
+      onLocationDragEnd(lngLat.lat, lngLat.lng);
+    }
+  };
+
+  return (
+    <>
+      <Map
+        mapboxAccessToken={mapboxToken}
+        mapStyle='mapbox://styles/landozone/cm0uy6b4p00sp01qu7k1k6tj2'
+        initialViewState={{
+          latitude: 52.489471,
+          longitude: -1.898575,
+          zoom: 12,
+        }}
+        ref={(instance) => {
+          mapRef.current = instance;
+          setMap(instance);
+        }}
+        onClick={(e) => onAddLocation(e)}
+        onMouseOver={(e) => (e.target.getCanvas().style.cursor = 'crosshair')}
+        onMove={handleMapMove}
       >
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onMarkerClick(soundbite);
-          }}
-          type='button'
-        >
-          <HiLocationMarker size={30} color='tomato' />
-        </button>
-      </Marker>
-    ))}
+        <NavigationControl position='bottom-right' />
 
-    {locs.map((loc, index) => (
-      <Marker key={index} latitude={loc.latitude} longitude={loc.longitude}>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onMarkerSelect(loc, index);
-          }}
-          type='button'
-        >
-          <HiLocationMarker size={30} color='tomato' />
-        </button>
-      </Marker>
-    ))}
+        {soundbites.map((soundbite) => (
+          <Marker
+            key={soundbite.id}
+            latitude={soundbite.coordinates.latitude}
+            longitude={soundbite.coordinates.longitude}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onMarkerClick(soundbite);
+              }}
+              type='button'
+            >
+              <CustomMarker category={soundbite.category} />
+            </button>
+          </Marker>
+        ))}
 
-    {selectedMarker && (
-      <Popup
-        offset={25}
-        latitude={
-          selectedMarker.coordinates?.latitude || selectedMarker.loc.latitude
-        }
-        longitude={
-          selectedMarker.coordinates?.longitude || selectedMarker.loc.longitude
-        }
-        onClose={onPopupClose}
-      >
-        <PopupInfo
-          longitude={
-            selectedMarker.coordinates?.longitude ||
-            selectedMarker.loc.longitude
-          }
-          latitude={
-            selectedMarker.coordinates?.latitude || selectedMarker.loc.latitude
-          }
-        />
-      </Popup>
-    )}
-  </Map>
-);
+        {locs.map((loc, index) => (
+          <Marker
+            key={index}
+            latitude={loc.latitude}
+            longitude={loc.longitude}
+            draggable
+            onDragEnd={handleDragEnd}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onMarkerSelect(loc, index);
+              }}
+              type='button'
+            >
+              <CustomMarker category={'music'} />
+            </button>
+          </Marker>
+        ))}
+
+        {/* Render the new location marker if available */}
+        {newLocation && (
+          <Marker
+            latitude={newLocation.latitude}
+            longitude={newLocation.longitude}
+            draggable
+            onDragEnd={handleDragEnd}
+          >
+            <CustomMarker category={'blank'} />
+          </Marker>
+        )}
+      </Map>
+    </>
+  );
+};
 
 export default MapComponent;

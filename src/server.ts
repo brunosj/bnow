@@ -24,7 +24,6 @@ const start = async (): Promise<void> => {
         );
       },
     },
-    seed: process.env.PAYLOAD_PUBLIC_SEED === 'true',
   });
 
   if (process.env.NEXT_BUILD) {

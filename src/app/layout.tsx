@@ -1,14 +1,12 @@
 import React from 'react';
 import { Metadata } from 'next';
-
-import { AdminBar } from './_components/AdminBar';
-import { Footer } from './_components/Footer';
-import { Header } from './_components/Header';
 import { Providers } from './_providers';
 import { InitTheme } from './_providers/Theme/InitTheme';
 import { mergeOpenGraph } from './_utilities/mergeOpenGraph';
+import Header from './_components/Header';
+import HeaderV2 from './_components/HeaderV2';
 
-import './_css/app.scss';
+import './_css/globals.css';
 
 export default async function RootLayout({
   children,
@@ -24,8 +22,8 @@ export default async function RootLayout({
       </head>
       <body>
         <Providers>
+          {/* <HeaderV2 /> */}
           {/* <AdminBar /> */}
-          {/* <Header /> */}
           {children}
           {/* <Footer /> */}
         </Providers>

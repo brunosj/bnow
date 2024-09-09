@@ -1,6 +1,4 @@
 import { CollectionConfig } from 'payload/types';
-import CustomAudioCell from '../../components/CustomAudioCell';
-import CustomAudioField from '../../components/CustomAudioField';
 import audioField from '../../fields/audioField';
 import afterChangeHook from '../../hooks/afterChangeHook';
 
@@ -18,6 +16,53 @@ const SoundBites: CollectionConfig = {
     defaultColumns: ['title', 'year', 'longitude', 'latitude', 'approved'],
     useAsTitle: 'title',
   },
+  endpoints: [
+    {
+      path: '/custom-create',
+      method: 'post',
+      handler: async (req, res, next) => {
+        try {
+          const {
+            title,
+            description,
+            year,
+            category,
+            license,
+            tags,
+            contributorName,
+            audioGroup,
+            coordinates,
+            status,
+          } = req.body;
+
+          // Handle soundbite creation
+          const soundbiteDoc = await req.payload.create({
+            collection: 'soundbites',
+            data: {
+              title,
+              description,
+              year,
+              category,
+              license,
+              tags,
+              contributorName,
+              audioGroup,
+              coordinates,
+              status,
+            },
+          });
+
+          res.status(200).json({
+            message: 'Soundbite successfully created.',
+            doc: soundbiteDoc,
+          });
+        } catch (error) {
+          console.error('Error in custom soundbite creation endpoint:', error);
+          res.status(500).json({ error: 'Error creating soundbite' });
+        }
+      },
+    },
+  ],
   hooks: {
     afterChange: [afterChangeHook],
   },

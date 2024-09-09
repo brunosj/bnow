@@ -1,11 +1,14 @@
 // collections/AudioFiles.ts
-import { CollectionConfig } from 'payload/types'
-import path from 'path'
-import CustomAudioCell from '../../components/CustomAudioCell'
-import CustomAudioField from '../../components/CustomAudioField'
-import { admins } from '@/payload/access/admins'
-import { adminsOrPublished } from '@/payload/access/adminsOrPublished'
-import audioField from '../../fields/audioField'
+import { CollectionConfig } from 'payload/types';
+import path from 'path';
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_MIME_TYPES = [
+  'audio/mpeg',
+  'audio/vnd.wav',
+  'audio/mp4',
+  'audio/wav',
+];
 
 const Audio: CollectionConfig = {
   slug: 'audio',
@@ -16,6 +19,65 @@ const Audio: CollectionConfig = {
   access: {
     read: () => true,
   },
+  endpoints: [
+    {
+      path: '/custom-upload',
+      method: 'post',
+      handler: async (req, res, next) => {
+        try {
+          const { title } = req.body;
+          const file = req.files.file;
+
+          if (!file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+          }
+
+          // Validate file type
+          if (!ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+            return res.status(400).json({ error: 'Invalid file type' });
+          }
+
+          // Validate file size
+          if (file.size > MAX_FILE_SIZE) {
+            return res
+              .status(400)
+              .json({ error: 'File size exceeds the 5MB limit' });
+          }
+
+          // Validate file duration
+          // const duration = await getAudioDuration(file);
+          // if (duration > 300) {
+          //   // 300 seconds = 5 minutes
+          //   return res
+          //     .status(400)
+          //     .json({ error: 'Audio duration exceeds the 5-minute limit' });
+          // }
+
+          const audioDoc = await req.payload.create({
+            collection: 'audio',
+            data: {
+              title,
+              file: file.id,
+            },
+            file: file,
+          });
+
+          res.status(200).json({
+            message: 'Audio successfully uploaded.',
+            doc: {
+              id: audioDoc.id,
+              title,
+              filename: file.originalname,
+              url: audioDoc.url,
+            },
+          });
+        } catch (error) {
+          console.error('Error in custom audio upload endpoint:', error);
+          res.status(500).json({ error: 'Error uploading audio file' });
+        }
+      },
+    },
+  ],
   fields: [
     {
       name: 'title',
@@ -26,49 +88,6 @@ const Audio: CollectionConfig = {
       name: 'Caption',
       type: 'textarea',
     },
-    // {
-    //   name: 'audioPreview',
-    //   type: 'ui',
-    //   admin: {
-    //     components: {
-    //       Field: CustomAudioField,
-    //       Cell: CustomAudioCell,
-    //     },
-    //   },
-    // },
-
-    // {
-    //   name: 'duration',
-    //   type: 'number',
-    //   admin: {
-    //     readOnly: true,
-    //     description: 'Duration of the audio file in seconds.',
-    //   },
-    // },
-    // {
-    //   name: 'format',
-    //   type: 'text',
-    //   admin: {
-    //     readOnly: true,
-    //     description: 'Audio file format (e.g., mp3, wav).',
-    //   },
-    // },
-    // {
-    //   name: 'size',
-    //   type: 'number',
-    //   admin: {
-    //     readOnly: true,
-    //     description: 'Size of the audio file in bytes.',
-    //   },
-    // },
-    // {
-    //   name: 'uploadedBy',
-    //   type: 'relationship',
-    //   relationTo: 'users',
-    //   admin: {
-    //     readOnly: true,
-    //   },
-    // },
     {
       name: 'createdAt',
       type: 'date',
@@ -77,6 +96,6 @@ const Audio: CollectionConfig = {
       },
     },
   ],
-}
+};
 
-export default Audio
+export default Audio;

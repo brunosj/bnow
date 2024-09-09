@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.mapboxgl-popup-content {
+  padding: 0 !important;
+}
+
+/* * {
+  outline: gray solid 1px;
+} */

@@ -8,7 +8,11 @@ const Icon = () => {
 
   return (
     <div className='icon'>
-      <img src={logoSrc} alt='Birmingham Now' />
+      <img
+        src={logoSrc}
+        alt='Birmingham Now'
+        style={{ maxHeight: '25px', margin: 'auto' }}
+      />
     </div>
   );
 };

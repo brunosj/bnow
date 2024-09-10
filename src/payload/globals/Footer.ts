@@ -1,6 +1,5 @@
-import type { GlobalConfig } from 'payload/types'
-
-import link from '../fields/link'
+import type { GlobalConfig } from 'payload/types';
+import link from '../fields/link';
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
@@ -19,4 +18,4 @@ export const Footer: GlobalConfig = {
       ],
     },
   ],
-}
+};

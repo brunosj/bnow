@@ -7,6 +7,7 @@ import MapComponent from '../MapComponent';
 import SidebarList from '../SidebarList';
 import SidebarSoundbite from '../SidebarSoundbite';
 import SidebarNewLocation from '../SidebarNewLocation';
+import CategoryFilter from '../CategoryFilter';
 import Header from '../Header';
 
 interface MapViewProps {
@@ -27,6 +28,9 @@ const MapView = ({ soundbites }: MapViewProps) => {
     lat: 52.489471,
     lng: -1.898575,
   });
+  const [selectedCategory, setSelectedCategory] = useState<
+    'music' | 'speech' | 'sound_effects' | 'blank' | null
+  >(null);
 
   // Adds a new location when clicking on the map
   const addLocation = (e: { lngLat: { lat: number; lng: number } }) => {
@@ -76,14 +80,28 @@ const MapView = ({ soundbites }: MapViewProps) => {
     setCenter({ lat, lng });
   }, []);
 
+  const filteredSoundbites = soundbites.filter(
+    (soundbite) =>
+      soundbite.status === 'published' &&
+      (selectedCategory === null || soundbite.category === selectedCategory)
+  );
+
   const publishedSoundbites = soundbites.filter(
     (soundbite) => soundbite.status === 'published'
   );
+
+  const categories = [...new Set(soundbites.map((s) => s.category))];
 
   return (
     <div className='h-[100vh] flex z-100 max-w-full relative'>
       {/* Conditionally render the Header based on visibleSidebars */}
       <Header />
+
+      <CategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+      />
 
       {/* Button to toggle the soundbite list sidebar */}
       <button
@@ -96,12 +114,13 @@ const MapView = ({ soundbites }: MapViewProps) => {
       {/* Map component handling map rendering, markers, and popups */}
       <MapComponent
         mapboxToken={mapboxToken}
-        soundbites={publishedSoundbites}
+        soundbites={filteredSoundbites}
         locs={[]}
         selectedMarker={selectedMarker}
         newLocation={newLocation}
         onAddLocation={addLocation}
         onMarkerClick={handleMarkerClick}
+        //@ts-ignore
         onMarkerSelect={(loc, index) => setSelectedMarker({ loc, index })}
         onPopupClose={() => setSelectedMarker(null)}
         onCenterChange={handleCenterChange}

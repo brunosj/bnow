@@ -3,7 +3,7 @@ import React from 'react';
 import categoryStyles, { defaultStyle } from '../CategoryStyles';
 
 interface CustomMarkerProps {
-  category: 'music' | 'speech' | 'sound_effects';
+  category: 'music' | 'speech' | 'sound_effects' | 'blank';
 }
 
 const CustomMarker: React.FC<CustomMarkerProps> = ({ category }) => {
@@ -15,9 +15,9 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ category }) => {
       style={{ backgroundColor: `${color}` }}
     >
       {/* Marker Shape */}
-      <div
+      {/* <div
         className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1 w-2 h-2 bg-[${color} rounded-full z-0`}
-      />
+      /> */}
       {/* Icon inside the marker */}
       <div className='relative z-10'>{icon}</div>
     </div>

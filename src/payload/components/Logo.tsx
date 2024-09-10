@@ -8,7 +8,11 @@ const Logo = () => {
 
   return (
     <div className='logo'>
-      <img src={logoSrc} alt='Birmingham Now' />
+      <img
+        src={logoSrc}
+        alt='Birmingham Now'
+        style={{ maxHeight: '200px', margin: 'auto' }}
+      />
     </div>
   );
 };

@@ -8,26 +8,26 @@ import { GrDocumentSound } from 'react-icons/gr';
 // Define the styles with just the color values
 const categoryStyles = {
   music: {
-    icon: <FaMusic className='text-black' />,
+    icon: <FaMusic className='text-black' size={18} />,
     color: '#FE6285',
   },
   speech: {
-    icon: <PiUserSound className='text-black' />,
+    icon: <PiUserSound className='text-black' size={18} />,
     color: '#97AAFF',
   },
   sound_effects: {
-    icon: <BsSoundwave className='text-black' />,
+    icon: <BsSoundwave className='text-black' size={18} />,
     color: '#8BBF9F',
   },
   blank: {
-    icon: <GrDocumentSound className='text-black' />,
+    icon: <GrDocumentSound className='text-black' size={18} />,
     color: '#ffffff',
   },
 };
 
 // Default style if category is not recognized
 export const defaultStyle = {
-  icon: <GrDocumentSound className='text-black' />,
+  icon: <GrDocumentSound className='text-black' size={18} />,
   color: '#ffffff',
 };
 

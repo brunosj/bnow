@@ -2,10 +2,7 @@ import type { CollectionConfig } from 'payload/types';
 
 import { admins } from '../../access/admins';
 import { adminsOrPublished } from '../../access/adminsOrPublished';
-import { hero } from '../../fields/hero';
 import { slugField } from '../../fields/slug';
-import { populateArchiveBlock } from '../../hooks/populateArchiveBlock';
-import { populatePublishedAt } from '../../hooks/populatePublishedAt';
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -45,15 +42,7 @@ export const Pages: CollectionConfig = {
         position: 'sidebar',
       },
     },
-    {
-      type: 'tabs',
-      tabs: [
-        {
-          label: 'Hero',
-          fields: [hero],
-        },
-      ],
-    },
+
     slugField(),
   ],
 };

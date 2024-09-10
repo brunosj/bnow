@@ -35,7 +35,6 @@ export default buildConfig({
         Icon,
       },
     },
-    css: path.resolve(__dirname, './customStyles.css'),
   },
   editor: slateEditor({}),
   db: mongooseAdapter({

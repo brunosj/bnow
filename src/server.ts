@@ -2,19 +2,18 @@ import dotenv from 'dotenv';
 import next from 'next';
 import nextBuild from 'next/dist/build';
 import path from 'path';
+import express from 'express';
+import { getPayloadClient } from './payload/getPayload';
 
 dotenv.config({
   path: path.resolve(__dirname, '../.env'),
 });
 
-import express from 'express';
-
-import { getPayloadClient } from './payload/getPayload';
-
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 const start = async (): Promise<void> => {
+  console.log(`Server starting on port ${PORT}`);
+
   const payload = await getPayloadClient({
     initOptions: {
       express: app,

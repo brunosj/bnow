@@ -1,5 +1,3 @@
-// app/map-view/page.tsx (Next.js component)
-import Image from 'next/image';
 import Map from './_components/Map';
 
 async function getData() {

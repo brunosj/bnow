@@ -13,6 +13,7 @@ import Audio from './collections/Audio';
 import { Media } from './collections/Media';
 import { Pages } from './collections/Pages';
 import SoundBites from './collections/SoundBites';
+import Transcripts from './collections/Transcripts';
 import Users from './collections/Users';
 import { Footer } from './globals/Footer';
 import { Header } from './globals/Header';
@@ -41,7 +42,7 @@ export default buildConfig({
     url: process.env.DATABASE_URI,
   }),
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
-  collections: [Pages, Audio, SoundBites, Media, Users],
+  collections: [Pages, Audio, SoundBites, Transcripts, Media, Users],
   globals: [Header, Footer],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),

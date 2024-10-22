@@ -1,9 +1,10 @@
 // components/CustomMarker.tsx
 import React from 'react';
 import categoryStyles, { defaultStyle } from '../CategoryStyles';
+import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 
 interface CustomMarkerProps {
-  category: 'music' | 'speech' | 'sound_effects' | 'blank';
+  category: SoundbiteCategory | 'blank';
 }
 
 const CustomMarker: React.FC<CustomMarkerProps> = ({ category }) => {

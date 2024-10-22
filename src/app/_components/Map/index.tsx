@@ -8,6 +8,7 @@ import SidebarList from '../SidebarList';
 import SidebarSoundbite from '../SidebarSoundbite';
 import SidebarNewLocation from '../SidebarNewLocation';
 import CategoryFilter from '../CategoryFilter';
+import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 import Header from '../Header';
 
 interface MapViewProps {
@@ -29,7 +30,7 @@ const MapView = ({ soundbites }: MapViewProps) => {
     lng: -1.898575,
   });
   const [selectedCategory, setSelectedCategory] = useState<
-    'music' | 'speech' | 'sound_effects' | 'blank' | null
+    SoundbiteCategory | 'blank' | null
   >(null);
 
   // Adds a new location when clicking on the map

@@ -35,10 +35,7 @@ export async function POST(req: Request) {
     payloadData.append('category', formData.get('category') as string);
     payloadData.append('license', formData.get('license') as string);
     // payloadData.append('tags', formData.get('tags') as string);
-    payloadData.append(
-      'contributorName',
-      formData.get('contributorName') as string
-    );
+    payloadData.append('author', formData.get('author') as string);
     payloadData.append(
       'coordinates[latitude]',
       formData.get('latitude') as string

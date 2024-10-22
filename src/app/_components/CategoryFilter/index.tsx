@@ -2,14 +2,13 @@
 import React from 'react';
 import CustomMarker from '../CustomMarker';
 import categoryStyles from '../CategoryStyles'; // Import category styles
+import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 
 // Define the props interface
 interface CategoryFilterProps {
-  categories: ('music' | 'speech' | 'sound_effects')[];
-  selectedCategory: 'music' | 'speech' | 'sound_effects' | 'blank' | null;
-  onSelectCategory: (
-    category: 'music' | 'speech' | 'sound_effects' | 'blank' | null
-  ) => void;
+  categories: SoundbiteCategory[];
+  selectedCategory: SoundbiteCategory | 'blank' | null;
+  onSelectCategory: (category: SoundbiteCategory | 'blank' | null) => void;
 }
 
 // Function to get the background color based on the selected category

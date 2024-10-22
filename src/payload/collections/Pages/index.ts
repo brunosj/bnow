@@ -36,12 +36,17 @@ export const Pages: CollectionConfig = {
       required: true,
     },
     {
-      name: 'publishedAt',
-      type: 'date',
-      admin: {
-        position: 'sidebar',
-      },
+      name: 'content',
+      type: 'richText',
+      required: false,
     },
+    // {
+    //   name: 'publishedAt',
+    //   type: 'date',
+    //   admin: {
+    //     position: 'sidebar',
+    //   },
+    // },
 
     slugField(),
   ],

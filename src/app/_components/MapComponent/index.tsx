@@ -121,7 +121,7 @@ const MapComponent = ({
               }}
               type='button'
             >
-              <CustomMarker category={'music'} />
+              <CustomMarker category={'soundscapes'} />
             </button>
           </Marker>
         ))}

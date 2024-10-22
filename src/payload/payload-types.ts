@@ -11,6 +11,7 @@ export interface Config {
     pages: Page;
     audio: Audio;
     soundbites: Soundbite;
+    transcripts: Transcript;
     media: Media;
     users: User;
     'payload-preferences': PayloadPreference;
@@ -28,7 +29,11 @@ export interface Config {
 export interface Page {
   id: string;
   title: string;
-  publishedAt?: string | null;
+  content?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
   slug?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -65,9 +70,10 @@ export interface Soundbite {
   };
   title?: string | null;
   description?: string | null;
-  contributorName?: string | null;
+  transcription?: (string | null) | Transcript;
+  author?: string | null;
   year?: number | null;
-  category?: ('music' | 'speech' | 'sound_effects') | null;
+  category?: ('oral_history' | 'interview' | 'field_recording' | 'soundscapes') | null;
   license?: ('cc' | 'public_domain' | 'all_rights_reserved') | null;
   tags?:
     | {
@@ -82,6 +88,25 @@ export interface Soundbite {
   };
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "transcripts".
+ */
+export interface Transcript {
+  id: string;
+  title: string;
+  Caption?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  url?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

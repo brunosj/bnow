@@ -25,7 +25,7 @@ const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
       <p className='text-sm text-gray-600'>{soundbite.description}</p>
       <p className='mt-2 text-xs text-gray-500'>Year: {soundbite.year}</p>
       <p className='mt-1 text-xs text-gray-500'>
-        Contributor: {soundbite.contributorName}
+        Contributor: {soundbite.author}
       </p>
       <div className='flex items-center mt-2'>
         <CustomMarker category={soundbite.category} />

@@ -3,6 +3,10 @@
 import React, { useState, useRef } from 'react';
 import type { Soundbite } from '../../../payload/payload-types';
 import Altcha from '../Altcha';
+import {
+  SoundbiteCategory,
+  soundbiteCategoryOptions,
+} from '../../_utilities/soundbitesCategories';
 
 interface NewLocationFormProps {
   onClose: () => void;
@@ -20,14 +24,12 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [year, setYear] = useState<number | null>(null);
-  const [category, setCategory] = useState<
-    'music' | 'speech' | 'sound_effects' | null
-  >(null);
+  const [category, setCategory] = useState<SoundbiteCategory | null>(null);
   const [license, setLicense] = useState<
     'cc' | 'public_domain' | 'all_rights_reserved' | null
   >(null);
   const [tags, setTags] = useState<{ tag?: string; id?: string }[]>([]);
-  const [contributorName, setContributorName] = useState('');
+  const [author, setAuthor] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
   const altchaRef = useRef<HTMLInputElement>(null);
@@ -71,7 +73,7 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
         soundbiteFormData.append('year', year ? year.toString() : '');
         soundbiteFormData.append('category', category ?? '');
         soundbiteFormData.append('license', license ?? '');
-        soundbiteFormData.append('contributorName', contributorName);
+        soundbiteFormData.append('author', author);
         soundbiteFormData.append('coordinates[latitude]', lat.toString());
         soundbiteFormData.append('coordinates[longitude]', lng.toString());
         soundbiteFormData.append('status', 'draft');
@@ -155,17 +157,14 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
           <select
             id='category'
             value={category ?? ''}
-            onChange={(e) =>
-              setCategory(
-                e.target.value as 'music' | 'speech' | 'sound_effects'
-              )
-            }
+            onChange={(e) => setCategory(e.target.value as SoundbiteCategory)}
             className='select'
           >
-            <option value=''>Select</option>
-            <option value='music'>Music</option>
-            <option value='speech'>Speech</option>
-            <option value='sound_effects'>Sound Effects</option>
+            {soundbiteCategoryOptions.map((option) => (
+              <option key={option.value} value={option.value || ''}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -191,14 +190,14 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
         </div>
 
         <div>
-          <label className='label' htmlFor='contributorName'>
-            Contributor Name:
+          <label className='label' htmlFor='author'>
+            Author:
           </label>
           <input
-            id='contributorName'
+            id='author'
             type='text'
-            value={contributorName}
-            onChange={(e) => setContributorName(e.target.value)}
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
             className='input  w-full'
           />
         </div>

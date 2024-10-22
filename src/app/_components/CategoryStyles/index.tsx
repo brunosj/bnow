@@ -4,18 +4,23 @@ import { FaMusic, FaMicrophone, FaSoundcloud } from 'react-icons/fa';
 import { BsSoundwave } from 'react-icons/bs';
 import { PiUserSound } from 'react-icons/pi';
 import { GrDocumentSound } from 'react-icons/gr';
+import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 
 // Define the styles with just the color values
 const categoryStyles = {
-  music: {
+  soundscapes: {
     icon: <FaMusic className='text-black' size={18} />,
     color: '#FE6285',
   },
-  speech: {
+  oral_history: {
     icon: <PiUserSound className='text-black' size={18} />,
     color: '#97AAFF',
   },
-  sound_effects: {
+  interview: {
+    icon: <PiUserSound className='text-black' size={18} />,
+    color: '#FFD700',
+  },
+  field_recording: {
     icon: <BsSoundwave className='text-black' size={18} />,
     color: '#8BBF9F',
   },

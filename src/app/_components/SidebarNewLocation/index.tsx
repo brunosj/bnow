@@ -18,11 +18,11 @@ const SidebarNewLocation = ({
 
   const handleFormSave = (newSoundbite: any) => {
     onSave(newSoundbite);
-    setFormVisible(false);
-    onClose();
+    // setFormVisible(false);
+    // onClose();
   };
 
-  console.log('lat:', lat, 'lng:', lng);
+  // console.log('lat:', lat, 'lng:', lng);
 
   return (
     <div className='bg-neutral fixed top-0 right-0 w-[500px] h-full shadow-lg p-8 overflow-y-auto z-50 bg-opacity-95'>

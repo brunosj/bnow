@@ -7,6 +7,11 @@ import {
   SoundbiteCategory,
   soundbiteCategoryOptions,
 } from '../../_utilities/soundbitesCategories';
+import TextInput from '../Form/TextInput';
+import TextArea from '../Form/TextArea';
+import SelectInput from '../Form/SelectInput';
+import FileInput from '../Form/FileInput';
+import CheckboxInput from '../Form/CheckboxInput';
 
 interface NewLocationFormProps {
   onClose: () => void;
@@ -28,9 +33,14 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
   const [license, setLicense] = useState<
     'cc' | 'public_domain' | 'all_rights_reserved' | null
   >(null);
-  const [tags, setTags] = useState<{ tag?: string; id?: string }[]>([]);
   const [author, setAuthor] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [transcriptFile, setTranscriptFile] = useState<File | null>(null);
+  const [agreedToPrivacyPolicy, setAgreedToPrivacyPolicy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const altchaRef = useRef<HTMLInputElement>(null);
 
@@ -40,15 +50,39 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
   };
 
   const handleSave = async () => {
+    setError(null);
+    setSuccessMessage(null);
+    setIsSubmitting(false);
+
+    if (
+      !title ||
+      !file ||
+      !year ||
+      !description ||
+      !category ||
+      !license ||
+      !agreedToPrivacyPolicy
+    ) {
+      setError(
+        'Please fill in all required fields (*) and agree to the privacy policy.'
+      );
+      return;
+    }
+
+    if (submitted) {
+      setError('This soundbite has already been submitted.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
     if (file) {
-      // Upload audio file
       const audioFormData = new FormData();
       audioFormData.append('title', title);
       audioFormData.append('file', file);
 
-      let audioResponse;
       try {
-        audioResponse = await fetch('/api/audio/custom-upload', {
+        const audioResponse = await fetch('/api/audio/custom-upload-audio', {
           method: 'POST',
           body: audioFormData,
         });
@@ -59,14 +93,36 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
         }
 
         const uploadedAudio = await audioResponse.json();
-        const fileId = uploadedAudio.doc.id; // Ensure this matches the backend response structure
+        const fileId = uploadedAudio.doc.id;
 
         if (!fileId) {
           console.error('No fileId received from audio upload response');
           return;
         }
 
-        // Now create the soundbite with the uploaded audio
+        let transcriptId: string | undefined;
+        if (transcriptFile) {
+          const transcriptFormData = new FormData();
+          transcriptFormData.append('title', title);
+          transcriptFormData.append('file', transcriptFile as File);
+
+          const transcriptResponse = await fetch(
+            '/api/transcripts/custom-upload-transcript',
+            {
+              method: 'POST',
+              body: transcriptFormData,
+            }
+          );
+
+          if (!transcriptResponse.ok) {
+            const errorData = await transcriptResponse.json();
+            throw new Error(errorData.error || 'Transcript upload failed');
+          }
+
+          const uploadedTranscript = await transcriptResponse.json();
+          transcriptId = uploadedTranscript.doc.id;
+        }
+
         const soundbiteFormData = new FormData();
         soundbiteFormData.append('title', title);
         soundbiteFormData.append('description', description);
@@ -80,145 +136,136 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
         soundbiteFormData.append('audioGroup[audioUpload]', fileId);
         soundbiteFormData.append('audioGroup[audioFile]', fileId);
 
-        const soundbiteResponse = await fetch('/api/soundbites/custom-create', {
-          method: 'POST',
-          body: soundbiteFormData,
-        });
+        if (transcriptId) {
+          soundbiteFormData.append('uploadedTranscript', transcriptId);
+        } else {
+          console.error('Transcript ID is missing.');
+        }
+
+        const soundbiteResponse = await fetch(
+          '/api/soundbites/custom-create-soundbite',
+          {
+            method: 'POST',
+            body: soundbiteFormData,
+          }
+        );
 
         if (!soundbiteResponse.ok) {
+          const errorData = await soundbiteResponse.json();
+          console.error('Soundbite creation failed:', errorData);
           throw new Error('Soundbite creation failed');
         }
 
         const newSoundbite = await soundbiteResponse.json();
+
         onSave(newSoundbite);
-        onClose();
+        setSuccessMessage('Soundbite uploaded successfully!');
+        setSubmitted(true);
+        // Optionally reset the form fields here if needed
+        setIsSubmitting(false);
+        // onClose();
       } catch (error) {
         console.error('Error:', error);
+        setError(error.message || 'An unknown error occurred.');
+        setIsSubmitting(false);
       }
     } else {
       console.error('No file selected');
+      setError('No audio file selected.');
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className='max-w-2xl mx-auto  rounded-lg shadow-md'>
+    <div className='max-w-2xl mx-auto rounded-lg shadow-md'>
       <form className='form-control'>
-        <div>
-          <label className='label' htmlFor='title'>
-            Title:
-          </label>
-          <input
-            id='title'
-            type='text'
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className='input  w-full'
-          />
-        </div>
-
-        <div>
-          <label className='label' htmlFor='description '>
-            Description:
-          </label>
-          <textarea
-            id='description'
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className='input  w-full'
-          />
-        </div>
-
-        <div>
-          <label className='label' htmlFor='year'>
-            Year:
-          </label>
-          <select
-            id='year'
-            value={year ?? ''}
-            onChange={(e) => setYear(Number(e.target.value))}
-            className='select'
-          >
-            <option value=''>Select Year</option>
-            {Array.from(
-              { length: 121 },
-              (_, i) => new Date().getFullYear() - i
-            ).map((yearOption) => (
-              <option key={yearOption} value={yearOption}>
-                {yearOption}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className='label' htmlFor='category'>
-            Category:
-          </label>
-          <select
-            id='category'
-            value={category ?? ''}
-            onChange={(e) => setCategory(e.target.value as SoundbiteCategory)}
-            className='select'
-          >
-            {soundbiteCategoryOptions.map((option) => (
-              <option key={option.value} value={option.value || ''}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className='label' htmlFor='license'>
-            License:
-          </label>
-          <select
-            id='license'
-            value={license ?? ''}
-            onChange={(e) =>
-              setLicense(
-                e.target.value as 'cc' | 'public_domain' | 'all_rights_reserved'
-              )
-            }
-            className='select'
-          >
-            <option value=''>Select</option>
-            <option value='cc'>Creative Commons</option>
-            <option value='public_domain'>Public Domain</option>
-            <option value='all_rights_reserved'>All Rights Reserved</option>
-          </select>
-        </div>
-
-        <div>
-          <label className='label' htmlFor='author'>
-            Author:
-          </label>
-          <input
-            id='author'
-            type='text'
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            className='input  w-full'
-          />
-        </div>
-
-        <div>
-          <label className='label' htmlFor='file'>
-            Audio File:
-          </label>
-          <input
-            id='file'
-            type='file'
-            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-            className='file-input'
-          />
-        </div>
-        {/* <div className='mt-6'>
-          <Altcha ref={altchaRef} />
-        </div> */}
-
-        <button type='button' onClick={handleSave} className='btn mt-6'>
-          Save
+        <TextInput
+          id='title'
+          label='Title*'
+          value={title}
+          onChange={setTitle}
+          disabled={submitted}
+        />
+        <TextArea
+          id='description'
+          label='Description*'
+          value={description}
+          onChange={setDescription}
+          disabled={submitted}
+        />
+        <SelectInput
+          id='year'
+          label='Year'
+          value={year?.toString() ?? null}
+          options={Array.from(
+            { length: 121 },
+            (_, i) => new Date().getFullYear() - i
+          ).map((yearOption) => ({
+            label: yearOption.toString(),
+            value: yearOption.toString(),
+          }))}
+          onChange={(value) => setYear(Number(value))}
+          disabled={submitted}
+        />
+        <SelectInput
+          id='category'
+          label='Category*'
+          value={category ?? null}
+          options={soundbiteCategoryOptions}
+          onChange={(value) => setCategory(value as SoundbiteCategory)}
+          disabled={submitted}
+        />
+        <SelectInput
+          id='license'
+          label='License*'
+          value={license ?? null}
+          options={[
+            { label: 'Select', value: '' },
+            { label: 'Creative Commons', value: 'cc' },
+            { label: 'Public Domain', value: 'public_domain' },
+            { label: 'All Rights Reserved', value: 'all_rights_reserved' },
+          ]}
+          onChange={(value) =>
+            setLicense(value as 'cc' | 'public_domain' | 'all_rights_reserved')
+          }
+          disabled={submitted}
+        />
+        <TextInput
+          id='author'
+          label='Author'
+          value={author}
+          onChange={setAuthor}
+          disabled={submitted}
+        />
+        <FileInput
+          id='file'
+          label='Audio File*'
+          onChange={setFile}
+          disabled={submitted}
+        />
+        <FileInput
+          id='transcriptFile'
+          label='Transcript File'
+          onChange={setTranscriptFile}
+          disabled={submitted}
+        />
+        <CheckboxInput
+          checked={agreedToPrivacyPolicy}
+          label='I agree to the privacy policy'
+          onChange={() => setAgreedToPrivacyPolicy(!agreedToPrivacyPolicy)}
+          disabled={submitted}
+        />
+        {error && <div className='text-pri mt-2'>{error}</div>}
+        {successMessage && (
+          <div className='text-ter mt-2'>{successMessage}</div>
+        )}
+        <button
+          type='button'
+          onClick={handleSave}
+          className='btn mt-6'
+          disabled={isSubmitting || submitted}
+        >
+          {isSubmitting ? 'Uploading...' : 'Save'}
         </button>
       </form>
     </div>

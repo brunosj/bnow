@@ -2,11 +2,12 @@ import Map from './_components/Map';
 
 async function getData() {
   const urls = [
-    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/soundbites?limit=0`,
+    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/soundbites?depth=2&limit=0`,
   ];
 
   const fetchPromises = urls.map((url) =>
     fetch(url, {
+      next: { revalidate: 1 },
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

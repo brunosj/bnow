@@ -1,4 +1,4 @@
-// app/api/audio/route.ts
+// app/api/transcript/route.ts
 
 import { NextResponse } from 'next/server';
 
@@ -8,15 +8,15 @@ export async function POST(req: Request) {
     const file = formData.get('file') as File;
     const title = formData.get('title') as string;
 
-    const audioUploadFormData = new FormData();
-    audioUploadFormData.append('title', title);
-    audioUploadFormData.append('file', file); // Directly append the file
+    const transcriptUploadFormData = new FormData();
+    transcriptUploadFormData.append('title', title);
+    transcriptUploadFormData.append('file', file); // Directly append the file
 
     const response = await fetch(
-      `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/audio/upload`,
+      `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/transcript/upload`,
       {
         method: 'POST',
-        body: audioUploadFormData, // Send as FormData
+        body: transcriptUploadFormData, // Send as FormData
         headers: {
           Authorization: `Bearer ${process.env.PAYLOAD_API_TOKEN}`,
         },
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     );
 
     if (!response.ok) {
-      throw new Error('Audio file upload failed');
+      throw new Error('Transcript upload failed');
     }
 
     const result = await response.json();
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(
-      { error: 'Error uploading audio file' },
+      { error: 'Error uploading transcript' },
       { status: 500 }
     );
   }

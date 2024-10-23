@@ -19,6 +19,7 @@ const Transcripts: CollectionConfig = {
   },
   access: {
     read: () => true,
+    create: () => true,
   },
   endpoints: [
     {

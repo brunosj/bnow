@@ -12,7 +12,6 @@ const AudioSelectField: React.FC<Props> = (props) => {
   const { value = '', setValue } = useField<string>({
     path,
     validate: (val: string, { siblingData }) => {
-      // Allow audioFile to be empty if audioUpload is present
       if (!val && siblingData.audioUpload) {
         return true;
       }
@@ -20,66 +19,68 @@ const AudioSelectField: React.FC<Props> = (props) => {
     },
   });
 
-  const [audioSrc, setAudioSrc] = useState<string>('');
+  // Use siblingData if audio information is already available
+  const siblingData = useField<{ audioFile?: { url?: string; id?: string } }>({
+    path: 'audioGroup',
+  }).value;
+
+  const [audioSrc, setAudioSrc] = useState<string>(
+    siblingData?.audioFile?.url || ''
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchAudioFile = async () => {
-      if (!value) {
-        console.log('No audio file ID provided.');
-        return;
-      }
+    if (!value && siblingData?.audioFile?.url) {
+      // If siblingData already has audio URL, no need to fetch
+      setAudioSrc(siblingData.audioFile.url);
+      setValue(siblingData.audioFile.id);
+      return;
+    }
 
-      console.log('Fetching audio file for ID:', value);
+    if (value) {
+      const fetchAudioFile = async () => {
+        setLoading(true);
+        setError(null);
 
-      setLoading(true);
-      setError(null);
+        try {
+          const response = await fetch(`/api/audio/${value}`);
+          if (!response.ok)
+            throw new Error('Failed to fetch the selected audio file');
 
-      try {
-        const response = await fetch(`/api/audio/${value}`);
-
-        console.log('Fetch Response Status:', response.status);
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch the selected audio file');
+          const audio: Audio = await response.json();
+          setAudioSrc(audio.url || `/api/audio/${audio.filename}`);
+          setValue(audio.id);
+        } catch (err) {
+          console.error('Error fetching audio file:', err);
+          setError(
+            'Error fetching the selected audio file. Please try again later.'
+          );
+        } finally {
+          setLoading(false);
         }
+      };
 
-        const audio: Audio = await response.json();
-        console.log('Fetched Audio Data:', audio);
-
-        const resolvedUrl = audio.url || `/api/audio/${audio.filename}`;
-        console.log('Resolved Audio URL:', resolvedUrl);
-
-        setAudioSrc(resolvedUrl);
-        setValue(audio.id);
-      } catch (err) {
-        console.error('Error fetching audio file:', err);
-        setError(
-          'Error fetching the selected audio file. Please try again later.'
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAudioFile();
-  }, [value, setValue]);
+      fetchAudioFile();
+    }
+  }, [value, setValue, siblingData]);
 
   if (loading) {
-    console.log('Loading audio file...');
     return <p>Loading audio file...</p>;
   }
 
   if (error) {
-    console.log('Error encountered:', error);
     return <p>{error}</p>;
   }
 
   return (
     <div className={baseClass} style={{ paddingBottom: '1.5rem' }}>
       <Label htmlFor={path} label={label} required={required} />
-      <CustomAudioPlayer key={audioSrc} src={audioSrc} />
+      {audioSrc ? (
+        <CustomAudioPlayer key={audioSrc} src={audioSrc} />
+      ) : (
+        <p>No audio file selected</p>
+      )}
     </div>
   );
 };

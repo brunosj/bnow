@@ -5,6 +5,7 @@ import type { Soundbite } from '../../../payload/payload-types';
 import Map, { Marker, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import CustomMarker from '../CustomMarker';
+import { isWithinBirmingham } from '../../_utilities/isWithinBirmingham';
 
 interface MapComponentProps {
   mapboxToken: string;
@@ -20,7 +21,7 @@ interface MapComponentProps {
   ) => void;
   onPopupClose: () => void;
   onCenterChange: (lat: number, lng: number) => void;
-  onLocationDragEnd?: (lat: number, lng: number) => void; // Add this line
+  onLocationDragEnd?: (lat: number, lng: number) => void;
 }
 
 const MapComponent = ({
@@ -34,7 +35,7 @@ const MapComponent = ({
   onMarkerSelect,
   onPopupClose,
   onCenterChange,
-  onLocationDragEnd, // Add this line
+  onLocationDragEnd,
 }: MapComponentProps) => {
   const [map, setMap] = useState<any>(null);
   const mapRef = useRef<any>(null);
@@ -106,33 +107,11 @@ const MapComponent = ({
           </Marker>
         ))}
 
-        {locs.map((loc, index) => (
-          <Marker
-            key={index}
-            latitude={loc.latitude}
-            longitude={loc.longitude}
-            draggable
-            onDragEnd={handleDragEnd}
-          >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onMarkerSelect(loc, index);
-              }}
-              type='button'
-            >
-              <CustomMarker category={'soundscapes'} />
-            </button>
-          </Marker>
-        ))}
-
         {/* Render the new location marker if available */}
         {newLocation && (
           <Marker
             latitude={newLocation.latitude}
             longitude={newLocation.longitude}
-            draggable
-            onDragEnd={handleDragEnd}
           >
             <CustomMarker category={'blank'} />
           </Marker>

@@ -70,11 +70,16 @@ export interface Soundbite {
   };
   title?: string | null;
   description?: string | null;
-  transcription?: (string | null) | Transcript;
   author?: string | null;
   year?: number | null;
   category?: ('oral_history' | 'interview' | 'field_recording' | 'soundscapes') | null;
   license?: ('cc' | 'public_domain' | 'all_rights_reserved') | null;
+  uploadedTranscript?: (string | null) | Transcript;
+  publishedTranscript?:
+    | {
+        [k: string]: unknown;
+      }[]
+    | null;
   tags?:
     | {
         tag?: string | null;

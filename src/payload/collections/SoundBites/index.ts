@@ -11,6 +11,7 @@ const SoundBites: CollectionConfig = {
   access: {
     read: () => true,
     update: () => true,
+    create: () => true,
   },
   admin: {
     defaultColumns: ['title', 'year', 'longitude', 'latitude', 'approved'],
@@ -18,7 +19,7 @@ const SoundBites: CollectionConfig = {
   },
   endpoints: [
     {
-      path: '/custom-create',
+      path: '/custom-create-soundbite',
       method: 'post',
       handler: async (req, res, next) => {
         try {
@@ -31,6 +32,7 @@ const SoundBites: CollectionConfig = {
             tags,
             author,
             audioGroup,
+            uploadedTranscript,
             coordinates,
             status,
           } = req.body;
@@ -46,10 +48,15 @@ const SoundBites: CollectionConfig = {
               license,
               tags,
               author,
-              audioGroup,
+              audioGroup: {
+                audioFile: audioGroup.audioFile, // Should be an ID
+                audioUpload: audioGroup.audioUpload, // Should be an ID
+              },
+              uploadedTranscript,
               coordinates,
               status,
             },
+            depth: 2,
           });
 
           res.status(200).json({
@@ -79,7 +86,7 @@ const SoundBites: CollectionConfig = {
           relationTo: 'audio',
           admin: {
             description:
-              'You need to refresh the page after uploading a new audio file to see the changes in the player.',
+              'You need to refresh the page after uploading/selecting a new audio file to see the changes in the player.',
           },
         },
       ],
@@ -93,11 +100,6 @@ const SoundBites: CollectionConfig = {
       name: 'description',
       type: 'textarea',
       required: false,
-    },
-    {
-      name: 'transcription',
-      type: 'relationship',
-      relationTo: 'transcripts',
     },
     {
       name: 'author',
@@ -144,6 +146,17 @@ const SoundBites: CollectionConfig = {
           ],
         },
       ],
+    },
+    {
+      name: 'uploadedTranscript',
+      label: 'Uploaded Transcript',
+      type: 'relationship',
+      relationTo: 'transcripts',
+    },
+    {
+      name: 'publishedTranscript',
+      label: 'Published Transcript',
+      type: 'richText',
     },
     {
       name: 'tags',

@@ -10,6 +10,7 @@ import SidebarNewLocation from '../SidebarNewLocation';
 import CategoryFilter from '../CategoryFilter';
 import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 import Header from '../Header';
+import { isWithinBirmingham } from '../../_utilities/isWithinBirmingham';
 
 interface MapViewProps {
   soundbites: Soundbite[];
@@ -19,6 +20,10 @@ const MapView = ({ soundbites }: MapViewProps) => {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
   const [selectedMarker, setSelectedMarker] = useState<Soundbite | null>(null);
   const [newLocation, setNewLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const [initialLocation, setInitialLocation] = useState<{
     latitude: number;
     longitude: number;
   } | null>(null);
@@ -35,10 +40,17 @@ const MapView = ({ soundbites }: MapViewProps) => {
 
   // Adds a new location when clicking on the map
   const addLocation = (e: { lngLat: { lat: number; lng: number } }) => {
+    const { lat, lng } = e.lngLat;
+
     if (newLocation) return; // Prevent adding multiple new locations
-    setNewLocation({ latitude: e.lngLat.lat, longitude: e.lngLat.lng });
-    setVisibleSidebars(new Set(visibleSidebars).add('newLocation'));
-    console.log('New Location:', e.lngLat);
+
+    if (isWithinBirmingham(lat, lng)) {
+      setNewLocation({ latitude: lat, longitude: lng });
+      setVisibleSidebars(new Set(visibleSidebars).add('newLocation'));
+      // console.log('New Location:', e.lngLat);
+    } else {
+      alert('Location is outside the boundaries of Birmingham.');
+    }
   };
 
   // Handles the click event on a soundbite marker
@@ -72,10 +84,17 @@ const MapView = ({ soundbites }: MapViewProps) => {
   // Handles the drag end event for the new location marker
   const handleLocationDragEnd = (lat: number, lng: number) => {
     if (newLocation) {
-      setNewLocation({ latitude: lat, longitude: lng });
+      if (isWithinBirmingham(lat, lng)) {
+        setNewLocation({ latitude: lat, longitude: lng });
+        setInitialLocation({ latitude: lat, longitude: lng }); // Update initial location
+      } else {
+        alert('Location is outside the boundaries of Birmingham.');
+        if (initialLocation) {
+          setNewLocation(initialLocation); // Reset to initial location
+        }
+      }
     }
   };
-
   // For the latitude and longitude info box
   const handleCenterChange = useCallback((lat: number, lng: number) => {
     setCenter({ lat, lng });

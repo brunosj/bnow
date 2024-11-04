@@ -13,7 +13,7 @@ const ALLOWED_MIME_TYPES = [
 const Audio: CollectionConfig = {
   slug: 'audio',
   upload: {
-    staticDir: path.resolve(__dirname, '../../../../media/audio'),
+    staticDir: path.resolve(__dirname, '../../../../../media/audio'),
     mimeTypes: ALLOWED_MIME_TYPES,
   },
   access: {

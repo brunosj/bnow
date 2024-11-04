@@ -14,7 +14,7 @@ const ALLOWED_MIME_TYPES = [
 const Transcripts: CollectionConfig = {
   slug: 'transcripts',
   upload: {
-    staticDir: path.resolve(__dirname, '../../../../media/transcripts'),
+    staticDir: path.resolve(__dirname, '../../../../../media/transcripts'),
     mimeTypes: ALLOWED_MIME_TYPES,
   },
   access: {

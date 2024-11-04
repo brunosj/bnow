@@ -112,6 +112,8 @@ const MapComponent = ({
           <Marker
             latitude={newLocation.latitude}
             longitude={newLocation.longitude}
+            // draggable
+            // onDragEnd={handleDragEnd}
           >
             <CustomMarker category={'blank'} />
           </Marker>

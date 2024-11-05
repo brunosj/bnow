@@ -28,7 +28,7 @@ const SidebarList: React.FC<SidebarListProps> = ({
   onSelectCategory,
 }) => {
   return (
-    <div
+    <aside
       className={`fixed top-0 left-0 h-full shadow-lg z-30 transition-transform duration-300 w-1/4 ${isOpen ? 'translate-x-0' : '-translate-x-[95%]'} bg-black`}
     >
       <div className='flex flex-col h-full p-6 space-y-6'>
@@ -60,7 +60,7 @@ const SidebarList: React.FC<SidebarListProps> = ({
           />
         </button>
       </div>
-    </div>
+    </aside>
   );
 };
 

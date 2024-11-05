@@ -5,7 +5,6 @@ import type { Soundbite } from '../../../payload/payload-types';
 import Map, { Marker, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import CustomMarker from '../CustomMarker';
-import { isWithinBirmingham } from '../../_utilities/isWithinBirmingham';
 
 interface MapComponentProps {
   mapboxToken: string;

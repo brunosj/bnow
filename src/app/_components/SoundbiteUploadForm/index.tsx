@@ -275,11 +275,21 @@ const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
             className='mt-3 w-full bg-ter text-black py-2 px-4 rounded-md'
             disabled={isSubmitting || submitted}
           >
-            {isSubmitting ? (
-              <span className='text-sm loading loading-bars loading-lg'></span>
-            ) : (
-              <span className='text-sm font-semibold'>Submit</span>
-            )}
+            <div className='text-sm font-semibold'>
+              {isSubmitting ? (
+                <div className='flex items-center justify-center space-x-3'>
+                  <div className='lds-ring'>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <span>Uploading...</span>
+                </div>
+              ) : (
+                <span>Submit</span>
+              )}
+            </div>
           </button>
         </div>
       </form>

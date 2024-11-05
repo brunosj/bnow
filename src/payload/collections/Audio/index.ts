@@ -2,12 +2,20 @@
 import { CollectionConfig } from 'payload/types';
 import path from 'path';
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+
 const ALLOWED_MIME_TYPES = [
-  'audio/mpeg',
-  'audio/vnd.wav',
-  'audio/mp4',
-  'audio/wav',
+  'audio/mpeg', // MP3
+  'audio/mp3', // MP3
+  'audio/x-mpeg-3', // MP3
+  'audio/mpeg3', // MP3
+  'audio/vnd.wav', // WAV
+  'audio/wav', // WAV
+  'audio/x-wav', // WAV
+  'audio/wave', // WAV
+  'audio/mp4', // MP4
+  'audio/aiff', // AIFF
+  'audio/x-aiff', // AIFF
 ];
 
 const Audio: CollectionConfig = {

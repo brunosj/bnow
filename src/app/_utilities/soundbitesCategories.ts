@@ -4,7 +4,8 @@ export type SoundbiteCategory =
   | 'oral_history'
   | 'interview'
   | 'field_recording'
-  | 'soundscapes';
+  | 'soundscapes'
+  | 'blank';
 
 export const generateLabel = (value: SoundbiteCategory): string => {
   if (value === null) return 'Select';
@@ -18,7 +19,6 @@ export const soundbiteCategoryOptions: {
   value: SoundbiteCategory;
   label: string;
 }[] = [
-  { value: null, label: generateLabel(null) },
   { value: 'oral_history', label: generateLabel('oral_history') },
   { value: 'interview', label: generateLabel('interview') },
   { value: 'field_recording', label: generateLabel('field_recording') },

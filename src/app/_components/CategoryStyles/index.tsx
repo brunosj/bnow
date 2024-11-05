@@ -10,19 +10,19 @@ import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 const categoryStyles = {
   soundscapes: {
     icon: <FaMusic className='text-black' size={18} />,
-    color: '#FE6285',
+    color: '#ED7373',
   },
   oral_history: {
     icon: <PiUserSound className='text-black' size={18} />,
-    color: '#97AAFF',
+    color: '#D4ECC7',
   },
   interview: {
     icon: <PiUserSound className='text-black' size={18} />,
-    color: '#FFD700',
+    color: '#FEFAAB',
   },
   field_recording: {
     icon: <BsSoundwave className='text-black' size={18} />,
-    color: '#8BBF9F',
+    color: '#B39F8B',
   },
   blank: {
     icon: <GrDocumentSound className='text-black' size={18} />,

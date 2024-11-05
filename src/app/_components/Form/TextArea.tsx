@@ -16,15 +16,15 @@ const TextArea: React.FC<TextAreaProps> = ({
   value,
   onChange,
 }) => (
-  <div>
+  <div className='input-container'>
     <label className='label' htmlFor={id}>
-      {label}:
+      {label}
     </label>
     <textarea
       id={id}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className='input w-full'
+      className='input w-full bg-lightGray p-2 '
       required
       disabled={disabled}
     />

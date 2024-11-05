@@ -3,6 +3,7 @@ import React from 'react';
 import CustomMarker from '../CustomMarker';
 import categoryStyles, { defaultStyle } from '../CategoryStyles';
 import type { Soundbite } from '../../../payload/payload-types';
+import { generateLabel } from '../../_utilities/soundbitesCategories';
 
 interface SoundbiteCardProps {
   soundbite: Soundbite;
@@ -16,20 +17,19 @@ const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
   const { color } = categoryStyles[soundbite.category] || defaultStyle;
 
   return (
-    <div
-      onClick={onClick}
-      className={`p-4 mb-4 cursor-pointer rounded-md shadow-md transition-transform duration-300 hover:scale-[1.02]`}
-      style={{ border: `2px solid ${color}` }}
-    >
-      <h3 className='text-lg font-semibold'>{soundbite.title}</h3>
-      <p className='text-sm text-gray-600'>{soundbite.description}</p>
-      <p className='mt-2 text-xs text-gray-500'>Year: {soundbite.year}</p>
-      <p className='mt-1 text-xs text-gray-500'>
-        Contributor: {soundbite.author}
-      </p>
-      <div className='flex items-center mt-2'>
+    <div onClick={onClick} className={`cursor-pointer`}>
+      <div className='flex items-center space-x-2'>
         <CustomMarker category={soundbite.category} />
-        <span className='ml-2 text-xs'>{soundbite.category}</span>
+        <div>
+          <p className='text-sm font-semibold'>{soundbite.title}</p>
+          <div className='flex space-x-1 items-center'>
+            <span className='text-xs'>{soundbite.year}</span>
+            <span>•</span>
+            <span className='ml-2 text-xs' style={{ color: ` ${color}` }}>
+              {generateLabel(soundbite.category)}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );

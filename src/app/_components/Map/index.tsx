@@ -34,9 +34,14 @@ const MapView = ({ soundbites }: MapViewProps) => {
     lat: 52.489471,
     lng: -1.898575,
   });
-  const [selectedCategory, setSelectedCategory] = useState<
-    SoundbiteCategory | 'blank' | null
-  >(null);
+  const [selectedCategories, setSelectedCategories] = useState<
+    SoundbiteCategory[]
+  >([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for sidebar open/close
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   // Adds a new location when clicking on the map
   const addLocation = (e: { lngLat: { lat: number; lng: number } }) => {
@@ -100,36 +105,22 @@ const MapView = ({ soundbites }: MapViewProps) => {
     setCenter({ lat, lng });
   }, []);
 
-  const filteredSoundbites = soundbites.filter(
-    (soundbite) =>
+  const filteredSoundbites = soundbites.filter((soundbite) => {
+    return (
       soundbite.status === 'published' &&
-      (selectedCategory === null || soundbite.category === selectedCategory)
-  );
+      (selectedCategories.length === 0 ||
+        !selectedCategories.includes(soundbite.category))
+    );
+  });
 
-  const publishedSoundbites = soundbites.filter(
-    (soundbite) => soundbite.status === 'published'
-  );
+  const categories: SoundbiteCategory[] = [
+    ...new Set(soundbites.map((s) => s.category)),
+  ];
 
-  const categories = [...new Set(soundbites.map((s) => s.category))];
-
+  console.log(selectedCategories);
   return (
     <div className='h-[100vh] flex z-100 max-w-full relative'>
-      {/* Conditionally render the Header based on visibleSidebars */}
-      <Header />
-
-      <CategoryFilter
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onSelectCategory={setSelectedCategory}
-      />
-
-      {/* Button to toggle the soundbite list sidebar */}
-      <button
-        className='absolute top-2 left-4 btn btn-primary  z-20 '
-        onClick={() => setVisibleSidebars(new Set(visibleSidebars).add('list'))}
-      >
-        Soundbites List
-      </button>
+      {/* <Header /> */}
 
       {/* Map component handling map rendering, markers, and popups */}
       <MapComponent
@@ -148,23 +139,25 @@ const MapView = ({ soundbites }: MapViewProps) => {
       />
 
       {/* Latitude and Longitude info box */}
-      <div className='absolute bottom-8 left-4 text-primary p-2 shadow-lg rounded-md z-10 bg-neutral bg-opacity-95'>
-        {/* <p className='text-sm font-semibold'>Center:</p> */}
+      {/* <div className='absolute bottom-8 left-4 text-primary p-2 shadow-lg rounded-md z-10 bg-neutral bg-opacity-95'>
         <p className='text-xs font-mono'>
           Latitude: {center.lat.toFixed(6)}
           <br />
           Longitude: {center.lng.toFixed(6)}
         </p>
-      </div>
+      </div> */}
 
       {/* Sidebar displaying the list of soundbites */}
-      {visibleSidebars.has('list') && (
-        <SidebarList
-          soundbites={publishedSoundbites}
-          onClose={() => handleCloseSidebar('list')}
-          onSelectSoundbite={handleSoundbiteSelect}
-        />
-      )}
+      <SidebarList
+        soundbites={filteredSoundbites}
+        onClose={() => handleCloseSidebar('list')}
+        onSelectSoundbite={handleSoundbiteSelect}
+        isOpen={isSidebarOpen}
+        onToggle={toggleSidebar}
+        categories={categories}
+        selectedCategories={selectedCategories}
+        onSelectCategory={setSelectedCategories}
+      />
 
       {/* Sidebar for soundbite details */}
       {visibleSidebars.has('soundbite') && selectedMarker && (

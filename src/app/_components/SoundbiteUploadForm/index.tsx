@@ -13,14 +13,14 @@ import SelectInput from '../Form/SelectInput';
 import FileInput from '../Form/FileInput';
 import CheckboxInput from '../Form/CheckboxInput';
 
-interface NewLocationFormProps {
+interface SoundbiteUploadFormProps {
   onClose: () => void;
   onSave: (newSoundbite: Soundbite) => void;
   lat: number;
   lng: number;
 }
 
-const NewLocationForm: React.FC<NewLocationFormProps> = ({
+const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
   onClose,
   onSave,
   lat,
@@ -170,7 +170,7 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
         setIsSubmitting(false);
       }
     } else {
-      console.error('No file selected');
+      console.error('No file chosen');
       setError('No audio file selected.');
       setIsSubmitting(false);
     }
@@ -178,14 +178,31 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
 
   return (
     <div className='max-w-2xl mx-auto rounded-lg shadow-md'>
-      <form className='form-control'>
-        <TextInput
-          id='title'
-          label='Title*'
-          value={title}
-          onChange={setTitle}
-          disabled={submitted}
-        />
+      <form className='space-y-3'>
+        <div className='flex justify-between items-center gap-3'>
+          <TextInput
+            id='title'
+            label='Title*'
+            value={title}
+            onChange={setTitle}
+            disabled={submitted}
+          />
+          <SelectInput
+            id='year'
+            label='Year'
+            value={year?.toString() ?? null}
+            option=''
+            options={Array.from(
+              { length: 121 },
+              (_, i) => new Date().getFullYear() - i
+            ).map((yearOption) => ({
+              label: yearOption.toString(),
+              value: yearOption.toString(),
+            }))}
+            onChange={(value) => setYear(Number(value))}
+            disabled={submitted}
+          />
+        </div>
         <TextArea
           id='description'
           label='Description*'
@@ -193,18 +210,10 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
           onChange={setDescription}
           disabled={submitted}
         />
-        <SelectInput
-          id='year'
-          label='Year'
-          value={year?.toString() ?? null}
-          options={Array.from(
-            { length: 121 },
-            (_, i) => new Date().getFullYear() - i
-          ).map((yearOption) => ({
-            label: yearOption.toString(),
-            value: yearOption.toString(),
-          }))}
-          onChange={(value) => setYear(Number(value))}
+        <FileInput
+          id='transcriptFile'
+          label='Transcription'
+          onChange={setTranscriptFile}
           disabled={submitted}
         />
         <SelectInput
@@ -220,7 +229,6 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
           label='License*'
           value={license ?? null}
           options={[
-            { label: 'Select', value: '' },
             { label: 'Creative Commons', value: 'cc' },
             { label: 'Public Domain', value: 'public_domain' },
             { label: 'All Rights Reserved', value: 'all_rights_reserved' },
@@ -239,37 +247,44 @@ const NewLocationForm: React.FC<NewLocationFormProps> = ({
         />
         <FileInput
           id='file'
-          label='Audio File*'
+          label='Sound File*'
           onChange={setFile}
           disabled={submitted}
         />
-        <FileInput
-          id='transcriptFile'
-          label='Transcript File'
-          onChange={setTranscriptFile}
-          disabled={submitted}
-        />
+
         <CheckboxInput
           checked={agreedToPrivacyPolicy}
           label='I agree to the privacy policy'
           onChange={() => setAgreedToPrivacyPolicy(!agreedToPrivacyPolicy)}
           disabled={submitted}
         />
-        {error && <div className='text-pri mt-2'>{error}</div>}
-        {successMessage && (
-          <div className='text-ter mt-2'>{successMessage}</div>
+        {error && (
+          <p className='text-pri pt-3 text-sm font-semibold text-center'>
+            {error}
+          </p>
         )}
-        <button
-          type='button'
-          onClick={handleSave}
-          className='btn mt-6'
-          disabled={isSubmitting || submitted}
-        >
-          {isSubmitting ? 'Uploading...' : 'Save'}
-        </button>
+        {successMessage && (
+          <p className='text-ter pt-3 text-sm font-semibold text-center'>
+            {successMessage}
+          </p>
+        )}
+        <div className='w-full'>
+          <button
+            type='button'
+            onClick={handleSave}
+            className='mt-3 w-full bg-ter text-black py-2 px-4 rounded-md'
+            disabled={isSubmitting || submitted}
+          >
+            {isSubmitting ? (
+              <span className='text-sm loading loading-bars loading-lg'></span>
+            ) : (
+              <span className='text-sm font-semibold'>Submit</span>
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );
 };
 
-export default NewLocationForm;
+export default SoundbiteUploadForm;

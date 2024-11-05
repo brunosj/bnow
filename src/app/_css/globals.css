@@ -2,10 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-pri: #ed7373;
+  --color-sec: #fefaab;
+  --color-ter: #d4ecc7;
+  --color-black: #1b1b1b;
+  --color-white: #ffffff;
+  --color-lightGray: #262626;
+  --color-lighterGray: #424242;
+}
+
+@layer base {
+  body {
+    @apply bg-black text-white;
+  }
+
+  h1 {
+    @apply text-xl lg:text-2xl;
+  }
+  h2 {
+    @apply text-lg lg:text-2xl font-bold;
+  }
+
+  h3 {
+    @apply text-base lg:text-xl font-semibold;
+  }
+
+  h4 {
+    @apply text-sm lg:text-lg font-semibold;
+  }
+
+  p {
+    @apply text-sm lg:text-base;
+  }
+
+  .richText p {
+    @apply mb-4 text-sm lg:text-base;
+  }
+
+  .richTextSmallP p {
+    @apply text-xs lg:text-sm;
+  }
+}
+
 .mapboxgl-popup-content {
   padding: 0 !important;
 }
 
-/* * {
-  outline: gray solid 1px;
+.label {
+  @apply text-xs  font-semibold py-2;
+}
+
+.input {
+  @apply w-full p-2 border border-lighterGray rounded-md;
+}
+
+.select {
+  @apply w-full p-2 border border-lighterGray rounded-md text-xs;
+}
+
+.file-input {
+  @apply w-full p-2 border border-lighterGray rounded-md;
+}
+
+.input-container {
+  @apply flex flex-col;
+}
+
+.file-input {
+  @apply hidden;
+}
+
+.file-input-wrapper {
+  @apply flex items-center relative;
+}
+
+.custom-file-input {
+  @apply inline-block py-2 px-5 bg-lighterGray border border-lighterGray rounded-tl-md rounded-bl-md cursor-pointer transition-colors duration-300 text-xs;
+}
+
+.custom-file-input:hover {
+  @apply bg-lightGray;
+}
+
+.file-placeholder {
+  @apply ml-0 py-2 px-5 bg-lightGray border border-lighterGray rounded-tr-md rounded-br-md text-xs flex-grow;
+}
+
+.custom-file-input[disabled] {
+  @apply bg-lightGray text-white cursor-not-allowed;
+}
+
+.checkbox {
+  @apply w-0 h-0; /* Hide the actual checkbox */
+}
+
+.checkbox-custom {
+  @apply w-5 h-5 border border-lighterGray bg-lightGray rounded-sm flex items-center justify-center cursor-pointer;
+  transition: background-color 0.3s; /* Optional for a smooth transition */
+}
+
+/* .checkbox-custom.checked {
+  @apply bg-white border-lightGray;
 } */
+
+.x-mark {
+  @apply text-white font-semibold text-lg; /* Customize the X mark */
+}
+
+/* Disabled state */
+.checkbox[disabled] + .checkbox-custom {
+  @apply bg-lightGray cursor-not-allowed;
+}

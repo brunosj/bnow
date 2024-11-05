@@ -50,7 +50,7 @@ const Audio: CollectionConfig = {
           if (file.size > MAX_FILE_SIZE) {
             return res
               .status(400)
-              .json({ error: 'File size exceeds the 5MB limit' });
+              .json({ error: 'File size exceeds the 50MB limit' });
           }
 
           // Validate file duration

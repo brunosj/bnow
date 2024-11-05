@@ -48,6 +48,11 @@ export default buildConfig({
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
     declare: false,
   },
+  // upload: {
+  //   limits: {
+  //     fileSize: 50 * 1024 * 1024,
+  //   },
+  // },
   cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
   csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
 });

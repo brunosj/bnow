@@ -69,7 +69,9 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
                     onClick={() =>
                       handlePageClick(
                         pages.find(
-                          (p) => p.slug === item.link.reference.value.slug
+                          (p) =>
+                            p.slug ===
+                            (item.link.reference.value as { slug: string }).slug
                         )!
                       )
                     }

@@ -18,8 +18,7 @@ export interface Config {
     'payload-migrations': PayloadMigration;
   };
   globals: {
-    header: Header;
-    footer: Footer;
+    menu: Menu;
   };
 }
 /**
@@ -72,7 +71,7 @@ export interface Soundbite {
   description?: string | null;
   author?: string | null;
   year?: number | null;
-  category?: ('oral_history' | 'interview' | 'field_recording' | 'soundscapes') | null;
+  category: 'oral_history' | 'interview' | 'field_recording' | 'soundscapes';
   license?: ('cc' | 'public_domain' | 'all_rights_reserved') | null;
   uploadedTranscript?: (string | null) | Transcript;
   publishedTranscript?:
@@ -191,33 +190,9 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "header".
+ * via the `definition` "menu".
  */
-export interface Header {
-  id: string;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: string | Page;
-          } | null;
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer".
- */
-export interface Footer {
+export interface Menu {
   id: string;
   navItems?:
     | {

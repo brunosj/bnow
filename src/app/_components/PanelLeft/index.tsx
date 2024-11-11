@@ -1,7 +1,7 @@
 // components/SidebarLeft.tsx
 import React, { useState } from 'react';
 import SoundbiteCard from '../SoundbiteCard';
-import type { Soundbite, Page } from '../../../payload/payload-types';
+import type { Soundbite, Page, Menu } from '../../../payload/payload-types';
 import { IoChevronForward } from 'react-icons/io5';
 import CategoryFilter from '../CategoryFilter';
 import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
@@ -18,6 +18,7 @@ interface PanelLeftProps {
   onSelectCategory: (categories: SoundbiteCategory[]) => void;
   onInfoClick: (slug: string) => void;
   pages: Page[];
+  menu: Menu;
 }
 
 const PanelLeft: React.FC<PanelLeftProps> = ({
@@ -30,6 +31,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
   onSelectCategory,
   onInfoClick,
   pages,
+  menu,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -39,7 +41,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
 
   const handlePageClick = (page: Page) => {
     onInfoClick(page.slug);
-    setIsMenuOpen(false);
+    // setIsMenuOpen(false);
   };
 
   return (
@@ -60,15 +62,20 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
       <div className='flex flex-col h-full bg-pri relative'>
         {isMenuOpen ? (
           <div className='p-6 text-white'>
-            <p className='font-semibold mb-4'>Menu</p>
             <ul className='space-y-3'>
-              {pages.map((page) => (
-                <li key={page.id}>
+              {menu.navItems.map((item) => (
+                <li key={item.id}>
                   <button
-                    onClick={() => handlePageClick(page)}
-                    className='w-full text-left py-2 px-3 rounded-lg hover:bg-white/10 transition-colors'
+                    onClick={() =>
+                      handlePageClick(
+                        pages.find(
+                          (p) => p.slug === item.link.reference.value.slug
+                        )!
+                      )
+                    }
+                    className=''
                   >
-                    {page.title}
+                    {item.link.label}
                   </button>
                 </li>
               ))}

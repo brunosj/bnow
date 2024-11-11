@@ -1,6 +1,6 @@
 'use client';
 
-import type { Soundbite, Page } from '../../../payload/payload-types';
+import type { Soundbite, Page, Menu } from '../../../payload/payload-types';
 
 import { useState, useCallback } from 'react';
 import MapComponent from '../MapComponent';
@@ -16,12 +16,13 @@ import SidebarInfo from '../SidebarInfo';
 interface MapViewProps {
   soundbites: Soundbite[];
   pages: Page[];
+  menu: Menu;
 }
 
 type RightSidebarType = 'soundbite' | 'newLocation' | 'info' | null;
 
-const MapView = ({ soundbites, pages }: MapViewProps) => {
-  console.log(pages);
+const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
+  console.log(menu);
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
   // Markers functionality
@@ -167,6 +168,7 @@ const MapView = ({ soundbites, pages }: MapViewProps) => {
         onSelectCategory={setSelectedCategories}
         onInfoClick={handleInfoClick}
         pages={pages}
+        menu={menu}
       />
 
       {/* Sidebar for soundbite details */}

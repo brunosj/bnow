@@ -21,7 +21,7 @@ const PanelRight: React.FC<PanelRightProps> = ({
       }`}
     >
       {/* Header */}
-      <div className='pt-3 px-6 '>
+      <div className='py-3 px-6 '>
         <div className='flex items-center justify-between'>
           <h2 className='text-xl font-semibold'>{title}</h2>
           <button

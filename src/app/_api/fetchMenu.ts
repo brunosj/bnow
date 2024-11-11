@@ -1,15 +1,16 @@
-import type { Page } from '../../payload/payload-types';
+import type { Menu } from '../../payload/payload-types';
 
-export const fetchMenu = async (): Promise<Page[]> => {
-  const res: {
-    docs: Page[];
-  } = await fetch(`${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/pages`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `users API-Key ${process.env.PAYLOAD_API_KEY}`,
-    },
-  }).then((res) => res.json());
+export const fetchMenu = async (): Promise<Menu> => {
+  const res: Menu = await fetch(
+    `${process.env.NEXT_PUBLIC_PAYLOAD_URL}/api/globals/menu`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `users API-Key ${process.env.PAYLOAD_API_KEY}`,
+      },
+    }
+  ).then((res) => res.json());
 
-  return res?.docs ?? [];
+  return res ?? null;
 };

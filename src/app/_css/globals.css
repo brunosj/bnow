@@ -12,9 +12,13 @@
   --color-lighterGray: #424242;
 }
 
+/* * {
+  outline: 1px solid gray;
+} */
+
 @layer base {
   body {
-    @apply bg-black text-white;
+    @apply dark:bg-black bg-white text-black dark:text-white;
   }
 
   h1 {
@@ -36,11 +40,31 @@
     @apply text-sm lg:text-base;
   }
 
+  .richText h1 {
+    @apply text-xl lg:text-2xl mb-4;
+  }
+
+  .richText h2 {
+    @apply text-lg lg:text-2xl font-bold my-8;
+  }
+
+  .richText h3 {
+    @apply text-base lg:text-xl font-semibold my-6;
+  }
+
   .richText p {
     @apply mb-4 text-sm lg:text-base;
   }
 
-  .richTextSmallP p {
+  .richText h6 {
+    @apply text-sm lg:text-base;
+  }
+
+  .richTextSmall p {
+    @apply text-xs lg:text-sm;
+  }
+
+  .richTextSmall h6 {
     @apply text-xs lg:text-sm;
   }
 }
@@ -50,7 +74,7 @@
 }
 
 .label {
-  @apply text-xs  font-semibold py-2;
+  @apply text-xs font-semibold py-2;
 }
 
 .input {
@@ -78,19 +102,19 @@
 }
 
 .custom-file-input {
-  @apply inline-block py-2 px-5 bg-lighterGray border border-lighterGray rounded-tl-md rounded-bl-md cursor-pointer transition-colors duration-300 text-xs;
+  @apply inline-block py-2 px-5 dark:bg-lighterGray border border-lighterGray rounded-tl-md rounded-bl-md cursor-pointer transition-colors duration-300 text-xs;
 }
 
 .custom-file-input:hover {
-  @apply bg-lightGray;
+  @apply dark:bg-lightGray;
 }
 
 .file-placeholder {
-  @apply ml-0 py-2 px-5 bg-lightGray border border-lighterGray rounded-tr-md rounded-br-md text-xs flex-grow;
+  @apply ml-0 py-2 px-5 dark:bg-lightGray border border-lighterGray rounded-tr-md rounded-br-md text-xs flex-grow;
 }
 
 .custom-file-input[disabled] {
-  @apply bg-lightGray text-white cursor-not-allowed;
+  @apply dark:bg-lightGray text-white cursor-not-allowed;
 }
 
 .checkbox {
@@ -98,7 +122,7 @@
 }
 
 .checkbox-custom {
-  @apply w-5 h-5 border border-lighterGray bg-lightGray rounded-sm flex items-center justify-center cursor-pointer;
+  @apply w-5 h-5 border border-lighterGray dark:bg-lightGray rounded-sm flex items-center justify-center cursor-pointer;
   transition: background-color 0.3s; /* Optional for a smooth transition */
 }
 
@@ -112,11 +136,11 @@
 
 /* Disabled state */
 .checkbox[disabled] + .checkbox-custom {
-  @apply bg-lightGray cursor-not-allowed;
+  @apply dark:bg-lightGray cursor-not-allowed;
 }
 
 .checkbox[disabled] + .checkbox-custom {
-  @apply bg-lightGray cursor-not-allowed;
+  @apply dark:bg-lightGray cursor-not-allowed;
 }
 
 .lds-ring,

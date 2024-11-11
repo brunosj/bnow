@@ -1,23 +1,30 @@
 'use client';
 
-import type { Soundbite } from '../../../payload/payload-types';
+import type { Soundbite, Page } from '../../../payload/payload-types';
 
 import { useState, useCallback } from 'react';
 import MapComponent from '../MapComponent';
-import SidebarList from '../SidebarList';
+import PanelLeft from '../PanelLeft';
 import SidebarSoundbite from '../SidebarSoundbite';
 import SidebarNewLocation from '../SidebarNewLocation';
 import CategoryFilter from '../CategoryFilter';
 import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 import Header from '../Header';
 import { isWithinBirmingham } from '../../_utilities/isWithinBirmingham';
+import SidebarInfo from '../SidebarInfo';
 
 interface MapViewProps {
   soundbites: Soundbite[];
+  pages: Page[];
 }
 
-const MapView = ({ soundbites }: MapViewProps) => {
+type RightSidebarType = 'soundbite' | 'newLocation' | 'info' | null;
+
+const MapView = ({ soundbites, pages }: MapViewProps) => {
+  console.log(pages);
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
+
+  // Markers functionality
   const [selectedMarker, setSelectedMarker] = useState<Soundbite | null>(null);
   const [newLocation, setNewLocation] = useState<{
     latitude: number;
@@ -27,32 +34,52 @@ const MapView = ({ soundbites }: MapViewProps) => {
     latitude: number;
     longitude: number;
   } | null>(null);
-  const [visibleSidebars, setVisibleSidebars] = useState<
-    Set<'soundbite' | 'newLocation' | 'list'>
-  >(new Set());
+
   const [center, setCenter] = useState<{ lat: number; lng: number }>({
     lat: 52.489471,
     lng: -1.898575,
   });
+
+  // Soundbites category filter
   const [selectedCategories, setSelectedCategories] = useState<
     SoundbiteCategory[]
   >([]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for sidebar open/close
+
+  const filteredSoundbites = soundbites.filter((soundbite) => {
+    return (
+      soundbite.status === 'published' &&
+      (selectedCategories.length === 0 ||
+        !selectedCategories.includes(soundbite.category))
+    );
+  });
+
+  const categories: SoundbiteCategory[] = [
+    ...new Set(soundbites.map((s) => s.category)),
+  ];
+
+  // Panels functionality
+  const [rightPanelType, setRightPanelType] = useState<RightSidebarType>(null);
+  const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(false);
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    setIsLeftPanelOpen(!isLeftPanelOpen);
+  };
+
+  const closeRightPanel = () => {
+    setRightPanelType(null);
+    setSelectedMarker(null);
+    setNewLocation(null);
   };
 
   // Adds a new location when clicking on the map
   const addLocation = (e: { lngLat: { lat: number; lng: number } }) => {
     const { lat, lng } = e.lngLat;
 
-    if (newLocation) return; // Prevent adding multiple new locations
+    if (newLocation) return;
 
     if (isWithinBirmingham(lat, lng)) {
       setNewLocation({ latitude: lat, longitude: lng });
-      setVisibleSidebars(new Set(visibleSidebars).add('newLocation'));
-      // console.log('New Location:', e.lngLat);
+      setRightPanelType('newLocation');
     } else {
       alert('Location is outside the boundaries of Birmingham.');
     }
@@ -61,29 +88,13 @@ const MapView = ({ soundbites }: MapViewProps) => {
   // Handles the click event on a soundbite marker
   const handleMarkerClick = (soundbite: Soundbite) => {
     setSelectedMarker(soundbite);
-    setVisibleSidebars(new Set(visibleSidebars).add('soundbite'));
-  };
-
-  // Closes the specified sidebar
-  const handleCloseSidebar = (
-    sidebar: 'soundbite' | 'newLocation' | 'list'
-  ) => {
-    const updatedSidebars = new Set(visibleSidebars);
-    updatedSidebars.delete(sidebar);
-    setVisibleSidebars(updatedSidebars);
-
-    // Optionally reset other states if needed
-    if (sidebar === 'soundbite') {
-      setSelectedMarker(null);
-    } else if (sidebar === 'newLocation') {
-      setNewLocation(null);
-    }
+    setRightPanelType('soundbite');
   };
 
   // Handles soundbite selection from the list sidebar
   const handleSoundbiteSelect = (soundbite: Soundbite) => {
     setSelectedMarker(soundbite);
-    setVisibleSidebars(new Set(visibleSidebars).add('soundbite'));
+    setRightPanelType('soundbite');
   };
 
   // Handles the drag end event for the new location marker
@@ -100,24 +111,21 @@ const MapView = ({ soundbites }: MapViewProps) => {
       }
     }
   };
+
   // For the latitude and longitude info box
   const handleCenterChange = useCallback((lat: number, lng: number) => {
     setCenter({ lat, lng });
   }, []);
 
-  const filteredSoundbites = soundbites.filter((soundbite) => {
-    return (
-      soundbite.status === 'published' &&
-      (selectedCategories.length === 0 ||
-        !selectedCategories.includes(soundbite.category))
-    );
-  });
+  const [selectedPage, setSelectedPage] = useState<Page | undefined>();
 
-  const categories: SoundbiteCategory[] = [
-    ...new Set(soundbites.map((s) => s.category)),
-  ];
+  // Update the info click handler
+  const handleInfoClick = (slug: string) => {
+    const page = pages.find((p) => p.slug === slug);
+    setSelectedPage(page);
+    setRightPanelType('info');
+  };
 
-  console.log(selectedCategories);
   return (
     <div className='h-[100vh] flex z-100 max-w-full relative'>
       {/* <Header /> */}
@@ -148,33 +156,39 @@ const MapView = ({ soundbites }: MapViewProps) => {
       </div> */}
 
       {/* Sidebar displaying the list of soundbites */}
-      <SidebarList
+      <PanelLeft
         soundbites={filteredSoundbites}
-        onClose={() => handleCloseSidebar('list')}
+        onClose={() => setIsLeftPanelOpen(false)}
         onSelectSoundbite={handleSoundbiteSelect}
-        isOpen={isSidebarOpen}
+        isOpen={isLeftPanelOpen}
         onToggle={toggleSidebar}
         categories={categories}
         selectedCategories={selectedCategories}
         onSelectCategory={setSelectedCategories}
+        onInfoClick={handleInfoClick}
+        pages={pages}
       />
 
       {/* Sidebar for soundbite details */}
-      {visibleSidebars.has('soundbite') && selectedMarker && (
+      {rightPanelType === 'soundbite' && selectedMarker && (
         <SidebarSoundbite
           soundbite={selectedMarker}
-          onClose={() => handleCloseSidebar('soundbite')}
+          onClose={closeRightPanel}
         />
       )}
 
       {/* Sidebar for adding a new location */}
-      {visibleSidebars.has('newLocation') && newLocation && (
+      {rightPanelType === 'newLocation' && newLocation && (
         <SidebarNewLocation
           lat={newLocation.latitude}
           lng={newLocation.longitude}
-          onClose={() => handleCloseSidebar('newLocation')}
+          onClose={closeRightPanel}
           onSave={() => {}}
         />
+      )}
+
+      {rightPanelType === 'info' && (
+        <SidebarInfo onClose={closeRightPanel} page={selectedPage} />
       )}
     </div>
   );

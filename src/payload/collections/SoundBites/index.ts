@@ -134,7 +134,7 @@ const SoundBites: CollectionConfig = {
             { label: 'Field Recording', value: 'field_recording' },
             { label: 'Soundscapes / Sound Art', value: 'soundscapes' },
           ],
-          required: false,
+          required: true,
         },
         {
           name: 'license',

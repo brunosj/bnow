@@ -21,8 +21,8 @@ const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
       <div className='flex items-center space-x-2'>
         <CustomMarker category={soundbite.category} />
         <div>
-          <p className='text-sm font-semibold'>{soundbite.title}</p>
-          <div className='flex space-x-1 items-center'>
+          <p className='text-sm font-semibold '>{soundbite.title}</p>
+          <div className='flex space-x-2 items-center'>
             <span className='text-xs'>{soundbite.year}</span>
             <span>•</span>
             <span className='ml-2 text-xs' style={{ color: ` ${color}` }}>

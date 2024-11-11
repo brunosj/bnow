@@ -189,7 +189,7 @@ const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
           />
           <SelectInput
             id='year'
-            label='Year'
+            label='Year*'
             value={year?.toString() ?? null}
             option=''
             options={Array.from(

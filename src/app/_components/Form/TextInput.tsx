@@ -25,7 +25,7 @@ const TextInput: React.FC<TextInputProps> = ({
       type='text'
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className='input w-full bg-lightGray'
+      className='input w-full dark:bg-lightGray'
       required
       disabled={disabled}
     />

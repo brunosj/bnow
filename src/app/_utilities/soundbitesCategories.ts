@@ -7,8 +7,8 @@ export type SoundbiteCategory =
   | 'soundscapes'
   | 'blank';
 
-export const generateLabel = (value: SoundbiteCategory): string => {
-  if (value === null) return 'Select';
+export const generateLabel = (value: SoundbiteCategory | undefined): string => {
+  if (!value) return null;
   return value
     .split('_')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))

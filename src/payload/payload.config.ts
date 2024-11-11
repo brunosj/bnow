@@ -15,8 +15,7 @@ import { Pages } from './collections/Pages';
 import SoundBites from './collections/SoundBites';
 import Transcripts from './collections/Transcripts';
 import Users from './collections/Users';
-import { Footer } from './globals/Footer';
-import { Header } from './globals/Header';
+import { Menu } from './globals/Menu';
 
 const generateTitle: GenerateTitle = () => {
   return 'Birmingham Sound Map';
@@ -43,7 +42,7 @@ export default buildConfig({
   }),
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
   collections: [Pages, Audio, SoundBites, Transcripts, Media, Users],
-  globals: [Header, Footer],
+  globals: [Menu],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
     declare: false,

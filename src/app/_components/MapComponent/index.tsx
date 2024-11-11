@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useTheme } from 'next-themes';
 import type { Soundbite } from '../../../payload/payload-types';
 import Map, { Marker, NavigationControl } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import CustomMarker from '../CustomMarker';
+import { SearchBoxComponent } from '../SearchBox';
+import { MAPBOX_THEME_DARK, MAPBOX_THEME_LIGHT } from '../../constants';
 
 interface MapComponentProps {
   mapboxToken: string;
@@ -38,8 +41,13 @@ const MapComponent = ({
 }: MapComponentProps) => {
   const [map, setMap] = useState<any>(null);
   const mapRef = useRef<any>(null);
+  const { theme } = useTheme();
+  const [mapStyle, setMapStyle] = useState(MAPBOX_THEME_LIGHT);
 
-  // Effect to handle map view updates
+  useEffect(() => {
+    setMapStyle(theme === 'dark' ? MAPBOX_THEME_DARK : MAPBOX_THEME_LIGHT);
+  }, [theme]);
+
   useEffect(() => {
     if (selectedMarker && map) {
       map.flyTo({
@@ -72,7 +80,7 @@ const MapComponent = ({
     <>
       <Map
         mapboxAccessToken={mapboxToken}
-        mapStyle='mapbox://styles/landozone/cm0uy6b4p00sp01qu7k1k6tj2'
+        mapStyle={mapStyle}
         initialViewState={{
           latitude: 52.489471,
           longitude: -1.898575,
@@ -87,6 +95,10 @@ const MapComponent = ({
         onMove={handleMapMove}
       >
         <NavigationControl position='bottom-right' />
+
+        {/* <div className='w-1/4 p-6 ml-auto'>
+          <SearchBoxComponent />
+        </div> */}
 
         {soundbites.map((soundbite) => (
           <Marker

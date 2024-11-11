@@ -28,7 +28,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
       id={id}
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value)}
-      className='select bg-lightGray'
+      className='select dark:bg-lightGray bg-white'
       required
       disabled={disabled}
     >

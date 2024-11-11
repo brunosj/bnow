@@ -4,7 +4,6 @@ import { FaMusic, FaMicrophone, FaSoundcloud } from 'react-icons/fa';
 import { BsSoundwave } from 'react-icons/bs';
 import { PiUserSound } from 'react-icons/pi';
 import { GrDocumentSound } from 'react-icons/gr';
-import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 
 // Define the styles with just the color values
 const categoryStyles = {

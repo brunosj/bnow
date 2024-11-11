@@ -15,7 +15,7 @@ interface CategoryFilterProps {
 // Function to get the background color based on the selected category
 const getCategoryColor = (category: string, isActive: boolean) => {
   // Default color when the category is not active
-  const defaultColor = 'bg-gray-200';
+  const defaultColor = 'bg-gray';
 
   // Get the color for the active category from categoryStyles
   const categoryColor =
@@ -59,17 +59,26 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
           <span
             className={`px-3 py-1 text-sm font-medium rounded-md ${
               selectedCategories.includes(category)
-                ? 'border-white border-[1px] opacity-50'
+                ? 'border-white border-[1px] opacity-75'
                 : ''
             }`}
             style={{
               backgroundColor: selectedCategories.includes(category)
-                ? 'black'
-                : getCategoryColor(category, true),
+                ? 'transparent'
+                : 'white',
               color: selectedCategories.includes(category) ? 'white' : 'black',
             }}
           >
-            <span className='text-sm'>{generateLabel(category)}</span>
+            <span
+              className='text-sm'
+              style={{
+                color: selectedCategories.includes(category)
+                  ? 'white'
+                  : getCategoryColor(category, true),
+              }}
+            >
+              {generateLabel(category)}
+            </span>
           </span>
         </button>
       ))}

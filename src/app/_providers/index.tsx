@@ -1,18 +1,30 @@
-'use client'
+'use client';
 
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
+import { ThemeProvider } from 'next-themes';
 
-import { AuthProvider } from '../_providers/Auth'
-import { ThemeProvider } from './Theme'
+const ClientOnlyWrapper: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return <>{children}</>;
+};
 
 export const Providers: React.FC<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }> = ({ children }) => {
   return (
-    <ThemeProvider>
-      {/* <AuthProvider> */}
-      {children}
-      {/* </AuthProvider> */}
+    <ThemeProvider attribute='class'>
+      <ClientOnlyWrapper>{children}</ClientOnlyWrapper>
     </ThemeProvider>
-  )
-}
+  );
+};

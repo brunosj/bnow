@@ -1,136 +1,168 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useTheme } from 'next-themes';
-import type { Soundbite } from '../../../payload/payload-types';
-import Map, { Marker, NavigationControl } from 'react-map-gl';
+import Map, { MapRef, Map as MapType } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import CustomMarker from '../CustomMarker';
-import { SearchBoxComponent } from '../SearchBox';
 import { MAPBOX_THEME_DARK, MAPBOX_THEME_LIGHT } from '../../constants';
+import ClusterLayer from './ClusterLayer';
+import MapMarkers from './MapMarkers';
+import MapControls from './MapControls';
+import type { Soundbite } from '../../../payload/payload-types';
 
 interface MapComponentProps {
   mapboxToken: string;
   soundbites: Soundbite[];
-  locs: { latitude: number; longitude: number }[];
   selectedMarker: Soundbite | null;
   newLocation: { latitude: number; longitude: number } | null;
   onAddLocation: (e: { lngLat: { lat: number; lng: number } }) => void;
   onMarkerClick: (soundbite: Soundbite) => void;
-  onMarkerSelect: (
-    loc: { latitude: number; longitude: number },
-    index: number
-  ) => void;
-  onPopupClose: () => void;
   onCenterChange: (lat: number, lng: number) => void;
-  onLocationDragEnd?: (lat: number, lng: number) => void;
+  onInfoClick: () => void;
+  isLeftPanelOpen: boolean;
+  isAddingLocation: boolean;
+  setIsAddingLocation: (value: boolean) => void;
 }
 
 const MapComponent = ({
   mapboxToken,
   soundbites,
-  locs,
   selectedMarker,
   newLocation,
   onAddLocation,
   onMarkerClick,
-  onMarkerSelect,
-  onPopupClose,
   onCenterChange,
-  onLocationDragEnd,
+  onInfoClick,
+  isLeftPanelOpen,
+  isAddingLocation,
+  setIsAddingLocation,
 }: MapComponentProps) => {
-  const [map, setMap] = useState<any>(null);
-  const mapRef = useRef<any>(null);
+  const [map, setMap] = useState<MapRef | null>(null);
+  const mapRef = useRef<MapRef | null>(null);
   const { theme } = useTheme();
   const [mapStyle, setMapStyle] = useState(MAPBOX_THEME_LIGHT);
+
+  const geojsonData = useMemo(
+    () => ({
+      type: 'FeatureCollection' as const,
+      features: soundbites.map((soundbite) => ({
+        type: 'Feature' as const,
+        properties: {
+          id: soundbite.id,
+          category: soundbite.category,
+        },
+        geometry: {
+          type: 'Point' as const,
+          coordinates: [
+            soundbite.coordinates.longitude,
+            soundbite.coordinates.latitude,
+          ],
+        },
+      })),
+    }),
+    [soundbites]
+  );
+
+  const { initializeClusters } = ClusterLayer({
+    geojsonData,
+    isAddingLocation,
+  });
+
+  const handleMapMove = useCallback(() => {
+    if (mapRef.current) {
+      const center = mapRef.current.getMap().getCenter();
+      onCenterChange?.(center.lat, center.lng);
+    }
+  }, [onCenterChange]);
 
   useEffect(() => {
     setMapStyle(theme === 'dark' ? MAPBOX_THEME_DARK : MAPBOX_THEME_LIGHT);
   }, [theme]);
 
   useEffect(() => {
-    if (selectedMarker && map) {
-      map.flyTo({
-        center: [
-          selectedMarker.coordinates.longitude,
-          selectedMarker.coordinates.latitude,
-        ],
-        zoom: 15,
-        essential: true,
+    if (mapRef.current) {
+      const map = mapRef.current.getMap();
+      map.once('style.load', () => {
+        initializeClusters(map);
       });
     }
-  }, [selectedMarker, map]);
-
-  const handleMapMove = useCallback(() => {
-    if (mapRef.current) {
-      const center = mapRef.current.getCenter();
-      onCenterChange(center.lat, center.lng);
-    }
-  }, [onCenterChange]);
-
-  // Handle drag end for draggable markers
-  const handleDragEnd = (e: any) => {
-    const { lngLat } = e;
-    if (onLocationDragEnd) {
-      onLocationDragEnd(lngLat.lat, lngLat.lng);
-    }
-  };
+  }, [mapStyle, initializeClusters]);
 
   return (
-    <>
-      <Map
-        mapboxAccessToken={mapboxToken}
-        mapStyle={mapStyle}
-        initialViewState={{
-          latitude: 52.489471,
-          longitude: -1.898575,
-          zoom: 12,
-        }}
-        ref={(instance) => {
+    <Map
+      mapboxAccessToken={mapboxToken}
+      mapStyle={mapStyle}
+      initialViewState={{
+        latitude: 52.489471,
+        longitude: -1.898575,
+        zoom: 12,
+      }}
+      interactiveLayerIds={['clusters']}
+      ref={(instance) => {
+        if (instance && !mapRef.current) {
           mapRef.current = instance;
           setMap(instance);
-        }}
-        onClick={(e) => onAddLocation(e)}
-        onMouseOver={(e) => (e.target.getCanvas().style.cursor = 'crosshair')}
-        onMove={handleMapMove}
-      >
-        <NavigationControl position='bottom-right' />
+        }
+      }}
+      onClick={(e) => {
+        const features = mapRef.current
+          ?.getMap()
+          .queryRenderedFeatures(e.point, {
+            layers: ['clusters'],
+          });
 
-        {/* <div className='w-1/4 p-6 ml-auto'>
-          <SearchBoxComponent />
-        </div> */}
+        if (features?.length && !isAddingLocation) {
+          const clusterId = features[0].properties.cluster_id;
+          const mapboxSource = mapRef.current
+            ?.getMap()
+            .getSource('soundbites') as mapboxgl.GeoJSONSource;
 
-        {soundbites.map((soundbite) => (
-          <Marker
-            key={soundbite.id}
-            latitude={soundbite.coordinates.latitude}
-            longitude={soundbite.coordinates.longitude}
-          >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onMarkerClick(soundbite);
-              }}
-              type='button'
-            >
-              <CustomMarker category={soundbite.category} />
-            </button>
-          </Marker>
-        ))}
+          mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err) return;
 
-        {/* Render the new location marker if available */}
-        {newLocation && (
-          <Marker
-            latitude={newLocation.latitude}
-            longitude={newLocation.longitude}
-            // draggable
-            // onDragEnd={handleDragEnd}
-          >
-            <CustomMarker category={'blank'} />
-          </Marker>
-        )}
-      </Map>
-    </>
+            mapRef.current?.flyTo({
+              center: (features[0].geometry as any).coordinates,
+              zoom,
+            });
+          });
+        } else if (isAddingLocation) {
+          if (!features?.length) {
+            onAddLocation(e);
+          }
+        }
+      }}
+      onMouseMove={(e) => {
+        const features = mapRef.current
+          ?.getMap()
+          .queryRenderedFeatures(e.point, {
+            layers: ['clusters'],
+          });
+
+        e.target.getCanvas().style.cursor = isAddingLocation
+          ? 'crosshair'
+          : features?.length
+            ? 'pointer'
+            : 'grab';
+      }}
+      onMove={handleMapMove}
+      onLoad={(e) => {
+        initializeClusters(e.target);
+      }}
+    >
+      <MapControls
+        isLeftPanelOpen={isLeftPanelOpen}
+        isAddingLocation={isAddingLocation}
+        onInfoClick={onInfoClick}
+        setIsAddingLocation={setIsAddingLocation}
+      />
+
+      <MapMarkers
+        soundbites={soundbites}
+        newLocation={newLocation}
+        onMarkerClick={onMarkerClick}
+        mapRef={mapRef as React.RefObject<MapRef>}
+      />
+    </Map>
   );
 };
 

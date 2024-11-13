@@ -12,7 +12,7 @@ const CustomMarker: React.FC<CustomMarkerProps> = ({ category }) => {
   const { icon, color } = categoryStyles[category] || defaultStyle;
   return (
     <div
-      className={`relative w-8 h-8 bg-${color} rounded-full flex items-center justify-center hover:bg-opacity-80 transition-all duration-300 shrink-0`}
+      className={`relative w-8 h-8 bg-${color} rounded-full flex items-center justify-center hover:bg-opacity-50 transition-all duration-300 shrink-0`}
       style={{ backgroundColor: `${color}` }}
     >
       {/* Marker Shape */}

@@ -6,19 +6,19 @@
   --color-pri: #ed7373;
   --color-sec: #fefaab;
   --color-ter: #d4ecc7;
-  --color-black: #1b1b1b;
+  --color-black: #232128;
   --color-white: #ffffff;
   --color-lightGray: #262626;
   --color-lighterGray: #424242;
 }
-
-/* * {
+/* 
+* {
   outline: 1px solid gray;
 } */
 
 @layer base {
   body {
-    @apply dark:bg-black bg-white text-black dark:text-white;
+    @apply dark:bg-black bg-black text-white dark:text-white;
   }
 
   h1 {
@@ -184,4 +184,87 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* From Uiverse.io by Galahhad */
+/* switch settings 👇 */
+
+.ui-switch {
+  /* switch */
+  --switch-bg: transparent;
+  --switch-width: 48px;
+  --switch-height: 20px;
+  /* circle */
+  --circle-diameter: 32px;
+  --circle-bg: var(--color-black);
+  --circle-inset: calc((var(--circle-diameter) - var(--switch-height)) / 2);
+}
+
+.ui-switch input {
+  display: none;
+}
+
+.slider {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: var(--switch-width);
+  height: var(--switch-height);
+  background: var(--switch-bg);
+  border: 1px solid var(--color-white);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+}
+
+.slider .circle {
+  top: calc(var(--circle-inset) * -1);
+  left: 0;
+  width: var(--circle-diameter);
+  height: var(--circle-diameter);
+  position: absolute;
+  background: var(--color-black);
+  border: 1px solid var(--color-white);
+  border-radius: inherit;
+  box-shadow: none;
+}
+
+.slider .circle::before {
+  display: none;
+}
+
+.theme-switch {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.switch-track {
+  width: 64px;
+  height: 24px;
+  padding: 2px;
+  border-radius: 999px;
+  border: 1px solid var(--color-white);
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.switch-thumb {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-black);
+  border: 1px solid var(--color-white);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  transition: transform 0.2s;
+}
+
+input:checked + .switch-track .switch-thumb {
+  transform: translateX(40px) translateY(-50%);
 }

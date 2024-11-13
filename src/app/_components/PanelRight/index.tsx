@@ -6,6 +6,7 @@ interface PanelRightProps {
   children: React.ReactNode;
   onClose: () => void;
   isOpen?: boolean;
+  setIsAddingLocation?: (value: boolean) => void;
 }
 
 const PanelRight: React.FC<PanelRightProps> = ({
@@ -13,20 +14,26 @@ const PanelRight: React.FC<PanelRightProps> = ({
   children,
   onClose,
   isOpen = true,
+  setIsAddingLocation,
 }) => {
+  const handleClose = () => {
+    setIsAddingLocation?.(false);
+    onClose();
+  };
+
   return (
     <aside
-      className={`fixed top-0 right-0 h-full shadow-lg z-30 transition-transform duration-300 w-1/4 bg-white dark:bg-black ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}
+      className={`fixed top-0 right-0 h-screen shadow-lg z-30 transition-all duration-300 ease-in-out w-1/4 
+        ${isOpen ? 'translate-x-0 opacity-100' : 'translate-x-[100%] opacity-0'}
+        bg-white dark:bg-black text-black dark:text-white`}
     >
       {/* Header */}
-      <div className='py-3 px-6 '>
+      <div className='py-3 px-6 border-b border-gray-200 dark:border-gray-800'>
         <div className='flex items-center justify-between'>
           <h2 className='text-xl font-semibold'>{title}</h2>
           <button
-            onClick={onClose}
-            className='p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors'
+            onClick={handleClose}
+            className='p-2 rounded-full transition-colors'
             aria-label='Close panel'
           >
             <IoClose size={24} />
@@ -35,7 +42,12 @@ const PanelRight: React.FC<PanelRightProps> = ({
       </div>
 
       {/* Content */}
-      <div className='h-full overflow-y-auto p-6'>{children}</div>
+      <div
+        className='overflow-y-auto px-6 py-4'
+        style={{ height: 'calc(100vh - 64px)' }}
+      >
+        {children}
+      </div>
     </aside>
   );
 };

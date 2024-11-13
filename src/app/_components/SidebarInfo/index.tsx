@@ -6,10 +6,19 @@ import { RichText } from '../RichText';
 interface SidebarInfoProps {
   onClose: () => void;
   page?: Page;
+  setIsAddingLocation: (value: boolean) => void;
 }
 
-const SidebarInfo = ({ onClose, page }: SidebarInfoProps) => (
-  <PanelRight title={page?.title || 'About'} onClose={onClose}>
+const SidebarInfo = ({
+  onClose,
+  page,
+  setIsAddingLocation,
+}: SidebarInfoProps) => (
+  <PanelRight
+    title={page?.title || 'About'}
+    onClose={onClose}
+    setIsAddingLocation={setIsAddingLocation}
+  >
     <div className='space-y-6'>
       {page ? (
         <div>

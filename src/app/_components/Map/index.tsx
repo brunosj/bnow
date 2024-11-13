@@ -2,7 +2,7 @@
 
 import type { Soundbite, Page, Menu } from '../../../payload/payload-types';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import MapComponent from '../MapComponent';
 import PanelLeft from '../PanelLeft';
 import SidebarSoundbite from '../SidebarSoundbite';
@@ -22,7 +22,6 @@ interface MapViewProps {
 type RightSidebarType = 'soundbite' | 'newLocation' | 'info' | null;
 
 const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
-  console.log(menu);
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
   // Markers functionality
@@ -60,17 +59,21 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
 
   // Panels functionality
   const [rightPanelType, setRightPanelType] = useState<RightSidebarType>(null);
-  const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(false);
+  const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAddingLocation, setIsAddingLocation] = useState(false);
 
   const toggleSidebar = () => {
     setIsLeftPanelOpen(!isLeftPanelOpen);
   };
 
-  const closeRightPanel = () => {
+  const closeRightPanel = useCallback(() => {
+    console.log('closeRightPanel called');
     setRightPanelType(null);
     setSelectedMarker(null);
     setNewLocation(null);
-  };
+    setIsAddingLocation(false);
+  }, []);
 
   // Adds a new location when clicking on the map
   const addLocation = (e: { lngLat: { lat: number; lng: number } }) => {
@@ -122,10 +125,42 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
 
   // Update the info click handler
   const handleInfoClick = (slug: string) => {
-    const page = pages.find((p) => p.slug === slug);
-    setSelectedPage(page);
-    setRightPanelType('info');
+    if (rightPanelType === 'info') {
+      // If info panel is already open, close it
+      setRightPanelType(null);
+    } else {
+      // Otherwise open it and turn off adding location
+      setRightPanelType('info');
+      setIsAddingLocation(false);
+      setSelectedPage(pages.find((p) => p.slug === slug));
+    }
   };
+
+  const [visibleSoundbites, setVisibleSoundbites] =
+    useState<Soundbite[]>(filteredSoundbites);
+
+  const handleVisibleSoundbitesChange = useCallback(
+    (soundbites: Soundbite[]) => {
+      setVisibleSoundbites(soundbites);
+    },
+    []
+  );
+
+  useEffect(() => {
+    setVisibleSoundbites(filteredSoundbites);
+  }, [filteredSoundbites]);
+
+  const mapStyles = useMemo(
+    () => ({
+      // your map styles
+    }),
+    []
+  ); // Only recreate when theme changes
+
+  // Add this to track state changes
+  useEffect(() => {
+    console.log('isAddingLocation changed to:', isAddingLocation);
+  }, [isAddingLocation]);
 
   return (
     <div className='h-[100vh] flex z-100 max-w-full relative'>
@@ -135,7 +170,6 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
       <MapComponent
         mapboxToken={mapboxToken}
         soundbites={filteredSoundbites}
-        locs={[]}
         selectedMarker={selectedMarker}
         newLocation={newLocation}
         onAddLocation={addLocation}
@@ -145,6 +179,11 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         onPopupClose={() => setSelectedMarker(null)}
         onCenterChange={handleCenterChange}
         onLocationDragEnd={handleLocationDragEnd}
+        onInfoClick={() => handleInfoClick('how-to-use-the-site')}
+        isLeftPanelOpen={isLeftPanelOpen}
+        isAddingLocation={isAddingLocation}
+        setIsAddingLocation={setIsAddingLocation}
+        onVisibleSoundbitesChange={handleVisibleSoundbitesChange}
       />
 
       {/* Latitude and Longitude info box */}
@@ -158,7 +197,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
 
       {/* Sidebar displaying the list of soundbites */}
       <PanelLeft
-        soundbites={filteredSoundbites}
+        soundbites={visibleSoundbites}
         onClose={() => setIsLeftPanelOpen(false)}
         onSelectSoundbite={handleSoundbiteSelect}
         isOpen={isLeftPanelOpen}
@@ -169,6 +208,9 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         onInfoClick={handleInfoClick}
         pages={pages}
         menu={menu}
+        isMenuOpen={isMenuOpen}
+        onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
+        setIsAddingLocation={setIsAddingLocation}
       />
 
       {/* Sidebar for soundbite details */}
@@ -176,6 +218,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         <SidebarSoundbite
           soundbite={selectedMarker}
           onClose={closeRightPanel}
+          setIsAddingLocation={setIsAddingLocation}
         />
       )}
 
@@ -186,11 +229,17 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
           lng={newLocation.longitude}
           onClose={closeRightPanel}
           onSave={() => {}}
+          setIsAddingLocation={setIsAddingLocation}
         />
       )}
 
+      {/* Sidebar for info page */}
       {rightPanelType === 'info' && (
-        <SidebarInfo onClose={closeRightPanel} page={selectedPage} />
+        <SidebarInfo
+          onClose={closeRightPanel}
+          page={selectedPage}
+          setIsAddingLocation={setIsAddingLocation}
+        />
       )}
     </div>
   );

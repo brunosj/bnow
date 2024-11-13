@@ -9,19 +9,19 @@ import { GrDocumentSound } from 'react-icons/gr';
 const categoryStyles = {
   soundscapes: {
     icon: <FaMusic className='text-black' size={18} />,
-    color: '#ED7373',
+    color: '#ca403e',
   },
   oral_history: {
     icon: <PiUserSound className='text-black' size={18} />,
-    color: '#D4ECC7',
+    color: '#61bf62',
   },
   interview: {
     icon: <PiUserSound className='text-black' size={18} />,
-    color: '#FEFAAB',
+    color: '#dc9a36',
   },
   field_recording: {
     icon: <BsSoundwave className='text-black' size={18} />,
-    color: '#B39F8B',
+    color: '#408c90',
   },
   blank: {
     icon: <GrDocumentSound className='text-black' size={18} />,

@@ -7,11 +7,13 @@ interface SidebarNewLocationProps {
   onSave: (newSoundbite: any) => void;
   lat: number;
   lng: number;
+  setIsAddingLocation: (value: boolean) => void; // Add this
 }
 
 const SidebarNewLocation = ({
   onClose,
   onSave,
+  setIsAddingLocation,
   lat,
   lng,
 }: SidebarNewLocationProps) => {
@@ -24,7 +26,11 @@ const SidebarNewLocation = ({
   };
 
   return (
-    <PanelRight title='Add your Soundbite' onClose={onClose}>
+    <PanelRight
+      title='Add your Soundbite'
+      onClose={onClose}
+      setIsAddingLocation={setIsAddingLocation}
+    >
       <div className='space-y-4'>
         <p className='text-sm text-gray-600 dark:text-gray-400'>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

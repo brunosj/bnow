@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import localFont from 'next/font/local';
-
+import { siteMetadata } from './_components/Metadata';
 import { mergeOpenGraph } from './_utilities/mergeOpenGraph';
 import Header from './_components/Header';
 import HeaderV2 from './_components/HeaderV2';
@@ -40,12 +40,5 @@ export default async function RootLayout({
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SERVER_URL || 'https://payloadcms.com'
-  ),
-  twitter: {
-    card: 'summary_large_image',
-    creator: '@payloadcms',
-  },
-  openGraph: mergeOpenGraph(),
+  ...siteMetadata,
 };

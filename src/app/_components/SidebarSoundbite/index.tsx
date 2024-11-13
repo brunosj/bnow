@@ -10,13 +10,22 @@ import { RichText } from '../RichText';
 interface SidebarSoundbiteProps {
   soundbite: Soundbite;
   onClose: () => void;
+  setIsAddingLocation: (value: boolean) => void; // Add this
 }
 
-const SidebarSoundbite = ({ soundbite, onClose }: SidebarSoundbiteProps) => {
+const SidebarSoundbite = ({
+  soundbite,
+  onClose,
+  setIsAddingLocation,
+}: SidebarSoundbiteProps) => {
   const { color } = categoryStyles[soundbite.category] || defaultStyle;
 
   return (
-    <PanelRight title='' onClose={onClose}>
+    <PanelRight
+      title=''
+      onClose={onClose}
+      setIsAddingLocation={setIsAddingLocation}
+    >
       <section className='space-y-6'>
         <div>
           <h4 className=''>{soundbite.title}</h4>

@@ -1,0 +1,70 @@
+.hamburger {
+  width: 24px;
+  height: 16px;
+  position: relative;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.line {
+  display: block;
+  height: 1.5px;
+  width: 100%;
+  background: white;
+  border-radius: 1px;
+  transition: transform 0.3s ease-in-out;
+  transform-origin: center;
+  position: relative;
+}
+
+/* Different lengths for each line */
+.line:nth-child(1) {
+  width: 100%;
+}
+
+.line:nth-child(2) {
+  width: 75%;
+  margin-left: 0;
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+}
+
+.line:nth-child(3) {
+  width: 50%;
+  margin-left: 0;
+  transition:
+    transform 0.3s ease-in-out,
+    width 0.3s ease-in-out;
+}
+
+/* Active state transformations */
+.hamburger.active .line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.active .line:nth-child(2) {
+  opacity: 0;
+  transform: translateX(-8px);
+}
+
+.hamburger.active .line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+  width: 100%;
+}
+
+/* Focus state for accessibility */
+.hamburger:focus {
+  outline: none;
+}
+
+.hamburger:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+  border-radius: 2px;
+}

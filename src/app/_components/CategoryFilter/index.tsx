@@ -41,48 +41,30 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   };
 
   return (
-    <div className='flex flex-wrap gap-x-4 gap-y-3'>
-      {/* Render a button for each category */}
-      {categories.map((category) => (
-        <button
-          key={category}
-          className={`flex items-center rounded-md`}
-          onClick={() => toggleCategory(category)} // Toggle the category
-        >
-          {/* <div
-            className={`flex items-center ${
-              selectedCategories.includes(category) ? 'border-white ' : ''
-            } rounded-full`}
-          >
-            <CustomMarker category={category} />
-          </div> */}
-          <span
-            className={`px-3 py-1 text-sm font-medium rounded-md ${
-              selectedCategories.includes(category)
-                ? 'border-white border-[1px] opacity-75'
-                : ''
-            }`}
-            style={{
-              backgroundColor: selectedCategories.includes(category)
-                ? 'transparent'
-                : 'white',
-              color: selectedCategories.includes(category) ? 'white' : 'black',
-            }}
+    <section className='space-y-3'>
+      <p className='font-semibold text-white'>Categories</p>
+
+      <div className='flex flex-wrap gap-x-4 gap-y-3'>
+        {/* Render a button for each category */}
+        {categories.map((category) => (
+          <button
+            key={category}
+            className={`flex items-center`}
+            onClick={() => toggleCategory(category)}
           >
             <span
-              className='text-sm'
-              style={{
-                color: selectedCategories.includes(category)
-                  ? 'white'
-                  : getCategoryColor(category, true),
-              }}
+              className={`rounded-3xl px-3 py-1 text-sm font-medium border-white border-[1px]  ${
+                selectedCategories.includes(category)
+                  ? 'opacity-50'
+                  : 'opacity-100'
+              }`}
             >
               {generateLabel(category)}
             </span>
-          </span>
-        </button>
-      ))}
-    </div>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 };
 

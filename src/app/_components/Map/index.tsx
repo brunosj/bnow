@@ -2,7 +2,7 @@
 
 import type { Soundbite, Page, Menu } from '../../../payload/payload-types';
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import MapComponent from '../MapComponent';
 import PanelLeft from '../PanelLeft';
 import SidebarSoundbite from '../SidebarSoundbite';
@@ -12,6 +12,7 @@ import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 import Header from '../Header';
 import { isWithinBirmingham } from '../../_utilities/isWithinBirmingham';
 import SidebarInfo from '../SidebarInfo';
+import { MapRef } from 'react-map-gl';
 
 interface MapViewProps {
   soundbites: Soundbite[];
@@ -148,19 +149,14 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
 
   useEffect(() => {
     setVisibleSoundbites(filteredSoundbites);
-  }, [filteredSoundbites]);
-
-  const mapStyles = useMemo(
-    () => ({
-      // your map styles
-    }),
-    []
-  ); // Only recreate when theme changes
+  }, [selectedCategories]);
 
   // Add this to track state changes
   useEffect(() => {
     console.log('isAddingLocation changed to:', isAddingLocation);
   }, [isAddingLocation]);
+
+  const mapRef = useRef<MapRef>(null);
 
   return (
     <div className='h-[100vh] flex z-100 max-w-full relative'>
@@ -184,6 +180,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         isAddingLocation={isAddingLocation}
         setIsAddingLocation={setIsAddingLocation}
         onVisibleSoundbitesChange={handleVisibleSoundbitesChange}
+        ref={mapRef}
       />
 
       {/* Latitude and Longitude info box */}
@@ -211,6 +208,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         isMenuOpen={isMenuOpen}
         onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
         setIsAddingLocation={setIsAddingLocation}
+        mapRef={mapRef}
       />
 
       {/* Sidebar for soundbite details */}

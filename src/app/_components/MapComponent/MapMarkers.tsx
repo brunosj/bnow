@@ -15,6 +15,15 @@ const MapMarkers = ({
   onMarkerClick,
   mapRef,
 }: MapMarkersProps) => {
+  const handleMarkerClick = (soundbite: Soundbite) => {
+    mapRef.current?.flyTo({
+      center: [soundbite.coordinates.longitude, soundbite.coordinates.latitude],
+      zoom: 15,
+      duration: 1500,
+    });
+    onMarkerClick(soundbite);
+  };
+
   return (
     <>
       {soundbites.map((soundbite) => (
@@ -26,7 +35,7 @@ const MapMarkers = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onMarkerClick(soundbite);
+              handleMarkerClick(soundbite);
             }}
             type='button'
             style={{

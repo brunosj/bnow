@@ -1,11 +1,12 @@
 import type { Soundbite, Page, Menu } from '../../../payload/payload-types';
 import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import PanelLeftHeader from './Header';
 import ToggleButton from './ToggleButton';
 import PanelLeftMenu from './Menu';
 import PanelLeftSoundbites from './Soundbites';
+import type { Map as MapboxMap, MapRef } from 'react-map-gl';
 
 interface PanelLeftProps {
   soundbites: Soundbite[];
@@ -22,6 +23,7 @@ interface PanelLeftProps {
   isMenuOpen: boolean;
   onToggleMenu: () => void;
   setIsAddingLocation: (value: boolean) => void;
+  mapRef?: React.RefObject<MapRef>;
 }
 
 const PanelLeft: React.FC<PanelLeftProps> = ({
@@ -38,6 +40,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
   isMenuOpen,
   onToggleMenu,
   setIsAddingLocation,
+  mapRef,
 }) => {
   const handleInfoClick = () => {
     const howToUsePage = pages.find((p) => p.slug === 'how-to-use-the-site')!;
@@ -69,6 +72,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
               selectedCategories,
               onSelectCategory,
               onSelectSoundbite,
+              mapRef,
             }}
           />
         )}

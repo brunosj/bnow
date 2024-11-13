@@ -1,5 +1,5 @@
 // SidebarAudioPlayer.tsx
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import 'react-h5-audio-player/lib/styles.css';
 import type { Audio } from '../../../payload/payload-types';
 import AudioPlayer from '../AudioPlayer';
@@ -12,6 +12,8 @@ interface SoundbiteAudioPlayerProps {
 }
 
 const SoundbiteAudioPlayerV2 = ({ audioGroup }: SoundbiteAudioPlayerProps) => {
+  const [currentTrack, setCurrentTrack] = useState(0);
+
   const audioUrl =
     typeof audioGroup?.audioUpload === 'object' && audioGroup.audioUpload?.url
       ? audioGroup.audioUpload.url
@@ -19,7 +21,15 @@ const SoundbiteAudioPlayerV2 = ({ audioGroup }: SoundbiteAudioPlayerProps) => {
 
   if (!audioUrl) return null;
 
-  return <AudioPlayer audioUrl={audioUrl} hasMultipleTracks={false} />;
+  return (
+    <div>
+      <AudioPlayer
+        key={currentTrack}
+        audioUrl={audioUrl}
+        hasMultipleTracks={false}
+      />
+    </div>
+  );
 };
 
 export default SoundbiteAudioPlayerV2;

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Plyr, { APITypes } from 'plyr-react';
 import 'plyr-react/plyr.css';
 import {
@@ -26,6 +26,7 @@ const AudioPlayer = ({
 }: AudioPlayerProps) => {
   const playerRef = useRef<APITypes>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [player, setPlayer] = useState<Plyr | null>(null);
 
   const controls = ['play', 'progress', 'current-time', 'duration'];
 
@@ -61,6 +62,15 @@ const AudioPlayer = ({
       </button>
     </div>
   );
+
+  useEffect(() => {
+    if (player) {
+      player.source = {
+        type: 'audio',
+        sources: [{ src: audioUrl }],
+      };
+    }
+  }, [audioUrl, player]);
 
   return (
     <div className='space-y-2 text'>

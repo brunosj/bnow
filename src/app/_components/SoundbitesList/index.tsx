@@ -1,5 +1,5 @@
 // components/SoundbitesList.tsx
-import React from 'react';
+import React, { useCallback } from 'react';
 import SoundbiteCard from '../SoundbiteCard';
 import type { Soundbite } from '../../../payload/payload-types';
 import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
@@ -17,17 +17,21 @@ const SoundbitesListItem = React.memo(
   }: {
     soundbite: Soundbite;
     onSelectSoundbite: (soundbite: Soundbite) => void;
-  }) => (
-    <li
-      key={soundbite.id}
-      className='rounded-3xl overflow-y-auto shadow-lg p-2 border-white border-[1px] border-opacity-25'
-    >
-      <SoundbiteCard
-        soundbite={soundbite}
-        onClick={() => onSelectSoundbite(soundbite)}
-      />
-    </li>
-  )
+  }) => {
+    const handleClick = useCallback(() => {
+      console.log('SoundbitesListItem clicked'); // Debug log
+      onSelectSoundbite(soundbite);
+    }, [onSelectSoundbite, soundbite]);
+
+    return (
+      <li
+        key={soundbite.id}
+        className='rounded-3xl overflow-y-auto shadow-lg p-2 border-white border-[1px] border-opacity-25'
+      >
+        <SoundbiteCard soundbite={soundbite} onClick={handleClick} />
+      </li>
+    );
+  }
 );
 
 SoundbitesListItem.displayName = 'SoundbitesListItem';

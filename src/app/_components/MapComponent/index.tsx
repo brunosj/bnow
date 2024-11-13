@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTheme } from 'next-themes';
 import Map, { MapRef, Map as MapType } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -24,146 +24,161 @@ interface MapComponentProps {
   setIsAddingLocation: (value: boolean) => void;
 }
 
-const MapComponent = ({
-  mapboxToken,
-  soundbites,
-  selectedMarker,
-  newLocation,
-  onAddLocation,
-  onMarkerClick,
-  onCenterChange,
-  onInfoClick,
-  isLeftPanelOpen,
-  isAddingLocation,
-  setIsAddingLocation,
-}: MapComponentProps) => {
-  const [map, setMap] = useState<MapRef | null>(null);
-  const mapRef = useRef<MapRef | null>(null);
-  const { theme } = useTheme();
-  const [mapStyle, setMapStyle] = useState(MAPBOX_THEME_LIGHT);
+const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
+  (
+    {
+      mapboxToken,
+      soundbites,
+      selectedMarker,
+      newLocation,
+      onAddLocation,
+      onMarkerClick,
+      onCenterChange,
+      onInfoClick,
+      isLeftPanelOpen,
+      isAddingLocation,
+      setIsAddingLocation,
+    }: MapComponentProps,
+    ref
+  ) => {
+    const { theme } = useTheme();
+    const [mapStyle, setMapStyle] = useState(MAPBOX_THEME_LIGHT);
+    const [mapLoaded, setMapLoaded] = useState(false);
 
-  const geojsonData = useMemo(
-    () => ({
-      type: 'FeatureCollection' as const,
-      features: soundbites.map((soundbite) => ({
-        type: 'Feature' as const,
-        properties: {
-          id: soundbite.id,
-          category: soundbite.category,
-        },
-        geometry: {
-          type: 'Point' as const,
-          coordinates: [
-            soundbite.coordinates.longitude,
-            soundbite.coordinates.latitude,
-          ],
-        },
-      })),
-    }),
-    [soundbites]
-  );
+    const geojsonData = useMemo(
+      () => ({
+        type: 'FeatureCollection' as const,
+        features: soundbites.map((soundbite) => ({
+          type: 'Feature' as const,
+          properties: {
+            id: soundbite.id,
+            category: soundbite.category,
+          },
+          geometry: {
+            type: 'Point' as const,
+            coordinates: [
+              soundbite.coordinates.longitude,
+              soundbite.coordinates.latitude,
+            ],
+          },
+        })),
+      }),
+      [soundbites]
+    );
 
-  const { initializeClusters } = ClusterLayer({
-    geojsonData,
-    isAddingLocation,
-  });
+    const { initializeClusters } = ClusterLayer({
+      geojsonData,
+      isAddingLocation,
+    });
 
-  const handleMapMove = useCallback(() => {
-    if (mapRef.current) {
-      const center = mapRef.current.getMap().getCenter();
-      onCenterChange?.(center.lat, center.lng);
-    }
-  }, [onCenterChange]);
+    const handleMapMove = useCallback(() => {
+      if (ref && 'current' in ref && ref.current) {
+        const center = ref.current.getMap().getCenter();
+        onCenterChange?.(center.lat, center.lng);
+      }
+    }, [onCenterChange, ref]);
 
-  useEffect(() => {
-    setMapStyle(theme === 'dark' ? MAPBOX_THEME_DARK : MAPBOX_THEME_LIGHT);
-  }, [theme]);
+    useEffect(() => {
+      setMapStyle(theme === 'dark' ? MAPBOX_THEME_DARK : MAPBOX_THEME_LIGHT);
+    }, [theme]);
 
-  useEffect(() => {
-    if (mapRef.current) {
-      const map = mapRef.current.getMap();
-      map.once('style.load', () => {
+    useEffect(() => {
+      if (!ref || !('current' in ref) || !ref.current || !mapLoaded) return;
+
+      const map = ref.current.getMap();
+
+      if (map.isStyleLoaded()) {
         initializeClusters(map);
-      });
-    }
-  }, [mapStyle, initializeClusters]);
+      } else {
+        map.once('style.load', () => {
+          initializeClusters(map);
+        });
+      }
+    }, [mapStyle, mapLoaded, initializeClusters, ref]);
 
-  return (
-    <Map
-      mapboxAccessToken={mapboxToken}
-      mapStyle={mapStyle}
-      initialViewState={{
-        latitude: 52.489471,
-        longitude: -1.898575,
-        zoom: 12,
-      }}
-      interactiveLayerIds={['clusters']}
-      ref={(instance) => {
-        if (instance && !mapRef.current) {
-          mapRef.current = instance;
-          setMap(instance);
-        }
-      }}
-      onClick={(e) => {
-        const features = mapRef.current
-          ?.getMap()
-          .queryRenderedFeatures(e.point, {
-            layers: ['clusters'],
-          });
+    const customCursor = `data:image/svg+xml;base64,${btoa(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="14" fill="black"/>
+      <path d="M16 9v14M9 16h14" stroke="white" stroke-width="2"/>
+    </svg>
+    `)}`;
 
-        if (features?.length && !isAddingLocation) {
-          const clusterId = features[0].properties.cluster_id;
-          const mapboxSource = mapRef.current
-            ?.getMap()
-            .getSource('soundbites') as mapboxgl.GeoJSONSource;
+    return (
+      <Map
+        mapboxAccessToken={mapboxToken}
+        mapStyle={mapStyle}
+        initialViewState={{
+          latitude: 52.489471,
+          longitude: -1.898575,
+          zoom: 12,
+        }}
+        interactiveLayerIds={['clusters']}
+        ref={ref}
+        onLoad={() => setMapLoaded(true)}
+        onClick={(e) => {
+          if (!ref || !('current' in ref)) return;
 
-          mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
-            if (err) return;
-
-            mapRef.current?.flyTo({
-              center: (features[0].geometry as any).coordinates,
-              zoom,
+          const map = ref.current.getMap();
+          if (map.getLayer('clusters')) {
+            const features = map.queryRenderedFeatures(e.point, {
+              layers: ['clusters'],
             });
-          });
-        } else if (isAddingLocation) {
-          if (!features?.length) {
-            onAddLocation(e);
+
+            if (features?.length && !isAddingLocation) {
+              const clusterId = features[0].properties.cluster_id;
+              const mapboxSource = ref.current
+                ?.getMap()
+                .getSource('soundbites') as mapboxgl.GeoJSONSource;
+
+              mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
+                if (err) return;
+
+                ref.current?.flyTo({
+                  center: (features[0].geometry as any).coordinates,
+                  zoom,
+                });
+              });
+            } else if (isAddingLocation) {
+              if (!features?.length) {
+                onAddLocation(e);
+              }
+            }
           }
-        }
-      }}
-      onMouseMove={(e) => {
-        const features = mapRef.current
-          ?.getMap()
-          .queryRenderedFeatures(e.point, {
-            layers: ['clusters'],
-          });
+        }}
+        onMouseMove={(e) => {
+          const features =
+            ref && 'current' in ref && ref.current
+              ? ref.current.getMap().queryRenderedFeatures(e.point, {
+                  layers: ['clusters'],
+                })
+              : [];
 
-        e.target.getCanvas().style.cursor = isAddingLocation
-          ? 'crosshair'
-          : features?.length
-            ? 'pointer'
-            : 'grab';
-      }}
-      onMove={handleMapMove}
-      onLoad={(e) => {
-        initializeClusters(e.target);
-      }}
-    >
-      <MapControls
-        isLeftPanelOpen={isLeftPanelOpen}
-        isAddingLocation={isAddingLocation}
-        onInfoClick={onInfoClick}
-        setIsAddingLocation={setIsAddingLocation}
-      />
+          e.target.getCanvas().style.cursor = isAddingLocation
+            ? `url('${customCursor}') 16 16, crosshair`
+            : features?.length
+              ? 'pointer'
+              : 'grab';
+        }}
+        onMove={handleMapMove}
+      >
+        <MapControls
+          isLeftPanelOpen={isLeftPanelOpen}
+          isAddingLocation={isAddingLocation}
+          onInfoClick={onInfoClick}
+          setIsAddingLocation={setIsAddingLocation}
+        />
 
-      <MapMarkers
-        soundbites={soundbites}
-        newLocation={newLocation}
-        onMarkerClick={onMarkerClick}
-        mapRef={mapRef as React.RefObject<MapRef>}
-      />
-    </Map>
-  );
-};
+        <MapMarkers
+          soundbites={soundbites}
+          newLocation={newLocation}
+          onMarkerClick={onMarkerClick}
+          mapRef={ref as React.RefObject<MapRef>}
+        />
+      </Map>
+    );
+  }
+);
+
+MapComponent.displayName = 'MapComponent';
 
 export default MapComponent;

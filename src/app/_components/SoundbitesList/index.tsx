@@ -6,30 +6,32 @@ import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 
 interface SoundbitesListProps {
   soundbites: Soundbite[];
+  categories: SoundbiteCategory[];
   selectedCategories: SoundbiteCategory[];
   onSelectSoundbite: (soundbite: Soundbite) => void;
+  selectedSoundbiteId?: string;
 }
 
 const SoundbitesListItem = React.memo(
   ({
     soundbite,
     onSelectSoundbite,
+    selectedSoundbiteId,
   }: {
     soundbite: Soundbite;
     onSelectSoundbite: (soundbite: Soundbite) => void;
+    selectedSoundbiteId?: string;
   }) => {
     const handleClick = useCallback(() => {
-      console.log('SoundbitesListItem clicked'); // Debug log
       onSelectSoundbite(soundbite);
     }, [onSelectSoundbite, soundbite]);
 
     return (
-      <li
-        key={soundbite.id}
-        className='rounded-3xl overflow-y-auto shadow-lg p-2 border-white border-[1px] border-opacity-25'
-      >
-        <SoundbiteCard soundbite={soundbite} onClick={handleClick} />
-      </li>
+      <SoundbiteCard
+        soundbite={soundbite}
+        onClick={handleClick}
+        isSelected={selectedSoundbiteId === soundbite.id}
+      />
     );
   }
 );
@@ -39,24 +41,27 @@ SoundbitesListItem.displayName = 'SoundbitesListItem';
 const SoundbitesList = React.memo(
   ({
     soundbites,
+    categories,
     selectedCategories,
     onSelectSoundbite,
+    selectedSoundbiteId,
   }: SoundbitesListProps) => {
-    if (selectedCategories.length == soundbites.length) {
+    if (selectedCategories.length === categories.length) {
       return (
-        <p className='text-gray-500 text-center  px-4'>
+        <p className='text-center'>
           Please select categories to view Soundbites
         </p>
       );
     }
 
     return (
-      <ul className='space-y-3 overflow-y-auto h-full px-4'>
+      <ul className='space-y-2 lg:space-y-4 overflow-y-auto h-[92%] px-4'>
         {soundbites.map((soundbite) => (
           <SoundbitesListItem
             key={soundbite.id}
             soundbite={soundbite}
             onSelectSoundbite={onSelectSoundbite}
+            selectedSoundbiteId={selectedSoundbiteId}
           />
         ))}
       </ul>

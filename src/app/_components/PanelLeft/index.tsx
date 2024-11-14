@@ -24,6 +24,7 @@ interface PanelLeftProps {
   onToggleMenu: () => void;
   setIsAddingLocation: (value: boolean) => void;
   mapRef?: React.RefObject<MapRef>;
+  selectedSoundbiteId?: string;
 }
 
 const PanelLeft: React.FC<PanelLeftProps> = ({
@@ -41,6 +42,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
   onToggleMenu,
   setIsAddingLocation,
   mapRef,
+  selectedSoundbiteId,
 }) => {
   const handleInfoClick = () => {
     const howToUsePage = pages.find((p) => p.slug === 'how-to-use-the-site')!;
@@ -73,6 +75,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
               onSelectCategory,
               onSelectSoundbite,
               mapRef,
+              selectedSoundbiteId,
             }}
           />
         )}

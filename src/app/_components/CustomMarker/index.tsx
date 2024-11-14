@@ -5,21 +5,22 @@ import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
 
 interface CustomMarkerProps {
   category: SoundbiteCategory | 'blank';
+  isSelected?: boolean;
 }
 
-const CustomMarker: React.FC<CustomMarkerProps> = ({ category }) => {
-  // Get the styles for the category or fall back to the default style
+const CustomMarker: React.FC<CustomMarkerProps> = ({
+  category,
+  isSelected = false,
+}) => {
   const { icon, color } = categoryStyles[category] || defaultStyle;
+
   return (
     <div
-      className={`relative w-8 h-8 bg-${color} rounded-full flex items-center justify-center hover:bg-opacity-50 transition-all duration-300 shrink-0`}
+      className={`relative w-10 h-10 bg-${color} rounded-full flex items-center justify-center hover:bg-opacity-50 transition-all duration-300 shrink-0 border-white ${
+        isSelected ? 'border-4 ' : 'border-[1px] '
+      }`}
       style={{ backgroundColor: `${color}` }}
     >
-      {/* Marker Shape */}
-      {/* <div
-        className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1 w-2 h-2 bg-[${color} rounded-full z-0`}
-      /> */}
-      {/* Icon inside the marker */}
       <div className='relative z-10'>{icon}</div>
     </div>
   );

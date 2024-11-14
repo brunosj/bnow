@@ -22,7 +22,6 @@ const SidebarSoundbite = ({
   const { color } = categoryStyles[soundbite.category] || defaultStyle;
   const [isTranscriptOpen, setIsTranscriptOpen] = useState(false);
 
-  console.log(soundbite);
   return (
     <PanelRight
       title=''

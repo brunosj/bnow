@@ -41,11 +41,35 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
     lng: -1.898575,
   });
 
-  // Soundbites category filter
+  // Categories for filtering
+  const categories: SoundbiteCategory[] = [
+    ...new Set(soundbites.map((s) => s.category)),
+  ];
+
+  const categoryCount = useMemo(() => {
+    const counts = new Map<SoundbiteCategory, number>();
+    soundbites.forEach((s) => {
+      counts.set(s.category, (counts.get(s.category) || 0) + 1);
+    });
+    return counts;
+  }, [soundbites]);
+
+  // Initialize selectedCategories with the least frequent category
   const [selectedCategories, setSelectedCategories] = useState<
     SoundbiteCategory[]
-  >([]);
+  >(() => {
+    let minCategory = categories[0];
+    let minCount = Infinity;
+    categoryCount.forEach((count, category) => {
+      if (count < minCount) {
+        minCount = count;
+        minCategory = category;
+      }
+    });
+    return [minCategory];
+  });
 
+  // Filtered soundbites based on status and selected categories
   const filteredSoundbites = soundbites.filter((soundbite) => {
     return (
       soundbite.status === 'published' &&
@@ -54,22 +78,19 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
     );
   });
 
-  const categories: SoundbiteCategory[] = [
-    ...new Set(soundbites.map((s) => s.category)),
-  ];
-
   // Panels functionality
   const [rightPanelType, setRightPanelType] = useState<RightSidebarType>(null);
   const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAddingLocation, setIsAddingLocation] = useState(false);
 
+  // Toggles the left sidebar
   const toggleSidebar = () => {
     setIsLeftPanelOpen(!isLeftPanelOpen);
   };
 
+  // Closes the right sidebar
   const closeRightPanel = useCallback(() => {
-    console.log('closeRightPanel called');
     setRightPanelType(null);
     setSelectedMarker(null);
     setNewLocation(null);
@@ -107,11 +128,11 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
     if (newLocation) {
       if (isWithinBirmingham(lat, lng)) {
         setNewLocation({ latitude: lat, longitude: lng });
-        setInitialLocation({ latitude: lat, longitude: lng }); // Update initial location
+        setInitialLocation({ latitude: lat, longitude: lng });
       } else {
         alert('Location is outside the boundaries of Birmingham.');
         if (initialLocation) {
-          setNewLocation(initialLocation); // Reset to initial location
+          setNewLocation(initialLocation);
         }
       }
     }
@@ -127,16 +148,15 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
   // Update the info click handler
   const handleInfoClick = (slug: string) => {
     if (rightPanelType === 'info') {
-      // If info panel is already open, close it
       setRightPanelType(null);
     } else {
-      // Otherwise open it and turn off adding location
       setRightPanelType('info');
       setIsAddingLocation(false);
       setSelectedPage(pages.find((p) => p.slug === slug));
     }
   };
 
+  // Visible soundbites based on viewport
   const [visibleSoundbites, setVisibleSoundbites] =
     useState<Soundbite[]>(filteredSoundbites);
 
@@ -151,11 +171,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
     setVisibleSoundbites(filteredSoundbites);
   }, [selectedCategories]);
 
-  // Add this to track state changes
-  useEffect(() => {
-    console.log('isAddingLocation changed to:', isAddingLocation);
-  }, [isAddingLocation]);
-
+  // Map ref for mapbox
   const mapRef = useRef<MapRef>(null);
 
   return (
@@ -181,6 +197,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         setIsAddingLocation={setIsAddingLocation}
         onVisibleSoundbitesChange={handleVisibleSoundbitesChange}
         ref={mapRef}
+        selectedSoundbiteId={selectedMarker?.id}
       />
 
       {/* Latitude and Longitude info box */}
@@ -209,6 +226,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
         setIsAddingLocation={setIsAddingLocation}
         mapRef={mapRef}
+        selectedSoundbiteId={selectedMarker?.id} // Add this prop
       />
 
       {/* Sidebar for soundbite details */}

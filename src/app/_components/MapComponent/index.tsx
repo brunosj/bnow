@@ -103,6 +103,66 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
     </svg>
     `)}`;
 
+    const handleMapClick = useCallback(
+      (e: any) => {
+        if (!ref || !('current' in ref)) return;
+
+        const map = ref.current.getMap();
+        if (map.getLayer('clusters') && map.getSource('soundbites')) {
+          const features = map.queryRenderedFeatures(e.point, {
+            layers: ['clusters'],
+          });
+
+          if (features?.length && !isAddingLocation) {
+            const clusterId = features[0].properties.cluster_id;
+            const mapboxSource = map.getSource(
+              'soundbites'
+            ) as mapboxgl.GeoJSONSource;
+
+            mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
+              if (err) return;
+
+              ref.current?.flyTo({
+                center: (features[0].geometry as any).coordinates,
+                zoom,
+              });
+            });
+          } else if (isAddingLocation && !features?.length) {
+            onAddLocation(e);
+          }
+        } else if (isAddingLocation) {
+          onAddLocation(e);
+        }
+      },
+      [ref, isAddingLocation, onAddLocation]
+    );
+
+    const handleMouseMove = useCallback(
+      (e: any) => {
+        if (!ref || !('current' in ref)) return;
+
+        const map = ref.current.getMap();
+        let cursor = 'grab';
+
+        if (map.getLayer('clusters')) {
+          const features = map.queryRenderedFeatures(e.point, {
+            layers: ['clusters'],
+          });
+
+          if (isAddingLocation) {
+            cursor = `url('${customCursor}') 16 16, crosshair`;
+          } else if (features?.length) {
+            cursor = 'pointer';
+          }
+        } else if (isAddingLocation) {
+          cursor = `url('${customCursor}') 16 16, crosshair`;
+        }
+
+        e.target.getCanvas().style.cursor = cursor;
+      },
+      [ref, isAddingLocation, customCursor]
+    );
+
     return (
       <Map
         mapboxAccessToken={mapboxToken}
@@ -115,50 +175,8 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
         interactiveLayerIds={['clusters']}
         ref={ref}
         onLoad={() => setMapLoaded(true)}
-        onClick={(e) => {
-          if (!ref || !('current' in ref)) return;
-
-          const map = ref.current.getMap();
-          if (map.getLayer('clusters')) {
-            const features = map.queryRenderedFeatures(e.point, {
-              layers: ['clusters'],
-            });
-
-            if (features?.length && !isAddingLocation) {
-              const clusterId = features[0].properties.cluster_id;
-              const mapboxSource = ref.current
-                ?.getMap()
-                .getSource('soundbites') as mapboxgl.GeoJSONSource;
-
-              mapboxSource.getClusterExpansionZoom(clusterId, (err, zoom) => {
-                if (err) return;
-
-                ref.current?.flyTo({
-                  center: (features[0].geometry as any).coordinates,
-                  zoom,
-                });
-              });
-            } else if (isAddingLocation) {
-              if (!features?.length) {
-                onAddLocation(e);
-              }
-            }
-          }
-        }}
-        onMouseMove={(e) => {
-          const features =
-            ref && 'current' in ref && ref.current
-              ? ref.current.getMap().queryRenderedFeatures(e.point, {
-                  layers: ['clusters'],
-                })
-              : [];
-
-          e.target.getCanvas().style.cursor = isAddingLocation
-            ? `url('${customCursor}') 16 16, crosshair`
-            : features?.length
-              ? 'pointer'
-              : 'grab';
-        }}
+        onClick={handleMapClick}
+        onMouseMove={handleMouseMove}
         onMove={handleMapMove}
       >
         <MapControls
@@ -173,6 +191,7 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
           newLocation={newLocation}
           onMarkerClick={onMarkerClick}
           mapRef={ref as React.RefObject<MapRef>}
+          selectedSoundbiteId={selectedMarker?.id}
         />
       </Map>
     );

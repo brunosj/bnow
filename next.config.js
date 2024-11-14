@@ -2,6 +2,36 @@
 const ContentSecurityPolicy = require('./csp');
 const redirects = require('./redirects');
 
+const allowedDomains = [
+  process.env.NEXT_PUBLIC_PAYLOAD_URL,
+  process.env.NEXT_PUBLIC_FRONTEND_URL,
+  'https://api.mapbox.com',
+  'https://events.mapbox.com',
+  'https://*.tiles.mapbox.com',
+  'https://events.mapbox.com/events/v2*',
+  'https://*.mapbox.com',
+  'https://cdn.plyr.io',
+];
+
+const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' ${allowedDomains.join(' ')};
+    style-src 'self' 'unsafe-inline' ${allowedDomains.join(' ')};
+    img-src 'self' data: blob: ${allowedDomains.join(' ')};
+    media-src 'self' blob: ${allowedDomains.join(' ')};
+    frame-src 'self' ${allowedDomains.join(' ')};
+    font-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self' ${allowedDomains.join(' ')};
+    frame-ancestors 'none';
+    connect-src 'self' ${allowedDomains.join(' ')};
+    worker-src 'self' blob:;
+    upgrade-insecure-requests;
+`
+  .replace(/\s{2,}/g, ' ')
+  .trim();
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -14,10 +44,6 @@ const nextConfig = {
   async headers() {
     const headers = [];
 
-    // Prevent search engines from indexing the site if it is not live
-    // This is useful for staging environments before they are ready to go live
-    // To allow robots to crawl the site, use the `NEXT_PUBLIC_IS_LIVE` env variable
-    // You may want to also use this variable to conditionally render any tracking scripts
     if (!process.env.NEXT_PUBLIC_IS_LIVE) {
       headers.push({
         headers: [
@@ -33,15 +59,15 @@ const nextConfig = {
     // Set the `Content-Security-Policy` header as a security measure to prevent XSS attacks
     // It works by explicitly whitelisting trusted sources of content for your website
     // This will block all inline scripts and styles except for those that are allowed
-    // headers.push({
-    //   source: '/(.*)',
-    //   headers: [
-    //     {
-    //       key: 'Content-Security-Policy',
-    //       value: ContentSecurityPolicy,
-    //     },
-    //   ],
-    // })
+    headers.push({
+      source: '/(.*)',
+      headers: [
+        {
+          key: 'Content-Security-Policy',
+          value: cspHeader.replace(/\n/g, ''),
+        },
+      ],
+    });
 
     return headers;
   },

@@ -8,11 +8,13 @@ import { generateLabel } from '../../_utilities/soundbitesCategories';
 interface SoundbiteCardProps {
   soundbite: Soundbite;
   onClick: () => void;
+  isSelected?: boolean;
 }
 
 const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
   soundbite,
   onClick,
+  isSelected = false,
 }) => {
   const { color } = categoryStyles[soundbite.category] || defaultStyle;
 
@@ -21,21 +23,28 @@ const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
   };
 
   return (
-    <div onClick={handleClick} className={`cursor-pointer`}>
-      <div className='flex items-center space-x-2'>
+    <li
+      key={soundbite.id}
+      onClick={handleClick}
+      className={`cursor-pointer transition-all duration-300  rounded-[2rem] overflow-y-auto border-white shadow-lg p-2  ${
+        isSelected
+          ? 'border-opacity-100 border-2'
+          : 'border-[1px] border-opacity-25'
+      }`}
+    >
+      <div className='flex items-center space-x-3'>
         <CustomMarker category={soundbite.category} />
         <div>
-          <p className='text-sm font-semibold '>{soundbite.title}</p>
+          <p className='text-sm lg:text-base font-medium'>{soundbite.title}</p>
           <div className='flex space-x-2 items-center'>
             {soundbite.year && (
               <>
-                <span className='text-xs'>{soundbite.year}</span>
+                <span className='text-xs lg:text-sm'>{soundbite.year}</span>
                 <span className='mr-2'>•</span>
               </>
             )}
             <span
-              className=' text-xs'
-
+              className='text-xs lg:text-sm'
               // style={{ color: ` ${color}` }}
             >
               {generateLabel(soundbite.category)}
@@ -43,7 +52,7 @@ const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </li>
   );
 };
 

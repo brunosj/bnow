@@ -53,9 +53,9 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
             onClick={() => toggleCategory(category)}
           >
             <span
-              className={`rounded-3xl px-3 py-1 text-sm font-medium border-white border-[1px]  ${
+              className={`rounded-3xl px-3 py-1 text-sm  border-white border-[1px]  ${
                 selectedCategories.includes(category)
-                  ? 'opacity-50'
+                  ? 'opacity-35 '
                   : 'opacity-100'
               }`}
             >

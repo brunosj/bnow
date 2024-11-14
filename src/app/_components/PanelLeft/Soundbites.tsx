@@ -13,6 +13,7 @@ interface PanelLeftSoundbitesProps {
   onSelectCategory: (categories: SoundbiteCategory[]) => void;
   onSelectSoundbite: (soundbite: Soundbite) => void;
   mapRef?: React.RefObject<MapRef>;
+  selectedSoundbiteId?: string;
 }
 
 const PanelLeftSoundbites = React.memo(
@@ -23,6 +24,7 @@ const PanelLeftSoundbites = React.memo(
     onSelectCategory,
     onSelectSoundbite,
     mapRef,
+    selectedSoundbiteId,
   }: PanelLeftSoundbitesProps) => {
     // Memoize filtered soundbites
     const filteredSoundbites = useMemo(() => {
@@ -34,15 +36,9 @@ const PanelLeftSoundbites = React.memo(
 
     const handleSoundbiteClick = useCallback(
       (soundbite: Soundbite) => {
-        console.log('Soundbite clicked:', soundbite);
-        console.log('mapRef exists:', !!mapRef);
-        console.log('mapRef.current exists:', !!mapRef?.current);
-
         if (mapRef?.current) {
-          console.log('Flying to:', soundbite.coordinates);
           try {
             const map = mapRef.current.getMap();
-            console.log('Map instance:', !!map);
             map.flyTo({
               center: [
                 soundbite.coordinates.longitude,
@@ -69,11 +65,13 @@ const PanelLeftSoundbites = React.memo(
             onSelectCategory={onSelectCategory}
           />
         </div>
-        <div className='pt-6 flex-1 overflow-hidden'>
+        <div className='py-6 flex-1 overflow-hidden'>
           <SoundbitesList
+            categories={categories}
             soundbites={filteredSoundbites}
             selectedCategories={selectedCategories}
             onSelectSoundbite={handleSoundbiteClick}
+            selectedSoundbiteId={selectedSoundbiteId}
           />
         </div>
       </div>

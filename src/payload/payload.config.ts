@@ -25,6 +25,16 @@ dotenv.config({
   path: path.resolve(__dirname, '../../.env'),
 });
 
+const getAllowedOrigins = () => {
+  const urls = [
+    process.env.PAYLOAD_PUBLIC_SERVER_URL,
+    `http://localhost:3000`,
+    `http://localhost:3001`,
+  ].filter(Boolean);
+
+  return urls;
+};
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -52,6 +62,6 @@ export default buildConfig({
   //     fileSize: 50 * 1024 * 1024,
   //   },
   // },
-  cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
-  csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
+  cors: getAllowedOrigins(),
+  csrf: getAllowedOrigins(),
 });

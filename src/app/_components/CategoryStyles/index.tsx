@@ -1,37 +1,40 @@
 // components/CategoryStyles.tsx
 import React from 'react';
-import { FaMusic, FaMicrophone, FaSoundcloud } from 'react-icons/fa';
-import { BsSoundwave } from 'react-icons/bs';
-import { PiUserSound } from 'react-icons/pi';
-import { GrDocumentSound } from 'react-icons/gr';
+import IconRenderer from '../IconRenderer';
 
-// Define the styles with just the color values
+// Import icons
+import soundIcon from '../../_assets/icons/sound.png';
+import oralHistoryIcon from '../../_assets/icons/oral-history.png';
+import interviewIcon from '../../_assets/icons/interview.png';
+import fieldRecordingIcon from '../../_assets/icons/field-recording.png';
+
+// Define the styles with imported icons
 const categoryStyles = {
   soundscapes: {
-    icon: <FaMusic className='text-black' size={18} />,
-    color: '#ca403e',
+    icon: <IconRenderer icon={soundIcon} />,
+    color: '#DC3036',
   },
   oral_history: {
-    icon: <PiUserSound className='text-black' size={18} />,
-    color: '#61bf62',
+    icon: <IconRenderer icon={oralHistoryIcon} />,
+    color: '#30C156',
   },
   interview: {
-    icon: <PiUserSound className='text-black' size={18} />,
-    color: '#dc9a36',
+    icon: <IconRenderer icon={interviewIcon} />,
+    color: '#E79601',
   },
   field_recording: {
-    icon: <BsSoundwave className='text-black' size={18} />,
-    color: '#408c90',
+    icon: <IconRenderer icon={fieldRecordingIcon} />,
+    color: '#098E91',
   },
   blank: {
-    icon: <GrDocumentSound className='text-black' size={18} />,
-    color: '#ffffff',
+    icon: <IconRenderer icon={fieldRecordingIcon} />,
+    color: '#000000',
   },
 };
 
 // Default style if category is not recognized
 export const defaultStyle = {
-  icon: <GrDocumentSound className='text-black' size={18} />,
+  icon: <IconRenderer icon={fieldRecordingIcon} />,
   color: '#ffffff',
 };
 

@@ -4,9 +4,12 @@
 import React from 'react';
 import { IoInformationCircleOutline } from 'react-icons/io5';
 import { BsQuestionCircleFill } from 'react-icons/bs';
-
+import LogoFull from '../../_assets/birmingham-now-logo-full.svg';
+import LogoWaves from '../../_assets/birmingham-now-logo-waves.svg';
 import { Page } from '../../../payload/payload-types';
 import classes from './index.module.css';
+import Image from 'next/image';
+import InfoIcon from '../../_assets/icons/info-icon.svg';
 
 interface PanelLeftHeaderProps {
   isMenuOpen: boolean;
@@ -34,11 +37,13 @@ const PanelLeftHeader: React.FC<PanelLeftHeaderProps> = ({
       </button>
 
       {/* Logo */}
-      <div className='text-lg font-bold flex flex-col leading-none'>
-        <span>Birmingham</span>
-        <span>NOW</span>
-      </div>
+      <Image
+        src={LogoFull}
+        alt='Birmingham NOW Logo'
+        className='w-32  object-contain'
+      />
 
+      {/* Theme Switcher */}
       {/* Theme Switcher */}
       <div className='flex items-center gap-4'>
         <button
@@ -46,7 +51,8 @@ const PanelLeftHeader: React.FC<PanelLeftHeaderProps> = ({
           className='text-white hover:text-gray-200 transition-colors'
           aria-label='Information'
         >
-          <BsQuestionCircleFill size={20} />
+          {/* <BsQuestionCircleFill size={20} /> */}
+          <Image src={InfoIcon} alt='Info Icon' className='w-6 h-6' />
         </button>
       </div>
     </div>

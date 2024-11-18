@@ -26,10 +26,8 @@ const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
     <li
       key={soundbite.id}
       onClick={handleClick}
-      className={`cursor-pointer transition-all duration-300  rounded-[2rem] overflow-y-auto border-white shadow-lg p-2  ${
-        isSelected
-          ? 'border-opacity-100 border-2'
-          : 'border-[1px] border-opacity-25'
+      className={`cursor-pointer transition-all duration-300  rounded-[2rem] overflow-y-auto  shadow-lg p-2 border-[1px] ${
+        isSelected ? 'border-white' : 'border-bnowPurple'
       }`}
     >
       <div className='flex items-center space-x-3'>

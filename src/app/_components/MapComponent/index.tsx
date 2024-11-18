@@ -18,6 +18,7 @@ interface MapComponentProps {
   onAddLocation: (e: { lngLat: { lat: number; lng: number } }) => void;
   onMarkerClick: (soundbite: Soundbite) => void;
   onCenterChange: (lat: number, lng: number) => void;
+  onLocationDragEnd: (lat: number, lng: number) => void;
   onInfoClick: () => void;
   isLeftPanelOpen: boolean;
   isAddingLocation: boolean;
@@ -34,6 +35,7 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
       onAddLocation,
       onMarkerClick,
       onCenterChange,
+      onLocationDragEnd,
       onInfoClick,
       isLeftPanelOpen,
       isAddingLocation,
@@ -190,6 +192,7 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
           soundbites={soundbites}
           newLocation={newLocation}
           onMarkerClick={onMarkerClick}
+          onLocationDragEnd={onLocationDragEnd}
           mapRef={ref as React.RefObject<MapRef>}
           selectedSoundbiteId={selectedMarker?.id}
         />

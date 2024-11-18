@@ -272,7 +272,7 @@ const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
           <button
             type='button'
             onClick={handleSave}
-            className='mt-3 w-full bg-ter text-black py-2 px-4 rounded-md'
+            className='mt-3 w-full bg-bnowGreen text-black dark:text-white py-2 px-4 rounded-md'
             disabled={isSubmitting || submitted}
           >
             <div className='text-sm font-semibold'>

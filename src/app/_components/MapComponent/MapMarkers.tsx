@@ -9,6 +9,7 @@ interface MapMarkersProps {
   onMarkerClick: (soundbite: Soundbite) => void;
   mapRef: React.RefObject<MapRef>;
   selectedSoundbiteId?: string;
+  onLocationDragEnd: (lat: number, lng: number) => void;
 }
 
 const MapMarker = memo(
@@ -59,6 +60,7 @@ const MapMarkers = memo(
     onMarkerClick,
     mapRef,
     selectedSoundbiteId,
+    onLocationDragEnd,
   }: MapMarkersProps) => {
     return (
       <>
@@ -76,6 +78,8 @@ const MapMarkers = memo(
           <Marker
             latitude={newLocation.latitude}
             longitude={newLocation.longitude}
+            draggable
+            onDragEnd={(e) => onLocationDragEnd(e.lngLat.lat, e.lngLat.lng)}
           >
             <CustomMarker category={'blank'} />
           </Marker>

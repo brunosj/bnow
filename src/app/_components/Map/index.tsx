@@ -124,19 +124,22 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
   };
 
   // Handles the drag end event for the new location marker
-  const handleLocationDragEnd = (lat: number, lng: number) => {
-    if (newLocation) {
+  const handleLocationDragEnd = useCallback(
+    (lat: number, lng: number) => {
       if (isWithinBirmingham(lat, lng)) {
         setNewLocation({ latitude: lat, longitude: lng });
-        setInitialLocation({ latitude: lat, longitude: lng });
+        if (rightPanelType === 'newLocation') {
+          setNewLocation({ latitude: lat, longitude: lng });
+        }
       } else {
         alert('Location is outside the boundaries of Birmingham.');
         if (initialLocation) {
           setNewLocation(initialLocation);
         }
       }
-    }
-  };
+    },
+    [rightPanelType, initialLocation]
+  );
 
   // For the latitude and longitude info box
   const handleCenterChange = useCallback((lat: number, lng: number) => {
@@ -244,7 +247,11 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
           lat={newLocation.latitude}
           lng={newLocation.longitude}
           onClose={closeRightPanel}
-          onSave={() => {}}
+          onSave={(newSoundbite) => {
+            // Handle successful creation - maybe refresh the soundbites list
+            console.log('New soundbite created:', newSoundbite);
+            // Don't close the panel - let the success message show
+          }}
           setIsAddingLocation={setIsAddingLocation}
         />
       )}

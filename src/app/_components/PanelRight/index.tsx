@@ -28,7 +28,7 @@ const PanelRight: React.FC<PanelRightProps> = ({
         bg-white dark:bg-black text-black dark:text-white`}
     >
       {/* Header */}
-      <div className='py-3 px-6 border-b border-gray-200 dark:border-gray-800'>
+      <div className='py-3 px-6 '>
         <div className='flex items-center justify-between'>
           <h2 className='text-xl font-semibold'>{title}</h2>
           <button

@@ -24,7 +24,7 @@ const TextArea: React.FC<TextAreaProps> = ({
       id={id}
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className='input w-full dark:bg-lightGray p-2 '
+      className='input w-full  p-2 '
       required
       disabled={disabled}
     />

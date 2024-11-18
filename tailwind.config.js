@@ -16,7 +16,7 @@ module.exports = {
           DEFAULT: '#D4ECC7',
         },
         black: {
-          DEFAULT: '#232128',
+          DEFAULT: '#242129',
         },
         white: {
           DEFAULT: '#FFFFFF',
@@ -25,7 +25,25 @@ module.exports = {
           DEFAULT: '#262626',
         },
         lighterGray: {
-          DEFAULT: '#424242',
+          DEFAULT: '#A4A4A4',
+        },
+        bnowRed: {
+          DEFAULT: '#DC3036',
+        },
+        bnowGreen: {
+          DEFAULT: '#30C156',
+        },
+        bnowYellow: {
+          DEFAULT: '#E79601',
+        },
+        bnowBlue: {
+          DEFAULT: '#098E91',
+        },
+        bnowPurple: {
+          DEFAULT: '#4B4653',
+        },
+        bnowGray: {
+          DEFAULT: '#A4A4A4',
         },
       },
       fontFamily: {

@@ -57,7 +57,7 @@ const SidebarSoundbite = ({
             <div className='space-y-4'>
               <button
                 onClick={() => setIsTranscriptOpen(!isTranscriptOpen)}
-                className='w-full flex justify-between items-center border border-opacity-50 border-white p-2 rounded-lg'
+                className='w-full flex justify-between items-center border border-bnowPurple p-2 rounded-lg'
               >
                 <span className='text-sm font-medium'>Transcript</span>
                 <FaPlus

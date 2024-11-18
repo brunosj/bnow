@@ -22,13 +22,14 @@ const SidebarSoundbite = ({
   const { color } = categoryStyles[soundbite.category] || defaultStyle;
   const [isTranscriptOpen, setIsTranscriptOpen] = useState(false);
 
+  console.log(soundbite.publishedTranscript);
   return (
     <PanelRight
       title=''
       onClose={onClose}
       setIsAddingLocation={setIsAddingLocation}
     >
-      <section className='space-y-6'>
+      <section className='space-y-6 h-full '>
         <div className='space-y-1'>
           <h4 className=''>{soundbite.title}</h4>
           <div className='flex space-x-2 items-center'>
@@ -53,8 +54,10 @@ const SidebarSoundbite = ({
 
         {/* Transcript */}
         {soundbite.publishedTranscript &&
-          soundbite.publishedTranscript.length > 1 && (
-            <div className='space-y-4'>
+          (soundbite.publishedTranscript as any[]).some((block) =>
+            block.children?.some((child) => child.text?.trim().length > 0)
+          ) && (
+            <div className='space-y-4 '>
               <button
                 onClick={() => setIsTranscriptOpen(!isTranscriptOpen)}
                 className='w-full flex justify-between items-center border border-bnowPurple p-2 rounded-lg'
@@ -71,7 +74,7 @@ const SidebarSoundbite = ({
               <div
                 className={`transition-all duration-300 p-2 overflow-hidden ${
                   isTranscriptOpen
-                    ? 'max-h-[500px] opacity-100'
+                    ? 'max-h-full opacity-100'
                     : 'max-h-0 opacity-0'
                 }`}
               >

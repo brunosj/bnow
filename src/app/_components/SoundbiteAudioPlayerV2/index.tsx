@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import 'react-h5-audio-player/lib/styles.css';
 import type { Audio } from '../../../payload/payload-types';
 import AudioPlayer from '../AudioPlayer';
+import AudioPlayerV2 from '../AudioPlayerV2';
 
 interface SoundbiteAudioPlayerProps {
   audioGroup?: {
@@ -22,12 +23,13 @@ const SoundbiteAudioPlayerV2 = ({ audioGroup }: SoundbiteAudioPlayerProps) => {
   if (!audioUrl) return null;
 
   return (
-    <div>
-      <AudioPlayer
+    <div className=''>
+      {/* <AudioPlayer
         key={currentTrack}
         audioUrl={audioUrl}
         hasMultipleTracks={false}
-      />
+      /> */}
+      <AudioPlayerV2 audioUrl={audioUrl} />
     </div>
   );
 };

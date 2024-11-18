@@ -83,6 +83,9 @@ importers:
       react:
         specifier: ^18.3.1
         version: 18.3.1
+      react-audio-play:
+        specifier: ^1.0.4
+        version: 1.0.4(react@18.3.1)
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
@@ -4881,6 +4884,11 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
+
+  react-audio-play@1.0.4:
+    resolution: {integrity: sha512-2xOOQb0VDEqac6fvjdNrbYH4LjJoCxfzDh6cryCTdJusDJ1Th92Wg4oF6QdO0ZR/YbSlmns3T4PnM94KU2QiFw==}
+    peerDependencies:
+      react: '>=17'
 
   react-datepicker@4.16.0:
     resolution: {integrity: sha512-hNQ0PAg/LQoVbDUO/RWAdm/RYmPhN3cz7LuQ3hqbs24OSp69QCiKOJRrQ4jk1gv1jNR5oYu8SjjgfDh8q6Q1yw==}
@@ -11911,6 +11919,10 @@ snapshots:
 
   react-aptor@2.0.0(react@18.3.1):
     optionalDependencies:
+      react: 18.3.1
+
+  react-audio-play@1.0.4(react@18.3.1):
+    dependencies:
       react: 18.3.1
 
   react-datepicker@4.16.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):

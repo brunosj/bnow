@@ -14,7 +14,14 @@ const SoundBites: CollectionConfig = {
     create: () => true,
   },
   admin: {
-    defaultColumns: ['title', 'year', 'longitude', 'latitude', 'approved'],
+    defaultColumns: [
+      'title',
+      'year',
+      'longitude',
+      'latitude',
+      'approved',
+      'createdAt',
+    ],
     useAsTitle: 'title',
   },
   endpoints: [
@@ -49,8 +56,8 @@ const SoundBites: CollectionConfig = {
               tags,
               author,
               audioGroup: {
-                audioFile: audioGroup.audioFile, // Should be an ID
-                audioUpload: audioGroup.audioUpload, // Should be an ID
+                audioFile: audioGroup.audioFile,
+                audioUpload: audioGroup.audioUpload,
               },
               uploadedTranscript,
               coordinates,

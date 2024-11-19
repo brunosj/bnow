@@ -4,7 +4,7 @@ const Icon = () => {
   return (
     <div className='icon'>
       <img
-        src='../../../../media/images/logo-circle.png'
+        src='/logo-circle.png'
         alt='Birmingham Now'
         style={{ maxHeight: '25px', margin: 'auto' }}
       />

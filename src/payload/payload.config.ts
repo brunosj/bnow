@@ -17,23 +17,9 @@ import Transcripts from './collections/Transcripts';
 import Users from './collections/Users';
 import { Menu } from './globals/Menu';
 
-const generateTitle: GenerateTitle = () => {
-  return 'Birmingham Sound Map';
-};
-
 dotenv.config({
   path: path.resolve(__dirname, '../../.env'),
 });
-
-const getAllowedOrigins = () => {
-  const urls = [
-    process.env.PAYLOAD_PUBLIC_SERVER_URL,
-    `http://localhost:3000`,
-    `http://localhost:3001`,
-  ].filter(Boolean);
-
-  return urls;
-};
 
 export default buildConfig({
   admin: {
@@ -57,11 +43,6 @@ export default buildConfig({
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
     declare: false,
   },
-  // upload: {
-  //   limits: {
-  //     fileSize: 50 * 1024 * 1024,
-  //   },
-  // },
-  cors: getAllowedOrigins(),
-  csrf: getAllowedOrigins(),
+  cors: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
+  csrf: [process.env.PAYLOAD_PUBLIC_SERVER_URL || ''].filter(Boolean),
 });

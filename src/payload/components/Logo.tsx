@@ -1,10 +1,12 @@
 import React from 'react';
 import useTheme from '../hooks/useTheme';
-
+import logo from '../../../../media/images/logo-black.png';
 const Logo = () => {
   const theme = useTheme();
   const logoSrc =
-    theme === 'dark' ? '/assets/logo-white.png' : '/assets/logo-black.png';
+    theme === 'dark'
+      ? '../../../../media/images/logo-white.png'
+      : '../../../../media/images/logo-black.png';
 
   return (
     <div className='logo'>

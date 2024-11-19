@@ -10,7 +10,7 @@ import Logo from './components/Logo';
 import Icon from './components/Icon';
 
 import Audio from './collections/Audio';
-import { Media } from './collections/Media';
+import Media from './collections/Media';
 import { Pages } from './collections/Pages';
 import SoundBites from './collections/SoundBites';
 import Transcripts from './collections/Transcripts';

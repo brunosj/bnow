@@ -266,3 +266,94 @@ input:checked + .switch-track .switch-thumb {
 .select option:first-of-type {
   @apply text-xs text-gray-500;
 }
+
+/* Center the geocoder control */
+.mapboxgl-ctrl-geocoder {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translate(-50%, 0) !important;
+  top: 10px !important;
+  width: 400px !important;
+  max-width: calc(100vw - 40px) !important;
+  z-index: 20 !important;
+  margin: 0 !important;
+}
+
+/* Reset the default Mapbox control container positioning */
+.mapboxgl-ctrl-top-left {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.geocoder-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 10px;
+  width: 400px;
+  max-width: calc(100vw - 40px);
+  z-index: 20;
+}
+
+/* Style the geocoder input within the container */
+.geocoder-container .mapboxgl-ctrl-geocoder {
+  width: 100%;
+  min-width: 100%;
+  max-width: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  border-radius: 20px;
+}
+
+/* Remove the focus outline but keep it for keyboard navigation */
+.geocoder-container .mapboxgl-ctrl-geocoder--input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.dark .geocoder-container .mapboxgl-ctrl-geocoder--input:focus {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Remove dotted outline in Firefox */
+.geocoder-container .mapboxgl-ctrl-geocoder--input::-moz-focus-inner {
+  border: 0;
+}
+
+/* Remove dotted outline in Chrome */
+.geocoder-container .mapboxgl-ctrl-geocoder--input:focus-visible {
+  outline: none;
+}
+
+/* Remove all focus outlines from the geocoder input */
+.geocoder-container .mapboxgl-ctrl-geocoder--input {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+}
+
+.geocoder-container .mapboxgl-ctrl-geocoder--input:focus,
+.geocoder-container .mapboxgl-ctrl-geocoder--input:active,
+.geocoder-container .mapboxgl-ctrl-geocoder--input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Remove Firefox dotted outline */
+.geocoder-container .mapboxgl-ctrl-geocoder--input::-moz-focus-inner {
+  border: 0 !important;
+}
+
+/* Remove WebKit outline */
+.geocoder-container .mapboxgl-ctrl-geocoder--input:focus {
+  outline: -webkit-focus-ring-color auto 0px !important;
+}
+
+/* Add a subtle box shadow for visual feedback instead */
+.geocoder-container .mapboxgl-ctrl-geocoder {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}

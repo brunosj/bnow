@@ -22,6 +22,7 @@
     "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload/payload.config.ts payload"
   },
   "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^5.0.3",
     "@mapbox/search-js-react": "1.0.0-beta.22",
     "@payloadcms/bundler-webpack": "^1.0.7",
     "@payloadcms/db-mongodb": "^1.7.3",
@@ -30,6 +31,7 @@
     "@payloadcms/plugin-redirects": "^1.0.2",
     "@payloadcms/plugin-seo": "^2.4.0",
     "@payloadcms/richtext-slate": "^1.5.2",
+    "@types/mapbox__mapbox-gl-geocoder": "^5.0.0",
     "@types/react-plyr": "^2.1.4",
     "altcha": "^1.0.7",
     "cross-env": "^7.0.3",

@@ -1,8 +1,10 @@
 import { BsQuestionCircleFill } from 'react-icons/bs';
 import { FaPlus } from 'react-icons/fa6';
 import { NavigationControl } from 'react-map-gl';
+import SearchBox from '../SearchBox';
 
 interface MapControlsProps {
+  mapboxToken: string;
   isLeftPanelOpen: boolean;
   isAddingLocation: boolean;
   onInfoClick: () => void;
@@ -10,6 +12,7 @@ interface MapControlsProps {
 }
 
 const MapControls = ({
+  mapboxToken,
   isLeftPanelOpen,
   isAddingLocation,
   onInfoClick,
@@ -22,6 +25,10 @@ const MapControls = ({
         <div className='absolute inset-0  bg-[#bfbccb] bg-opacity-20 pointer-events-none z-0' />
       )}
 
+      {/* Search box placed in center*/}
+      <SearchBox mapboxToken={mapboxToken} />
+
+      {/* Navigation control */}
       <NavigationControl position='bottom-right' />
 
       {/* Info button */}

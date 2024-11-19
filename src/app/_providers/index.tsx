@@ -7,7 +7,6 @@ import { ThemeProvider } from 'next-themes';
 const ClientOnlyWrapper: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -23,7 +22,7 @@ export const Providers: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   return (
-    <ThemeProvider attribute='class'>
+    <ThemeProvider enableSystem={true} attribute='class' defaultTheme='system'>
       <ClientOnlyWrapper>{children}</ClientOnlyWrapper>
     </ThemeProvider>
   );

@@ -165,6 +165,7 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
       [ref, isAddingLocation, customCursor]
     );
 
+    console.log(theme);
     return (
       <Map
         mapboxAccessToken={mapboxToken}
@@ -182,6 +183,7 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
         onMove={handleMapMove}
       >
         <MapControls
+          mapboxToken={mapboxToken}
           isLeftPanelOpen={isLeftPanelOpen}
           isAddingLocation={isAddingLocation}
           onInfoClick={onInfoClick}

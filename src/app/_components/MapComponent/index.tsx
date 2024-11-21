@@ -99,7 +99,7 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
     }, [mapStyle, mapLoaded, initializeClusters, ref]);
 
     const customCursor = `data:image/svg+xml;base64,${btoa(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 32 32">
       <circle cx="16" cy="16" r="14" fill="black"/>
       <path d="M16 9v14M9 16h14" stroke="white" stroke-width="2"/>
     </svg>
@@ -131,12 +131,16 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
             });
           } else if (isAddingLocation && !features?.length) {
             onAddLocation(e);
+            map.getCanvas().style.cursor = 'grab';
+            setIsAddingLocation(false);
           }
         } else if (isAddingLocation) {
           onAddLocation(e);
+          map.getCanvas().style.cursor = 'grab';
+          setIsAddingLocation(false);
         }
       },
-      [ref, isAddingLocation, onAddLocation]
+      [ref, isAddingLocation, onAddLocation, setIsAddingLocation]
     );
 
     const handleMouseMove = useCallback(
@@ -165,7 +169,6 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
       [ref, isAddingLocation, customCursor]
     );
 
-    console.log(theme);
     return (
       <Map
         mapboxAccessToken={mapboxToken}

@@ -7,6 +7,7 @@ interface TextInputProps {
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -15,6 +16,7 @@ const TextInput: React.FC<TextInputProps> = ({
   value,
   disabled,
   onChange,
+  placeholder,
 }) => (
   <div className='input-container'>
     <label className='label' htmlFor={id}>
@@ -28,6 +30,7 @@ const TextInput: React.FC<TextInputProps> = ({
       className='input w-full'
       required
       disabled={disabled}
+      placeholder={placeholder}
     />
   </div>
 );

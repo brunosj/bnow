@@ -13,6 +13,7 @@ import Header from '../Header';
 import { isWithinBirmingham } from '../../_utilities/isWithinBirmingham';
 import SidebarInfo from '../SidebarInfo';
 import { MapRef } from 'react-map-gl';
+import { AnimatePresence } from 'motion/react';
 
 interface MapViewProps {
   soundbites: Soundbite[];
@@ -54,20 +55,10 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
     return counts;
   }, [soundbites]);
 
-  // Initialize selectedCategories with the least frequent category
+  // Initialize selectedCategories with no categories
   const [selectedCategories, setSelectedCategories] = useState<
     SoundbiteCategory[]
-  >(() => {
-    let minCategory = categories[0];
-    let minCount = Infinity;
-    categoryCount.forEach((count, category) => {
-      if (count < minCount) {
-        minCount = count;
-        minCategory = category;
-      }
-    });
-    return [minCategory];
-  });
+  >([]);
 
   // Filtered soundbites based on status and selected categories
   const filteredSoundbites = soundbites.filter((soundbite) => {
@@ -83,6 +74,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
   const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAddingLocation, setIsAddingLocation] = useState(false);
+  const [rightPanelOpen, setRightPanelOpen] = useState(false);
 
   // Toggles the left sidebar
   const toggleSidebar = () => {
@@ -95,6 +87,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
     setSelectedMarker(null);
     setNewLocation(null);
     setIsAddingLocation(false);
+    setRightPanelOpen(false);
   }, []);
 
   // Adds a new location when clicking on the map
@@ -106,6 +99,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
     if (isWithinBirmingham(lat, lng)) {
       setNewLocation({ latitude: lat, longitude: lng });
       setRightPanelType('newLocation');
+      setRightPanelOpen(true);
     } else {
       alert('Location is outside the boundaries of Birmingham.');
     }
@@ -115,21 +109,24 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
   const handleMarkerClick = (soundbite: Soundbite) => {
     setSelectedMarker(soundbite);
     setRightPanelType('soundbite');
+    setRightPanelOpen(true);
   };
 
   // Handles soundbite selection from the list sidebar
   const handleSoundbiteSelect = (soundbite: Soundbite) => {
     setSelectedMarker(soundbite);
     setRightPanelType('soundbite');
+    setRightPanelOpen(true);
   };
 
   // Handles the drag end event for the new location marker
   const handleLocationDragEnd = useCallback(
     (lat: number, lng: number) => {
       if (isWithinBirmingham(lat, lng)) {
-        setNewLocation({ latitude: lat, longitude: lng });
+        const newCoords = { latitude: lat, longitude: lng };
+        setNewLocation(newCoords);
         if (rightPanelType === 'newLocation') {
-          setNewLocation({ latitude: lat, longitude: lng });
+          setNewLocation(newCoords);
         }
       } else {
         alert('Location is outside the boundaries of Birmingham.');
@@ -150,13 +147,10 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
 
   // Update the info click handler
   const handleInfoClick = (slug: string) => {
-    if (rightPanelType === 'info') {
-      setRightPanelType(null);
-    } else {
-      setRightPanelType('info');
-      setIsAddingLocation(false);
-      setSelectedPage(pages.find((p) => p.slug === slug));
-    }
+    setRightPanelType('info');
+    setIsAddingLocation(false);
+    setSelectedPage(pages.find((p) => p.slug === slug));
+    setRightPanelOpen(true);
   };
 
   // Visible soundbites based on viewport
@@ -177,10 +171,16 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
   // Map ref for mapbox
   const mapRef = useRef<MapRef>(null);
 
+  // Add this new handler
+  const handleLocationDrag = useCallback((lat: number, lng: number) => {
+    if (isWithinBirmingham(lat, lng)) {
+      const newCoords = { latitude: lat, longitude: lng };
+      setNewLocation(newCoords);
+    }
+  }, []);
+
   return (
     <div className='h-[100vh] flex z-100 max-w-full relative'>
-      {/* <Header /> */}
-
       {/* Map component handling map rendering, markers, and popups */}
       <MapComponent
         mapboxToken={mapboxToken}
@@ -193,6 +193,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         onMarkerSelect={(loc, index) => setSelectedMarker({ loc, index })}
         onPopupClose={() => setSelectedMarker(null)}
         onCenterChange={handleCenterChange}
+        onLocationDrag={handleLocationDrag}
         onLocationDragEnd={handleLocationDragEnd}
         onInfoClick={() => handleInfoClick('how-to-use-the-site')}
         isLeftPanelOpen={isLeftPanelOpen}
@@ -202,15 +203,6 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         ref={mapRef}
         selectedSoundbiteId={selectedMarker?.id}
       />
-
-      {/* Latitude and Longitude info box */}
-      {/* <div className='absolute bottom-8 left-4 text-primary p-2 shadow-lg rounded-md z-10 bg-neutral bg-opacity-95'>
-        <p className='text-xs font-mono'>
-          Latitude: {center.lat.toFixed(6)}
-          <br />
-          Longitude: {center.lng.toFixed(6)}
-        </p>
-      </div> */}
 
       {/* Sidebar displaying the list of soundbites */}
       <PanelLeft
@@ -229,41 +221,44 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         onToggleMenu={() => setIsMenuOpen(!isMenuOpen)}
         setIsAddingLocation={setIsAddingLocation}
         mapRef={mapRef}
-        selectedSoundbiteId={selectedMarker?.id} // Add this prop
+        selectedSoundbiteId={selectedMarker?.id}
       />
 
-      {/* Sidebar for soundbite details */}
-      {rightPanelType === 'soundbite' && selectedMarker && (
-        <SidebarSoundbite
-          soundbite={selectedMarker}
-          onClose={closeRightPanel}
-          setIsAddingLocation={setIsAddingLocation}
-        />
-      )}
-
-      {/* Sidebar for adding a new location */}
-      {rightPanelType === 'newLocation' && newLocation && (
-        <SidebarNewLocation
-          lat={newLocation.latitude}
-          lng={newLocation.longitude}
-          onClose={closeRightPanel}
-          onSave={(newSoundbite) => {
-            // Handle successful creation - maybe refresh the soundbites list
-            console.log('New soundbite created:', newSoundbite);
-            // Don't close the panel - let the success message show
-          }}
-          setIsAddingLocation={setIsAddingLocation}
-        />
-      )}
-
-      {/* Sidebar for info page */}
-      {rightPanelType === 'info' && (
-        <SidebarInfo
-          onClose={closeRightPanel}
-          page={selectedPage}
-          setIsAddingLocation={setIsAddingLocation}
-        />
-      )}
+      {/* Right Panel Content */}
+      <AnimatePresence mode='wait'>
+        {rightPanelOpen && (
+          <>
+            {rightPanelType === 'soundbite' && selectedMarker && (
+              <SidebarSoundbite
+                soundbite={selectedMarker}
+                onClose={closeRightPanel}
+                setIsAddingLocation={setIsAddingLocation}
+                isOpen={true}
+              />
+            )}
+            {rightPanelType === 'newLocation' && newLocation && (
+              <SidebarNewLocation
+                lat={newLocation.latitude}
+                lng={newLocation.longitude}
+                onClose={closeRightPanel}
+                onSave={(newSoundbite) => {
+                  console.log('New soundbite created:', newSoundbite);
+                }}
+                setIsAddingLocation={setIsAddingLocation}
+                isOpen={true}
+              />
+            )}
+            {rightPanelType === 'info' && (
+              <SidebarInfo
+                onClose={closeRightPanel}
+                page={selectedPage}
+                setIsAddingLocation={setIsAddingLocation}
+                isOpen={true}
+              />
+            )}
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

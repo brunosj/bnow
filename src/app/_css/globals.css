@@ -60,6 +60,10 @@
     @apply text-sm lg:text-base;
   }
 
+  .richText li {
+    @apply mb-3 list-disc list-inside;
+  }
+
   .richTextSmall p {
     @apply text-xs lg:text-sm;
   }
@@ -81,6 +85,11 @@
 .select,
 .file-input {
   @apply w-full p-2 border border-bnowPurple rounded-md bg-transparent text-sm text-lightGray dark:text-lighterGray;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  @apply text-lightGray dark:text-lighterGray text-sm opacity-50;
 }
 
 .input-container {

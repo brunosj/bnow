@@ -98,6 +98,7 @@ const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
             label='Title*'
             value={title}
             onChange={setTitle}
+            placeholder='Enter a title'
           />
           <SelectInput
             id='year'
@@ -119,6 +120,8 @@ const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
           label='Description*'
           value={description}
           onChange={setDescription}
+          placeholder='Enter a brief description (max 350 characters)'
+          maxLength={350}
         />
         <FileInput
           id='transcriptFile'
@@ -151,7 +154,11 @@ const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
           value={author}
           onChange={setAuthor}
         />
-        <FileInput id='file' label='Sound File*' onChange={setFile} />
+        <FileInput
+          id='file'
+          label='Sound File* (max. 50MB)'
+          onChange={setFile}
+        />
 
         <CheckboxInput
           checked={agreedToPrivacyPolicy}

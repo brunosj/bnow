@@ -2,28 +2,27 @@ import { Metadata } from 'next';
 
 const siteMetadata: Metadata = {
   metadataBase: new URL('https://birminghamnow.co.uk'),
-  title: 'Birmingham NOW Sound Map',
-  description: 'Birmingham NOW Sound Map',
+  title: 'Birmingham Now',
+  description:
+    'Birmingham Now - An interactive map of Birmingham’s sonic history.',
 
   // Basic metadata
-  applicationName: 'Birmingham NOW Sound Map',
-  authors: [
-    { name: 'Birmingham NOW Sound Map', url: 'https://birminghamnow.co.uk' },
-  ],
+  applicationName: 'Birmingham Now',
+  authors: [{ name: 'Birmingham Now', url: 'https://birminghamnow.co.uk' }],
   keywords: ['dance', 'berlin', 'underground'],
   referrer: 'origin-when-cross-origin',
   creator: 'landozone',
-  publisher: 'Birmingham NOW Sound Map',
+  publisher: 'Birmingham Now',
 
   // Open Graph metadata
   openGraph: {
-    title: 'Birmingham NOW Sound Map',
-    description: 'Birmingham NOW Sound Map',
+    title: 'Birmingham Now',
+    description: 'Birmingham Now',
     url: 'https://birminghamnow.co.uk',
-    siteName: 'Birmingham NOW Sound Map',
+    siteName: 'Birmingham Now',
     images: [
       {
-        url: 'https://birminghamnow.co.uk/logo_SEO.png',
+        url: 'https://birminghamnow.co.uk/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Birmingham NOW Sound Map Image',
@@ -36,9 +35,9 @@ const siteMetadata: Metadata = {
   // Twitter metadata
   twitter: {
     card: 'summary_large_image',
-    title: 'Birmingham NOW Sound Map',
-    description: 'Birmingham NOW Sound Map',
-    images: ['https://birminghamnow.co.uk/logo_SEO.png'],
+    title: 'Birmingham Now',
+    description: 'Birmingham Now',
+    images: ['https://birminghamnow.co.uk/og-image.png'],
   },
 
   // Verification for search engines
@@ -75,7 +74,7 @@ const siteMetadata: Metadata = {
   // App-specific metadata
   appleWebApp: {
     capable: false,
-    title: 'Birmingham NOW Sound Map',
+    title: 'Birmingham Now',
     statusBarStyle: 'black-translucent',
   },
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Soundbite } from '../../../payload/payload-types';
 import SoundbiteAudioPlayer from '../SoundbiteAudioPlayer';
 import SoundbiteAudioPlayerV2 from '../SoundbiteAudioPlayerV2';
@@ -12,6 +12,7 @@ interface SidebarSoundbiteProps {
   soundbite: Soundbite;
   onClose: () => void;
   setIsAddingLocation: (value: boolean) => void;
+  isOpen: boolean;
 }
 
 const SidebarSoundbite = ({
@@ -22,29 +23,43 @@ const SidebarSoundbite = ({
   const { color } = categoryStyles[soundbite.category] || defaultStyle;
   const [isTranscriptOpen, setIsTranscriptOpen] = useState(false);
 
+  useEffect(() => {
+    setIsTranscriptOpen(false);
+  }, [soundbite.id]);
+
+  const handleClose = () => {
+    setIsTranscriptOpen(false);
+    onClose();
+  };
+
   return (
     <PanelRight
       title=''
-      onClose={onClose}
+      onClose={handleClose}
       setIsAddingLocation={setIsAddingLocation}
     >
       <section className='space-y-6 h-full '>
         <div className='space-y-1'>
-          <h4 className=''>{soundbite.title}</h4>
+          <h3 className=''>{soundbite.title}</h3>
           <div className='flex space-x-2 items-center'>
             {soundbite.year && (
               <>
-                <span className='text-xs'>{soundbite.year}</span>
+                <span className='text-xs lg:text-base'>{soundbite.year}</span>
                 <span className='mr-2'>•</span>
               </>
             )}
-            <span className='text-xs' style={{ color: ` ${color}` }}>
+            <span
+              className='text-xs lg:text-base'
+              style={{ color: ` ${color}` }}
+            >
               {generateLabel(soundbite.category)}
             </span>
           </div>
           {soundbite.author && (
             <>
-              <p className='text-sm'>{soundbite.author}</p>
+              <p className='text-xs lg:text-base'>
+                Submitted by {soundbite.author}
+              </p>
             </>
           )}
         </div>

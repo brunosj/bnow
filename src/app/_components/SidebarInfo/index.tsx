@@ -7,6 +7,7 @@ interface SidebarInfoProps {
   onClose: () => void;
   page?: Page;
   setIsAddingLocation: (value: boolean) => void;
+  isOpen: boolean;
 }
 
 const SidebarInfo = ({
@@ -18,11 +19,12 @@ const SidebarInfo = ({
     title={page?.title || 'About'}
     onClose={onClose}
     setIsAddingLocation={setIsAddingLocation}
+    isOpen={true}
   >
     <div className='space-y-6'>
       {page ? (
         <div>
-          <RichText content={page.content} className='richText' />
+          <RichText content={page.content} className='richText list-disc' />
         </div>
       ) : (
         <p>No content available</p>

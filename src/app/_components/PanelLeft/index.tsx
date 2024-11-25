@@ -7,6 +7,7 @@ import ToggleButton from './ToggleButton';
 import PanelLeftMenu from './Menu';
 import PanelLeftSoundbites from './Soundbites';
 import type { Map as MapboxMap, MapRef } from 'react-map-gl';
+import { motion } from 'motion/react';
 
 interface PanelLeftProps {
   soundbites: Soundbite[];
@@ -64,9 +65,11 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
       />
 
       <div className='flex flex-col h-full bg-black relative'>
+        {/* Menu */}
         {isMenuOpen ? (
           <PanelLeftMenu {...{ menu, pages, onInfoClick }} />
         ) : (
+          // Soundbites
           <PanelLeftSoundbites
             {...{
               soundbites,

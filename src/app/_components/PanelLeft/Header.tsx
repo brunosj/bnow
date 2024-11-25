@@ -2,10 +2,7 @@
 
 // components/PanelLeftHeader.tsx
 import React from 'react';
-import { IoInformationCircleOutline } from 'react-icons/io5';
-import { BsQuestionCircleFill } from 'react-icons/bs';
 import LogoFull from '../../_assets/birmingham-now-logo-full.svg';
-import LogoWaves from '../../_assets/birmingham-now-logo-waves.svg';
 import { Page } from '../../../payload/payload-types';
 import classes from './index.module.css';
 import Image from 'next/image';
@@ -22,7 +19,6 @@ const PanelLeftHeader: React.FC<PanelLeftHeaderProps> = ({
   isMenuOpen,
   onToggleMenu,
   onInfoClick,
-  pages,
 }) => {
   return (
     <div className='flex items-center justify-between p-4 bg-black text-white shadow-md'>

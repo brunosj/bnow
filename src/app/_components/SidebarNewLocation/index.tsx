@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SoundbiteUploadForm from '../SoundbiteUploadForm';
 import PanelRight from '../PanelRight';
 
@@ -7,7 +7,8 @@ interface SidebarNewLocationProps {
   onSave: (newSoundbite: any) => void;
   lat: number;
   lng: number;
-  setIsAddingLocation: (value: boolean) => void; // Add this
+  setIsAddingLocation: (value: boolean) => void;
+  isOpen: boolean;
 }
 
 const SidebarNewLocation = ({
@@ -112,6 +113,7 @@ const SidebarNewLocation = ({
       title='Add your Soundbite'
       onClose={onClose}
       setIsAddingLocation={setIsAddingLocation}
+      isOpen={true}
     >
       {step === 1 ? (
         <div className='space-y-4'>
@@ -158,6 +160,17 @@ const SidebarNewLocation = ({
                 <span>Submit</span>
               )}
             </button>
+
+            {/* Latitude and Longitude info box */}
+            <div className='absolute bottom-8 left-4 text-primary p-2 shadow-lg rounded-md z-10 bg-neutral bg-opacity-95'>
+              <p className='text-xs font-mono'>
+                Latitude:
+                <span className='text-bnowGreen'> {lat.toFixed(6)}</span>
+                <br />
+                Longitude:
+                <span className='text-bnowGreen'> {lng.toFixed(6)}</span>
+              </p>
+            </div>
           </div>
         </div>
       ) : (

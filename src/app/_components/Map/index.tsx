@@ -422,6 +422,7 @@ const MapView = ({
         )}
       </AnimatePresence>
 
+      {/* Mobile bottom sheet for location confirmation */}
       <MobileLocationBottomSheet
         isOpen={showMobileBottomSheet && newLocation !== null}
         onBack={() => {

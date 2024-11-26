@@ -23,8 +23,7 @@ const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
   };
 
   return (
-    <li
-      key={soundbite.id}
+    <div
       onClick={handleClick}
       className={`cursor-pointer transition-all duration-300  rounded-[2rem] overflow-y-auto  shadow-lg p-2 border-[1px] ${
         isSelected ? 'border-white' : 'border-bnowPurple'
@@ -50,7 +49,7 @@ const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
           </div>
         </div>
       </div>
-    </li>
+    </div>
   );
 };
 

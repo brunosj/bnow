@@ -13,10 +13,10 @@
 
 .line {
   display: block;
-  height: 1.5px;
+  height: 2.5px;
   width: 100%;
-  background: white;
-  border-radius: 1px;
+  background: var(--color-white);
+  border-radius: 6px;
   transition: transform 0.3s ease-in-out;
   transform-origin: center;
   position: relative;

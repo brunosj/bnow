@@ -73,11 +73,12 @@ const SidebarNewLocation = ({
   return (
     <>
       <PanelRight
-        title='Add your Soundbite'
         onClose={handlePanelClose}
         setIsAddingLocation={setIsAddingLocation}
         isOpen={!(step === 2 && isMobile)}
       >
+        <h2 className='font-semibold mb-6'>Add a Soundbite</h2>
+
         {step === 1 ? (
           <div className='space-y-4'>
             <p className='text-sm'>

@@ -7,19 +7,22 @@ interface PanelLeftMenuProps {
   menu: Menu;
   pages: Page[];
   onInfoClick: (slug: string) => void;
+  onCloseMenu: () => void;
 }
 
 const PanelLeftMenu: React.FC<PanelLeftMenuProps> = ({
   menu,
   pages,
   onInfoClick,
+  onCloseMenu,
 }) => {
   const handlePageClick = (slug: string) => {
     onInfoClick(slug);
+    onCloseMenu();
   };
 
   return (
-    <div className='fixed inset-0 md:relative  md:bg-transparent z-30 md:z-auto pt-16 bg-black'>
+    <div className='fixed inset-0 md:relative  md:bg-transparent z-30 md:z-auto lg:pt-0 pt-16 bg-black'>
       <div className='p-4 lg:p-6 text-white space-y-6 h-full'>
         <ul className='space-y-3'>
           {menu.navItems.map((item) => (

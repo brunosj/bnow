@@ -34,7 +34,7 @@ const PanelLeftHeader: React.FC<PanelLeftHeaderProps> = ({
       {/* Logo */}
       <Image
         src={LogoFull}
-        alt='Birmingham NOW Logo'
+        alt='Birmingham Now Logo'
         className='w-32  object-contain'
       />
 

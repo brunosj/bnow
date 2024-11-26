@@ -16,14 +16,14 @@ const SidebarInfo = ({
   setIsAddingLocation,
 }: SidebarInfoProps) => (
   <PanelRight
-    title={page?.title || 'About'}
     onClose={onClose}
     setIsAddingLocation={setIsAddingLocation}
     isOpen={true}
   >
     <div className='space-y-6'>
       {page ? (
-        <div>
+        <div className='space-y-6'>
+          <h2 className='font-semibold'>{page.title}</h2>
           <RichText content={page.content} className='richText list-disc' />
         </div>
       ) : (

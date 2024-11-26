@@ -26,7 +26,6 @@ const PanelLeftSoundbites = React.memo(
     mapRef,
     selectedSoundbiteId,
   }: PanelLeftSoundbitesProps) => {
-    // Memoize filtered soundbites
     const filteredSoundbites = useMemo(() => {
       if (selectedCategories.length === 0) return soundbites;
       return soundbites.filter(

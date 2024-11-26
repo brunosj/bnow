@@ -33,14 +33,10 @@ const SidebarSoundbite = ({
   };
 
   return (
-    <PanelRight
-      title=''
-      onClose={handleClose}
-      setIsAddingLocation={setIsAddingLocation}
-    >
-      <section className='space-y-6 h-full '>
-        <div className='space-y-1'>
-          <h3 className=''>{soundbite.title}</h3>
+    <PanelRight onClose={handleClose} setIsAddingLocation={setIsAddingLocation}>
+      <section className='space-y-6 h-full pt-6'>
+        <div className='space-y-2'>
+          <h2 className=''>{soundbite.title}</h2>
           <div className='flex space-x-2 items-center'>
             {soundbite.year && (
               <>

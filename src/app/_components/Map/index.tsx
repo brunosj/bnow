@@ -195,7 +195,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         onCenterChange={handleCenterChange}
         onLocationDrag={handleLocationDrag}
         onLocationDragEnd={handleLocationDragEnd}
-        onInfoClick={() => handleInfoClick('how-to-use-the-site')}
+        onInfoClick={() => handleInfoClick('how-to-use-this-site')}
         isLeftPanelOpen={isLeftPanelOpen}
         isAddingLocation={isAddingLocation}
         setIsAddingLocation={setIsAddingLocation}

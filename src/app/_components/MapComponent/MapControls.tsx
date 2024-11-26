@@ -33,13 +33,13 @@ const MapControls = ({
 
       {/* Info button */}
       <div
-        className={`absolute bottom-8 z-10 transition-all duration-300 ${
+        className={`absolute info-button z-10 transition-all duration-300 ${
           isLeftPanelOpen ? 'left-[21%]' : 'left-4'
         }`}
       >
         <button
           onClick={onInfoClick}
-          className='flex items-center gap-2 bg-black bg-opacity-100 hover:bg-opacity-85 text-white px-4 py-2 rounded-full transition-all duration-300'
+          className='hidden md:flex items-center gap-2 bg-black bg-opacity-100 hover:bg-opacity-85 text-white px-4 py-2 rounded-full transition-all duration-300'
         >
           <BsQuestionCircleFill size={20} />
           <span className='text-sm whitespace-nowrap'>
@@ -49,7 +49,7 @@ const MapControls = ({
       </div>
 
       {/* Add new location button */}
-      <div className='absolute top-2 right-2 z-20'>
+      <div className='absolute top-20 lg:top-2 right-2 z-20'>
         <div className='relative z-10'>
           <div className='absolute right-2 top-[0.15rem]'>
             <div className='flex items-center overflow-hidden'>

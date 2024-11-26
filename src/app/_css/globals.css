@@ -29,7 +29,7 @@
   }
 
   h3 {
-    @apply text-base lg:text-xl font-semibold;
+    @apply text-lg lg:text-xl font-semibold;
   }
 
   h4 {
@@ -277,15 +277,28 @@ input:checked + .switch-track .switch-thumb {
 }
 
 /* Center the geocoder control */
-.mapboxgl-ctrl-geocoder {
+/* .mapboxgl-ctrl-geocoder {
   position: absolute !important;
   left: 50% !important;
   transform: translate(-50%, 0) !important;
-  top: 10px !important;
+  bottom: 100px !important;
   width: 400px !important;
   max-width: calc(100vw - 40px) !important;
   z-index: 20 !important;
   margin: 0 !important;
+} */
+
+@media screen and (min-width: 768px) {
+  .mapboxgl-ctrl-geocoder {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translate(-50%, 0) !important;
+    top: 10px !important;
+    width: 400px !important;
+    max-width: calc(100vw - 40px) !important;
+    z-index: 20 !important;
+    margin: 0 !important;
+  }
 }
 
 /* Reset the default Mapbox control container positioning */
@@ -365,4 +378,57 @@ input:checked + .switch-track .switch-thumb {
 /* Add a subtle box shadow for visual feedback instead */
 .geocoder-container .mapboxgl-ctrl-geocoder {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Hide scrollbar on mobile */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .hide-scrollbar {
+    -ms-overflow-style: auto;
+    scrollbar-width: thin;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: block;
+    width: 4px;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+}
+
+/* Info button */
+.info-button {
+  top: 5rem;
+  bottom: unset;
+}
+
+@media screen and (min-width: 768px) {
+  .info-button {
+    bottom: 2rem;
+    top: unset;
+  }
+}
+
+/* New location button */
+.new-location-button {
+  top: 10rem;
+  bottom: unset;
+}
+
+@media screen and (min-width: 768px) {
+  .info-button {
+    top: 0.5rem;
+    top: unset;
+  }
 }

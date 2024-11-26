@@ -44,18 +44,17 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
     <section className='space-y-3'>
       <p className='font-semibold text-white'>Categories</p>
 
-      <div className='flex flex-wrap gap-x-4 gap-y-3'>
-        {/* Render a button for each category */}
+      <div className='flex overflow-x-auto md:flex-wrap  gap-y-3 space-x-4 md:space-x-0 lg:gap-x-4 pb-2 hide-scrollbar'>
         {categories.map((category) => (
           <button
             key={category}
-            className={`flex items-center`}
+            className='flex items-center flex-shrink-0'
             onClick={() => toggleCategory(category)}
           >
             <span
-              className={`rounded-3xl px-3 py-1 text-sm  border-white border-[1px]  ${
+              className={`rounded-3xl px-3 py-1 text-sm border-white border-[1px] whitespace-nowrap ${
                 selectedCategories.includes(category)
-                  ? 'opacity-35 '
+                  ? 'opacity-35'
                   : 'opacity-100'
               }`}
             >

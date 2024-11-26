@@ -55,14 +55,15 @@ const SoundbitesList = React.memo(
     }
 
     return (
-      <ul className='space-y-2 lg:space-y-4 overflow-y-auto h-[92%] px-4'>
+      <ul className='flex md:block overflow-x-auto md:overflow-x-hidden overflow-y-hidden md:overflow-y-auto h-[92%] px-4 space-x-4 md:space-x-0 md:space-y-4 hide-scrollbar '>
         {soundbites.map((soundbite) => (
-          <SoundbitesListItem
-            key={soundbite.id}
-            soundbite={soundbite}
-            onSelectSoundbite={onSelectSoundbite}
-            selectedSoundbiteId={selectedSoundbiteId}
-          />
+          <li className='flex-shrink-0 w-72 md:w-auto' key={soundbite.id}>
+            <SoundbitesListItem
+              soundbite={soundbite}
+              onSelectSoundbite={onSelectSoundbite}
+              selectedSoundbiteId={selectedSoundbiteId}
+            />
+          </li>
         ))}
       </ul>
     );

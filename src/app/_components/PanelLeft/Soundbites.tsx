@@ -65,7 +65,7 @@ const PanelLeftSoundbites = React.memo(
             onSelectCategory={onSelectCategory}
           />
         </div>
-        <div className='py-6 flex-1 overflow-hidden'>
+        <div className='py-0 lg:py-6 flex-1 overflow-hidden'>
           <SoundbitesList
             categories={categories}
             soundbites={filteredSoundbites}

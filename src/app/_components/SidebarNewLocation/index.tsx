@@ -176,8 +176,7 @@ const SidebarNewLocation = ({
       ) : (
         <div className='space-y-6'>
           <p className='text-sm'>
-            Thank you for submitting your soundbite! It will appear on the map
-            once approved.
+            Thanks! Your Soundbite has been added for approval.
           </p>
           <button
             onClick={onClose}

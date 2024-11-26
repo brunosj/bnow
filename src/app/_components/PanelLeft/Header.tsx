@@ -1,6 +1,5 @@
 'use client';
 
-// components/PanelLeftHeader.tsx
 import React from 'react';
 import LogoFull from '../../_assets/birmingham-now-logo-full.svg';
 import { Page } from '../../../payload/payload-types';
@@ -40,14 +39,12 @@ const PanelLeftHeader: React.FC<PanelLeftHeaderProps> = ({
       />
 
       {/* Theme Switcher */}
-      {/* Theme Switcher */}
       <div className='flex items-center gap-4'>
         <button
           onClick={onInfoClick}
           className='text-white hover:text-gray-200 transition-colors'
           aria-label='Information'
         >
-          {/* <BsQuestionCircleFill size={20} /> */}
           <Image src={InfoIcon} alt='Info Icon' className='w-6 h-6' />
         </button>
       </div>

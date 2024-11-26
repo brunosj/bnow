@@ -202,8 +202,6 @@ const MapView = ({
     }
   }, []);
 
-  // console.log('isAddingLocation', isAddingLocation, 'newLocation', newLocation);
-
   const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
 
@@ -300,7 +298,7 @@ const MapView = ({
   const [formData, setFormData] = useState<FormDataState | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [soundbites, setSoundbites] = useState<Soundbite[]>(soundbitesProps);
+  // const [soundbites, setSoundbites] = useState<Soundbite[]>(soundbitesProps);
 
   const handleSubmit = async () => {
     if (!formData) {
@@ -320,7 +318,7 @@ const MapView = ({
 
   const handleSubmitSuccess = (newSoundbite: any) => {
     // Update the soundbites list
-    setSoundbites((prevSoundbites) => [...prevSoundbites, newSoundbite]);
+    // setSoundbites((prevSoundbites) => [...prevSoundbites, newSoundbite]);
 
     // Show success notification
     setShowSuccessNotification(true);

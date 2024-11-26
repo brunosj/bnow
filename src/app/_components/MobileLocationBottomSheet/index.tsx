@@ -43,7 +43,19 @@ const MobileLocationBottomSheet = ({
                 disabled={isSubmitting}
                 className='flex-1 bg-bnowGreen text-white py-2 px-4 rounded-md'
               >
-                Confirm
+                {isSubmitting ? (
+                  <div className='flex items-center justify-center space-x-3'>
+                    <div className='lds-ring'>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                    <span>Uploading...</span>
+                  </div>
+                ) : (
+                  <span>Submit</span>
+                )}
               </button>
             </div>
           </div>

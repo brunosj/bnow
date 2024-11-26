@@ -26,10 +26,10 @@ const SidebarNewLocation = ({
   lng,
   setShowMobileBottomSheet,
   onSubmit,
+  isSubmitting,
 }: SidebarNewLocationProps) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<any>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   // Check for mobile screen size
@@ -69,87 +69,6 @@ const SidebarNewLocation = ({
     onSave(data);
     setStep(2);
   };
-
-  // const handleConfirmLocation = async () => {
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const audioFormData = new FormData();
-  //     audioFormData.append('title', formData.title);
-  //     audioFormData.append('file', formData.file);
-
-  //     const audioResponse = await fetch('/api/audio/custom-upload-audio', {
-  //       method: 'POST',
-  //       body: audioFormData,
-  //     });
-
-  //     if (!audioResponse.ok) {
-  //       throw new Error('Audio upload failed');
-  //     }
-
-  //     const uploadedAudio = await audioResponse.json();
-  //     const fileId = uploadedAudio.doc.id;
-
-  //     let transcriptId;
-  //     if (formData.transcriptFile) {
-  //       // Handle transcript upload
-  //       const transcriptFormData = new FormData();
-  //       transcriptFormData.append('title', formData.title);
-  //       transcriptFormData.append('file', formData.transcriptFile);
-
-  //       const transcriptResponse = await fetch(
-  //         '/api/transcripts/custom-upload-transcript',
-  //         {
-  //           method: 'POST',
-  //           body: transcriptFormData,
-  //         }
-  //       );
-
-  //       if (transcriptResponse.ok) {
-  //         const uploadedTranscript = await transcriptResponse.json();
-  //         transcriptId = uploadedTranscript.doc.id;
-  //       }
-  //     }
-
-  //     const soundbiteFormData = new FormData();
-  //     soundbiteFormData.append('title', formData.title);
-  //     soundbiteFormData.append('description', formData.description);
-  //     soundbiteFormData.append('year', formData.year?.toString() || '');
-  //     soundbiteFormData.append('category', formData.category || '');
-  //     soundbiteFormData.append('license', formData.license || '');
-  //     soundbiteFormData.append('author', formData.author);
-  //     soundbiteFormData.append('coordinates[latitude]', lat.toString());
-  //     soundbiteFormData.append('coordinates[longitude]', lng.toString());
-  //     soundbiteFormData.append('status', 'draft');
-  //     soundbiteFormData.append('audioGroup[audioUpload]', fileId);
-  //     soundbiteFormData.append('audioGroup[audioFile]', fileId);
-
-  //     if (transcriptId) {
-  //       soundbiteFormData.append('uploadedTranscript', transcriptId);
-  //     }
-
-  //     const soundbiteResponse = await fetch(
-  //       '/api/soundbites/custom-create-soundbite',
-  //       {
-  //         method: 'POST',
-  //         body: soundbiteFormData,
-  //       }
-  //     );
-
-  //     if (!soundbiteResponse.ok) {
-  //       throw new Error('Failed to create soundbite');
-  //     }
-
-  //     const newSoundbite = await soundbiteResponse.json();
-  //     onSave(newSoundbite);
-  //     setStep(3);
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //     alert(error.message || 'An unknown error occurred');
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
 
   return (
     <>
@@ -195,7 +114,6 @@ const SidebarNewLocation = ({
                     alert(error.message || 'An unknown error occurred');
                   }
                 }}
-                disabled={isSubmitting}
                 className='flex-1 bg-bnowGreen text-black dark:text-white py-2 px-4 rounded-md'
               >
                 {isSubmitting ? (

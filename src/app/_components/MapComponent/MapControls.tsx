@@ -2,6 +2,9 @@ import { BsQuestionCircleFill } from 'react-icons/bs';
 import { FaPlus } from 'react-icons/fa6';
 import { NavigationControl } from 'react-map-gl';
 import SearchBox from '../SearchBox';
+import { AnimatePresence } from 'motion/react';
+import SuccessNotification from './SuccessNotification';
+import { useState } from 'react';
 
 interface MapControlsProps {
   mapboxToken: string;
@@ -9,6 +12,7 @@ interface MapControlsProps {
   isAddingLocation: boolean;
   onInfoClick: () => void;
   setIsAddingLocation: (value: boolean) => void;
+  showSuccessNotification?: boolean;
 }
 
 const MapControls = ({
@@ -17,6 +21,7 @@ const MapControls = ({
   isAddingLocation,
   onInfoClick,
   setIsAddingLocation,
+  showSuccessNotification = false,
 }: MapControlsProps) => {
   return (
     <>
@@ -84,6 +89,10 @@ const MapControls = ({
           </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {showSuccessNotification && <SuccessNotification />}
+      </AnimatePresence>
     </>
   );
 };

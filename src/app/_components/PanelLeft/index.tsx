@@ -103,7 +103,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
 
       {/* Mobile Bottom Sheet */}
       <motion.div
-        className='fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-30 md:hidden'
+        className='md:hidden fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-30'
         drag='y'
         dragConstraints={{ top: 0, bottom: 500 }}
         dragElastic={0.2}

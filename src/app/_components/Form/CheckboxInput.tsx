@@ -27,7 +27,7 @@ const CheckboxInput: React.FC<CheckboxInputProps> = ({
         className='checkbox sr-only'
       />
       <div className={`checkbox-custom ${checked ? 'checked' : ''}`}>
-        {checked && <FaCheck className='text-white' />}
+        {checked && <FaCheck className='text-bnowGreen' />}
       </div>
       <span className='ml-3 text-xs'>{label}</span>
     </label>

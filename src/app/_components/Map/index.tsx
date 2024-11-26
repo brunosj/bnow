@@ -14,6 +14,7 @@ import { isWithinBirmingham } from '../../_utilities/isWithinBirmingham';
 import SidebarInfo from '../SidebarInfo';
 import { MapRef } from 'react-map-gl';
 import { AnimatePresence } from 'motion/react';
+import MobileLocationBottomSheet from '../MobileLocationBottomSheet';
 
 interface MapViewProps {
   soundbites: Soundbite[];
@@ -23,7 +24,22 @@ interface MapViewProps {
 
 type RightSidebarType = 'soundbite' | 'newLocation' | 'info' | null;
 
-const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
+interface FormDataState {
+  title: string;
+  description: string;
+  year: number | null;
+  category: SoundbiteCategory | null;
+  license: 'cc' | 'public_domain' | 'all_rights_reserved' | null;
+  author: string;
+  file: File | null;
+  transcriptFile: File | null;
+}
+
+const MapView = ({
+  soundbites: soundbitesProps,
+  pages,
+  menu,
+}: MapViewProps) => {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
   // Markers functionality
@@ -44,16 +60,16 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
 
   // Categories for filtering
   const categories: SoundbiteCategory[] = [
-    ...new Set(soundbites.map((s) => s.category)),
+    ...new Set(soundbitesProps.map((s) => s.category)),
   ];
 
   const categoryCount = useMemo(() => {
     const counts = new Map<SoundbiteCategory, number>();
-    soundbites.forEach((s) => {
+    soundbitesProps.forEach((s) => {
       counts.set(s.category, (counts.get(s.category) || 0) + 1);
     });
     return counts;
-  }, [soundbites]);
+  }, [soundbitesProps]);
 
   // Initialize selectedCategories with no categories
   const [selectedCategories, setSelectedCategories] = useState<
@@ -61,7 +77,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
   >([]);
 
   // Filtered soundbites based on status and selected categories
-  const filteredSoundbites = soundbites.filter((soundbite) => {
+  const filteredSoundbites = soundbitesProps.filter((soundbite) => {
     return (
       soundbite.status === 'published' &&
       (selectedCategories.length === 0 ||
@@ -83,12 +99,19 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
 
   // Closes the right sidebar
   const closeRightPanel = useCallback(() => {
+    const isMobile = window.innerWidth < 768;
+    const isLocationStep2 = rightPanelType === 'newLocation';
+
     setRightPanelType(null);
     setSelectedMarker(null);
-    setNewLocation(null);
-    setIsAddingLocation(false);
     setRightPanelOpen(false);
-  }, []);
+
+    // Only clear location and disable adding if we're not on mobile step 2
+    if (!(isMobile && isLocationStep2)) {
+      setNewLocation(null);
+      setIsAddingLocation(false);
+    }
+  }, [rightPanelType]);
 
   // Adds a new location when clicking on the map
   const addLocation = (e: { lngLat: { lat: number; lng: number } }) => {
@@ -179,6 +202,141 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
     }
   }, []);
 
+  // console.log('isAddingLocation', isAddingLocation, 'newLocation', newLocation);
+
+  const [showMobileBottomSheet, setShowMobileBottomSheet] = useState(false);
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+
+  // Add this function before the return statement
+  const handleConfirmLocation = async () => {
+    if (!formData || !newLocation) return;
+    console.log('Confirming location with formData:', formData);
+    console.log('File object:', formData.file);
+    setIsSubmitting(true);
+
+    try {
+      // Audio upload - ensure file is included
+      const audioFormData = new FormData();
+      audioFormData.append('title', formData.title);
+      if (!formData.file) throw new Error('No audio file provided');
+      audioFormData.append('file', formData.file);
+
+      const audioResponse = await fetch('/api/audio/custom-upload-audio', {
+        method: 'POST',
+        body: audioFormData,
+      });
+
+      if (!audioResponse.ok) {
+        throw new Error('Audio upload failed');
+      }
+
+      const uploadedAudio = await audioResponse.json();
+      const fileId = uploadedAudio.doc.id;
+
+      // Transcript upload (if exists)
+      let transcriptId;
+      if (formData.transcriptFile) {
+        const transcriptFormData = new FormData();
+        transcriptFormData.append('title', formData.title);
+        transcriptFormData.append('file', formData.transcriptFile);
+
+        const transcriptResponse = await fetch(
+          '/api/transcripts/custom-upload-transcript',
+          {
+            method: 'POST',
+            body: transcriptFormData,
+          }
+        );
+
+        if (transcriptResponse.ok) {
+          const uploadedTranscript = await transcriptResponse.json();
+          transcriptId = uploadedTranscript.doc.id;
+        }
+      }
+
+      // Create soundbite with proper audio linking
+      const soundbiteFormData = new FormData();
+      soundbiteFormData.append('title', formData.title);
+      soundbiteFormData.append('description', formData.description);
+      soundbiteFormData.append('year', formData.year?.toString() || '');
+      soundbiteFormData.append('category', formData.category || '');
+      soundbiteFormData.append('license', formData.license || '');
+      soundbiteFormData.append('author', formData.author);
+      soundbiteFormData.append(
+        'coordinates[latitude]',
+        newLocation.latitude.toString()
+      );
+      soundbiteFormData.append(
+        'coordinates[longitude]',
+        newLocation.longitude.toString()
+      );
+      soundbiteFormData.append('status', 'draft');
+      soundbiteFormData.append('audioGroup[audioUpload]', fileId);
+      soundbiteFormData.append('audioGroup[audioFile]', fileId);
+
+      if (transcriptId) {
+        soundbiteFormData.append('uploadedTranscript', transcriptId);
+      }
+
+      const soundbiteResponse = await fetch(
+        '/api/soundbites/custom-create-soundbite',
+        {
+          method: 'POST',
+          body: soundbiteFormData,
+        }
+      );
+
+      if (!soundbiteResponse.ok) {
+        throw new Error('Failed to create soundbite');
+      }
+
+      const newSoundbite = await soundbiteResponse.json();
+      return newSoundbite;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const [formData, setFormData] = useState<FormDataState | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [soundbites, setSoundbites] = useState<Soundbite[]>(soundbitesProps);
+
+  const handleSubmit = async () => {
+    if (!formData) {
+      console.error('No form data available');
+      alert('Please fill in the form details first');
+      return;
+    }
+    console.log('Submit with formData:', formData);
+    try {
+      const newSoundbite = await handleConfirmLocation();
+      handleSubmitSuccess(newSoundbite);
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error.message || 'An unknown error occurred');
+    }
+  };
+
+  const handleSubmitSuccess = (newSoundbite: any) => {
+    // Update the soundbites list
+    setSoundbites((prevSoundbites) => [...prevSoundbites, newSoundbite]);
+
+    // Show success notification
+    setShowSuccessNotification(true);
+
+    // Only clean up UI state for mobile
+    if (window.innerWidth < 768) {
+      setShowMobileBottomSheet(false);
+      setNewLocation(null);
+      setIsAddingLocation(false);
+      setRightPanelOpen(false);
+    }
+
+    // Hide notification after delay
+    setTimeout(() => setShowSuccessNotification(false), 3000);
+  };
+
   return (
     <div className='h-[100vh] flex z-100 max-w-full relative'>
       {/* Map component handling map rendering, markers, and popups */}
@@ -202,6 +360,7 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
         onVisibleSoundbitesChange={handleVisibleSoundbitesChange}
         ref={mapRef}
         selectedSoundbiteId={selectedMarker?.id}
+        showSuccessNotification={showSuccessNotification}
       />
 
       {/* Sidebar displaying the list of soundbites */}
@@ -241,11 +400,16 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
                 lat={newLocation.latitude}
                 lng={newLocation.longitude}
                 onClose={closeRightPanel}
-                onSave={(newSoundbite) => {
-                  console.log('New soundbite created:', newSoundbite);
+                onSave={(data) => {
+                  setFormData(data);
+                  console.log('Form data saved in Map:', data);
                 }}
                 setIsAddingLocation={setIsAddingLocation}
                 isOpen={true}
+                setShowMobileBottomSheet={setShowMobileBottomSheet}
+                onSubmit={handleSubmit}
+                onSubmitSuccess={handleSubmitSuccess}
+                isSubmitting={isSubmitting}
               />
             )}
             {rightPanelType === 'info' && (
@@ -259,6 +423,17 @@ const MapView = ({ soundbites, pages, menu }: MapViewProps) => {
           </>
         )}
       </AnimatePresence>
+
+      <MobileLocationBottomSheet
+        isOpen={showMobileBottomSheet && newLocation !== null}
+        onBack={() => {
+          setShowMobileBottomSheet(false);
+          setRightPanelType('newLocation');
+          setRightPanelOpen(true);
+        }}
+        onConfirm={handleSubmit}
+        isSubmitting={isSubmitting}
+      />
     </div>
   );
 };

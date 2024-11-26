@@ -24,6 +24,7 @@ interface MapComponentProps {
   isAddingLocation: boolean;
   setIsAddingLocation: (value: boolean) => void;
   onLocationDrag: (lat: number, lng: number) => void;
+  showSuccessNotification?: boolean;
 }
 
 const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
@@ -42,6 +43,7 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
       isAddingLocation,
       setIsAddingLocation,
       onLocationDrag,
+      showSuccessNotification,
     }: MapComponentProps,
     ref
   ) => {
@@ -193,6 +195,7 @@ const MapComponent = React.forwardRef<MapRef, MapComponentProps>(
           isAddingLocation={isAddingLocation}
           onInfoClick={onInfoClick}
           setIsAddingLocation={setIsAddingLocation}
+          showSuccessNotification={showSuccessNotification}
         />
 
         <MapMarkers

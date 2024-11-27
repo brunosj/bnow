@@ -12,7 +12,6 @@ import {
   AnimatePresence,
   useMotionValue,
   useTransform,
-  useMotionValueEvent,
 } from 'motion/react';
 
 interface PanelLeftProps {
@@ -135,7 +134,11 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
 
       {/* Mobile Bottom Sheet */}
       <motion.div
-        className='md:hidden fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-20 h-[60dvh]'
+        className='md:hidden fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-20'
+        style={{
+          height: 'calc(60dvh + env(safe-area-inset-bottom))',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}
         drag='y'
         dragConstraints={{ top: 150, bottom: 360 }}
         dragElastic={0.2}
@@ -161,7 +164,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
       {/* Mobile Menu Overlay */}
       <AnimatePresence mode='wait'>
         {isMenuOpen && (
-          <motion.div
+          <motion.aside
             drag='x'
             dragDirectionLock
             dragElastic={0.2}
@@ -179,7 +182,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
             <PanelLeftMenu
               {...{ menu, pages, onInfoClick, onCloseMenu: handleCloseMenu }}
             />
-          </motion.div>
+          </motion.aside>
         )}
       </AnimatePresence>
     </>

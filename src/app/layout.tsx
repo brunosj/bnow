@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { siteMetadata } from './_components/Metadata';
 import { Providers } from './_providers';
+import type { Viewport } from 'next';
 
 import './_css/globals.css';
 
@@ -33,4 +34,11 @@ export default async function RootLayout({
 
 export const metadata: Metadata = {
   ...siteMetadata,
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  // maximumScale: 1,
+  viewportFit: 'cover',
 };

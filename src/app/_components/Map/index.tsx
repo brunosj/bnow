@@ -9,7 +9,6 @@ import SidebarSoundbite from '../SidebarSoundbite';
 import SidebarNewLocation from '../SidebarNewLocation';
 import CategoryFilter from '../CategoryFilter';
 import type { SoundbiteCategory } from '../../_utilities/soundbitesCategories';
-import Header from '../Header';
 import { isWithinBirmingham } from '../../_utilities/isWithinBirmingham';
 import SidebarInfo from '../SidebarInfo';
 import { MapRef } from 'react-map-gl';
@@ -63,13 +62,13 @@ const MapView = ({
     ...new Set(soundbitesProps.map((s) => s.category)),
   ];
 
-  const categoryCount = useMemo(() => {
-    const counts = new Map<SoundbiteCategory, number>();
-    soundbitesProps.forEach((s) => {
-      counts.set(s.category, (counts.get(s.category) || 0) + 1);
-    });
-    return counts;
-  }, [soundbitesProps]);
+  // const categoryCount = useMemo(() => {
+  //   const counts = new Map<SoundbiteCategory, number>();
+  //   soundbitesProps.forEach((s) => {
+  //     counts.set(s.category, (counts.get(s.category) || 0) + 1);
+  //   });
+  //   return counts;
+  // }, [soundbitesProps]);
 
   // Initialize selectedCategories with no categories
   const [selectedCategories, setSelectedCategories] = useState<
@@ -336,7 +335,7 @@ const MapView = ({
   };
 
   return (
-    <div className='h-[100vh] flex z-100 max-w-full relative'>
+    <div className='h-[100dvh] flex z-100 max-w-full relative'>
       {/* Map component handling map rendering, markers, and popups */}
       <MapComponent
         mapboxToken={mapboxToken}

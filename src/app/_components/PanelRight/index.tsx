@@ -62,12 +62,12 @@ const PanelRight: React.FC<PanelRightProps> = ({
             x: '100%',
           }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className='fixed top-0 right-0 h-[100dvh] shadow-lg z-20 w-full md:w-1/3 lg:w-1/4 bg-white dark:bg-black text-black dark:text-white overflow-y-auto pt-16 md:pt-0 touch-pan-y'
+          className='fixed top-0 right-0 h-[100dvh] shadow-lg z-20 w-full md:w-1/2 lg:w-1/3 xl:w-1/4 bg-white dark:bg-black text-black dark:text-white overflow-y-auto pt-16 lg:pt-0 touch-pan-y'
         >
           {/* Drag handle for mobile */}
-          <div className='md:hidden absolute left-0 top-0 bottom-0 w-8 cursor-grab active:cursor-grabbing' />
+          <div className='lg:hidden absolute left-0 top-0 bottom-0 w-8 cursor-grab active:cursor-grabbing' />
 
-          <div className='fixed top-[4.5rem] lg:top-3 right-3 lg:right-6'>
+          <div className='fixed top-[4.7rem] md:top-20 lg:top-3 right-3 lg:right-6'>
             <div className='flex justify-end'>
               <button onClick={handleClose} aria-label='Close panel'>
                 <IoClose size={32} />
@@ -81,7 +81,7 @@ const PanelRight: React.FC<PanelRightProps> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className='mx-6 lg:mx-8 overflow-hidden mt-6 lg:mt-12 mb-6'
+              className='mx-6 lg:mx-8 overflow-hidden mt-8 md:mt-12 mb-6'
             >
               {children}
             </motion.div>

@@ -93,7 +93,7 @@ const SidebarNewLocation = ({
             />
           </div>
         ) : step === 2 ? (
-          <div className='hidden md:block space-y-6'>
+          <div className='hidden lg:block space-y-6'>
             <p className='text-sm'>
               Using the map, please drag the marker to confirm the location of
               your soundbite.

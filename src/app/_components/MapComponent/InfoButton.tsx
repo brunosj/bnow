@@ -14,7 +14,7 @@ const InfoButton = ({ onClick, isLeftPanelOpen }: InfoButtonProps) => {
     >
       <button
         onClick={onClick}
-        className='hidden md:flex items-center gap-2 bg-black bg-opacity-100 hover:bg-opacity-85 text-white px-4 py-2 rounded-full transition-all duration-300'
+        className='hidden lg:flex items-center gap-2 bg-black bg-opacity-100 hover:bg-opacity-85 text-white px-4 py-2 rounded-full transition-all duration-300'
       >
         <BsQuestionCircleFill size={20} />
         <span className='text-sm whitespace-nowrap'>

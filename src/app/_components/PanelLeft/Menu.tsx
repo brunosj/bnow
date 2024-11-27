@@ -22,7 +22,7 @@ const PanelLeftMenu: React.FC<PanelLeftMenuProps> = ({
   };
 
   return (
-    <div className='fixed inset-0 md:relative  md:bg-transparent z-30 md:z-auto lg:pt-0 pt-16 bg-black'>
+    <div className='fixed inset-0 md:relative z-30 xl:pt-0 pt-20 pb-6 bg-black w-full md:w-1/2 lg:w-full'>
       <div className='p-4 lg:p-6 text-white space-y-6 h-full'>
         <ul className='space-y-3'>
           {menu.navItems.map((item) => (

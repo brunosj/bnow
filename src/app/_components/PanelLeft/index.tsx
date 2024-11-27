@@ -83,7 +83,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
   return (
     <>
       {/* Mobile Header - Always visible */}
-      <div className='fixed top-0 left-0 right-0 z-40 md:hidden'>
+      <div className='fixed top-0 left-0 right-0 z-40 lg:hidden'>
         <PanelLeftHeader
           isMenuOpen={isMenuOpen}
           onToggleMenu={onToggleMenu}
@@ -94,7 +94,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
 
       {/* Desktop Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-[100dvh]  shadow-lg z-30 w-1/3 lg:w-1/5 transition-transform duration-300 hidden md:block ${
+        className={`fixed top-0 left-0 h-[100dvh]  shadow-lg z-30 w-1/3 xl:w-1/5 transition-transform duration-300 hidden lg:block ${
           isOpen ? 'translate-x-0' : '-translate-x-[100%]'
         }`}
       >
@@ -134,7 +134,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
 
       {/* Mobile Bottom Sheet */}
       <motion.div
-        className='md:hidden fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-20'
+        className='lg:hidden fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-20'
         style={{
           height: 'calc(60dvh + env(safe-area-inset-bottom))',
           paddingBottom: 'env(safe-area-inset-bottom)',
@@ -177,7 +177,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className='fixed top-0 left-0 w-full h-[100dvh] z-30 md:hidden'
+            className='fixed top-0 left-0 w-full h-[100dvh] z-30 lg:hidden'
           >
             <PanelLeftMenu
               {...{ menu, pages, onInfoClick, onCloseMenu: handleCloseMenu }}

@@ -10,7 +10,7 @@ const NewLocationButton = ({
   setIsAddingLocation,
 }: NewLocationButtonProps) => {
   return (
-    <div className='absolute top-20 lg:top-2 right-2 z-20'>
+    <div className='absolute top-20 md:top-2 right-2 z-20'>
       <div className='relative z-10'>
         <div className='absolute right-2 top-[0.15rem]'>
           <div className='flex items-center overflow-hidden'>

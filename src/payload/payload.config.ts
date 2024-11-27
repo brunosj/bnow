@@ -15,6 +15,7 @@ import Images from './collections/Images';
 import { Pages } from './collections/Pages';
 import SoundBites from './collections/SoundBites';
 import Transcripts from './collections/Transcripts';
+import { Categories } from './collections/Categories/Categories';
 import Users from './collections/Users';
 import { Menu } from './globals/Menu';
 
@@ -38,7 +39,15 @@ export default buildConfig({
     url: process.env.DATABASE_URI,
   }),
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL,
-  collections: [Pages, Audio, SoundBites, Transcripts, Images, Users],
+  collections: [
+    Pages,
+    Categories,
+    Audio,
+    SoundBites,
+    Transcripts,
+    Images,
+    Users,
+  ],
   globals: [Menu],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),

@@ -33,7 +33,7 @@
   }
 
   h4 {
-    @apply text-sm lg:text-lg font-semibold;
+    @apply text-base lg:text-lg font-semibold;
   }
 
   p {
@@ -50,6 +50,10 @@
 
   .richText h3 {
     @apply text-base lg:text-xl font-semibold my-6;
+  }
+
+  .richText h4 {
+    @apply text-base lg:text-lg font-semibold;
   }
 
   .richText p {

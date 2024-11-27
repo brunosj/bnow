@@ -35,7 +35,7 @@ export const Categories: CollectionConfig = {
     {
       name: 'description',
       type: 'textarea',
-      required: false,
+      required: true,
     },
   ],
 };

@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload/types';
 import { admins } from '../../access/admins';
 import { adminsOrPublished } from '../../access/adminsOrPublished';
 import { slugField } from '../../fields/slug';
+import { createRichTextField } from '../../fields/createRichTextField';
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -35,11 +36,14 @@ export const Pages: CollectionConfig = {
       type: 'text',
       required: true,
     },
-    {
-      name: 'content',
-      type: 'richText',
-      required: false,
-    },
+    // {
+    //   name: 'content',
+    //   type: 'richText',
+    //   required: false,
+    // },
+    createRichTextField({
+      label: 'Content',
+    }),
     {
       name: 'category',
       type: 'relationship',

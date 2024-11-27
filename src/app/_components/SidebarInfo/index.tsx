@@ -1,7 +1,8 @@
 import React from 'react';
 import PanelRight from '../PanelRight';
-import type { Page } from '../../../payload/payload-types';
+import type { Category, Page } from '../../../payload/payload-types';
 import { RichText } from '../RichText';
+import CategoryList from './CategoryList';
 
 interface SidebarInfoProps {
   onClose: () => void;
@@ -14,23 +15,26 @@ const SidebarInfo = ({
   onClose,
   page,
   setIsAddingLocation,
-}: SidebarInfoProps) => (
-  <PanelRight
-    onClose={onClose}
-    setIsAddingLocation={setIsAddingLocation}
-    isOpen={true}
-  >
-    <div className='space-y-6'>
-      {page ? (
-        <div className='space-y-6'>
-          <h2 className='font-semibold'>{page.title}</h2>
-          <RichText content={page.content} className='richText list-disc' />
-        </div>
-      ) : (
-        <p>No content available</p>
-      )}
-    </div>
-  </PanelRight>
-);
+}: SidebarInfoProps) => {
+  return (
+    <PanelRight
+      onClose={onClose}
+      setIsAddingLocation={setIsAddingLocation}
+      isOpen={true}
+    >
+      <div className='space-y-6'>
+        {page ? (
+          <div className='space-y-6'>
+            <h2 className='font-semibold'>{page.title}</h2>
+            <RichText content={page.content} className='richText' />
+            <CategoryList categories={page.category as Category[]} />
+          </div>
+        ) : (
+          <p>No content available</p>
+        )}
+      </div>
+    </PanelRight>
+  );
+};
 
 export default SidebarInfo;

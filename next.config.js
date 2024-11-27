@@ -40,8 +40,9 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname:
-          process.env.NEXT_PUBLIC_SERVER_URL?.replace(/https?:\/\//, '') ||
+          process.env.NEXT_PUBLIC_PAYLOAD_URL?.replace(/https?:\/\//, '') ||
           'localhost',
+        pathname: '/images/**',
       },
     ],
   },

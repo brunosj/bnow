@@ -50,6 +50,8 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
   mapRef,
   selectedSoundbiteId,
 }) => {
+
+  /* Info click */
   const handleInfoClick = () => {
     const howToUsePage = pages.find((p) => p.slug === 'how-to-use-this-site')!;
     onInfoClick(howToUsePage.slug);
@@ -60,15 +62,9 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
     onToggleMenu();
   };
 
-  //
-
   /* Dragging functionality for mobile */
-
   const x = useMotionValue(0);
   const [isDragging, setIsDragging] = useState(false);
-
-  // Calculate opacity based on drag position (right to left)
-  const opacity = useTransform(x, [-window.innerWidth * 0.6, 0], [0, 1]);
 
   const handleDragEnd = () => {
     setIsDragging(false);
@@ -140,7 +136,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
           paddingBottom: 'var(--safe-area-inset-bottom',
         }}
         drag='y'
-        dragConstraints={{ top: 150, bottom: 360 }}
+        dragConstraints={{ top: 150, bottom: 350 }}
         dragElastic={0.2}
         initial={{ y: '35%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}

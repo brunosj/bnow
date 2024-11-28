@@ -1,7 +1,7 @@
 import React from 'react';
 import IconRenderer from '../IconRenderer';
 
-import type { Category, Image } from '../../../payload/payload-types';
+import type { Category } from '../../../payload/payload-types';
 
 interface CategoryListProps {
   categories: Category[];

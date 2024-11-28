@@ -1,7 +1,6 @@
 import { webpackBundler } from '@payloadcms/bundler-webpack';
 import { mongooseAdapter } from '@payloadcms/db-mongodb';
 
-import type { GenerateTitle } from '@payloadcms/plugin-seo/types';
 import { slateEditor } from '@payloadcms/richtext-slate';
 import dotenv from 'dotenv';
 import path from 'path';

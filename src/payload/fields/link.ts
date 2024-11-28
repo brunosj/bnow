@@ -45,24 +45,15 @@ const link: LinkType = ({
             type: 'radio',
             options: [
               {
-                label: {
-                  en: 'Page',
-                  de: 'Seite',
-                },
+                label: 'Page',
                 value: 'reference',
               },
               {
-                label: {
-                  en: 'Custom URL',
-                  de: 'Interner Link',
-                },
+                label: 'Custom URL',
                 value: 'custom',
               },
               {
-                label: {
-                  en: 'Email',
-                  de: 'Email',
-                },
+                label: 'Email',
                 value: 'mailto',
               },
             ],
@@ -91,10 +82,7 @@ const link: LinkType = ({
   const linkTypes: Field[] = [
     {
       name: 'reference',
-      label: {
-        en: 'Page to link to',
-        de: 'Seite verlinken',
-      },
+      label: 'Page to link to',
       type: 'relationship',
       relationTo: ['pages'],
       required: true,
@@ -125,7 +113,6 @@ const link: LinkType = ({
       name: 'subject',
       label: 'Subject Line',
       type: 'text',
-      localized: true,
       required: true,
       admin: {
         condition: (_, siblingData) => siblingData?.type === 'mailto',
@@ -136,7 +123,6 @@ const link: LinkType = ({
       name: 'body',
       label: 'Email Text Body',
       type: 'textarea',
-      localized: true,
       required: true,
       admin: {
         condition: (_, siblingData) => siblingData?.type === 'mailto',
@@ -163,7 +149,6 @@ const link: LinkType = ({
           label: 'Label',
           type: 'text',
           required: true,
-          localized: true,
           admin: {
             width: '50%',
           },

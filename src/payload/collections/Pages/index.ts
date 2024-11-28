@@ -45,7 +45,7 @@ export const Pages: CollectionConfig = {
       label: 'Content',
     }),
     {
-      name: 'category',
+      name: 'categories',
       type: 'relationship',
       relationTo: 'categories',
       required: false,

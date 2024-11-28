@@ -13,7 +13,6 @@ export const createRichTextField = ({
   name: label.toLowerCase().replace(/\s+/g, '_'),
   type: 'richText',
   label: label,
-  localized: false,
   required: false,
 
   editor: slateEditor({
@@ -24,11 +23,6 @@ export const createRichTextField = ({
         fields: [
           link({
             appearances: false,
-            overrides: {
-              admin: {
-                condition: (_, { addLink }) => Boolean(addLink),
-              },
-            },
           }),
         ],
       },

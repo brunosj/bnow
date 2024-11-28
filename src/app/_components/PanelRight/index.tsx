@@ -20,48 +20,53 @@ const PanelRight: React.FC<PanelRightProps> = ({
   isOpen = true,
   setIsAddingLocation,
 }) => {
-  const x = useMotionValue(0);
-  const [isDragging, setIsDragging] = useState(false);
 
-  // Calculate opacity based on drag position
-  const opacity = useTransform(x, [0, window.innerWidth * 0.6], [1, 0]);
+  // Dragging is currently disabled to prevent accidental closing of the panel when using audio player 
+  
+  // const x = useMotionValue(0);
+  // const [isDragging, setIsDragging] = useState(false);
 
-  const handleDragEnd = () => {
-    setIsDragging(false);
-    const currentX = x.get();
-    if (currentX > window.innerWidth * 0.3) {
-      handleClose();
-    } else {
-      x.set(0);
-    }
-  };
+  // const handleDragEnd = () => {
+  //   setIsDragging(false);
+  //   const currentX = x.get();
+  //   if (currentX > window.innerWidth * 0.3) {
+  //     handleClose();
+  //   } else {
+  //     x.set(0);
+  //   }
+  // };
 
+  // const handleClose = () => {
+  //   x.set(window.innerWidth);
+  //   setTimeout(() => {
+  //     setIsAddingLocation?.(false);
+  //     onClose();
+  //   }, 300);
+  // };
+
+  // Original close function
   const handleClose = () => {
-    x.set(window.innerWidth);
-    setTimeout(() => {
-      setIsAddingLocation?.(false);
       onClose();
-    }, 300);
   };
-
+  
   return (
     <AnimatePresence mode='wait'>
       {isOpen && (
         <motion.aside
-          drag='x'
-          dragDirectionLock
-          dragElastic={0.2}
-          dragConstraints={{ left: 0, right: window.innerWidth }}
-          dragMomentum={false}
-          onDragStart={() => setIsDragging(true)}
-          onDragEnd={handleDragEnd}
-          style={{ x }}
-          initial={{ x: '100%' }}
-          animate={{ x: 0 }}
-          exit={{
-            x: '100%',
-          }}
-          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+          // drag='x'
+          // dragDirectionLock
+          // dragElastic={0.2}
+          // dragConstraints={{ left: 0, right: window.innerWidth }}
+          // dragMomentum={false}
+          // onDragStart={() => setIsDragging(true)}
+          // onDragEnd={handleDragEnd}
+          // style={{ x }}
+          // initial={{ x: '100%' }}
+          // animate={{ x: 0 }}
+          // exit={{
+          //   x: '100%',
+          // }}
+          // transition={{ type: 'spring', damping: 25, stiffness: 200 }}
           className='fixed top-0 right-0 h-[100dvh] shadow-lg z-20 w-full md:w-1/2 lg:w-1/3 xl:w-1/4 bg-white dark:bg-black text-black dark:text-white overflow-y-auto pt-16 lg:pt-0 touch-pan-y'
         >
           {/* Drag handle for mobile */}

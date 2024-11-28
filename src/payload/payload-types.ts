@@ -34,7 +34,7 @@ export interface Page {
         [k: string]: unknown;
       }[]
     | null;
-  category: (string | Category)[];
+  categories?: (string | Category)[] | null;
   slug?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -207,13 +207,16 @@ export interface Menu {
   navItems?:
     | {
         link: {
-          type?: ('reference' | 'custom') | null;
+          type?: ('reference' | 'custom' | 'mailto') | null;
           newTab?: boolean | null;
           reference?: {
             relationTo: 'pages';
             value: string | Page;
           } | null;
           url?: string | null;
+          email?: string | null;
+          subject?: string | null;
+          body?: string | null;
           label: string;
         };
         id?: string | null;

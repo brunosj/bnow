@@ -136,8 +136,8 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
       <motion.div
         className='lg:hidden fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-20'
         style={{
-          height: 'calc(60dvh + env(safe-area-inset-bottom))',
-          paddingBottom: 'env(safe-area-inset-bottom)',
+          height: 'calc(60vh + var(--safe-area-inset-bottom)',
+          paddingBottom: 'var(--safe-area-inset-bottom',
         }}
         drag='y'
         dragConstraints={{ top: 150, bottom: 360 }}

@@ -48,7 +48,7 @@ export const Pages: CollectionConfig = {
       name: 'category',
       type: 'relationship',
       relationTo: 'categories',
-      required: true,
+      required: false,
       hasMany: true,
     },
     // {

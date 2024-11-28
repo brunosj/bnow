@@ -27,7 +27,9 @@ const SidebarInfo = ({
           <div className='space-y-6'>
             <h2 className='font-semibold'>{page.title}</h2>
             <RichText content={page.content} className='richText' />
-            <CategoryList categories={page.category as Category[]} />
+            {page.category && (
+              <CategoryList categories={page.category as Category[]} />
+            )}
           </div>
         ) : (
           <p>No content available</p>

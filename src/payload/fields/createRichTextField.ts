@@ -13,22 +13,12 @@ export const createRichTextField = ({
   name: label.toLowerCase().replace(/\s+/g, '_'),
   type: 'richText',
   label: label,
-  localized: true,
+  localized: false,
   required: false,
+
   editor: slateEditor({
     admin: {
-      elements: [
-        'h1',
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6',
-        'link',
-        'blockquote',
-        'ol',
-        'ul',
-      ],
+      elements: ['h1', 'h2', 'h3', 'h4', 'link', 'blockquote', 'ol', 'ul'],
       leaves: ['bold', 'italic'],
       link: {
         fields: [

@@ -40,12 +40,12 @@ const SidebarSoundbite = ({
           <div className='flex space-x-2 items-center'>
             {soundbite.year && (
               <>
-                <span className='text-xs lg:text-base'>{soundbite.year}</span>
+                <span className='text-sm lg:text-base'>{soundbite.year}</span>
                 <span className='mr-2'>•</span>
               </>
             )}
             <span
-              className='text-xs lg:text-base'
+              className='text-sm lg:text-base'
               style={{ color: ` ${color}` }}
             >
               {generateLabel(soundbite.category)}
@@ -53,7 +53,7 @@ const SidebarSoundbite = ({
           </div>
           {soundbite.author && (
             <>
-              <p className='text-xs lg:text-base'>
+              <p className='text-sm lg:text-base'>
                 Submitted by {soundbite.author}
               </p>
             </>
@@ -72,7 +72,7 @@ const SidebarSoundbite = ({
                 onClick={() => setIsTranscriptOpen(!isTranscriptOpen)}
                 className='w-full flex justify-between items-center border border-bnowPurple p-2 rounded-lg'
               >
-                <span className='text-sm font-medium'>Transcript</span>
+                <p className='font-semibold'>Transcript</p>
                 <FaPlus
                   className={`transition-transform duration-300 ${
                     isTranscriptOpen ? 'rotate-45' : ''
@@ -90,7 +90,7 @@ const SidebarSoundbite = ({
               >
                 <RichText
                   content={soundbite.publishedTranscript}
-                  className='richTextSmall'
+                  className='richText'
                 />
               </div>
             </div>

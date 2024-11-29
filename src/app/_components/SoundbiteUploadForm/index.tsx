@@ -90,7 +90,7 @@ const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
   };
 
   return (
-    <div className='max-w-2xl mx-auto rounded-lg shadow-md pb-6'>
+    <div className='max-w-2xl mx-auto rounded-lg shadow-md pb-6 px-1'>
       <form className='space-y-3'>
         <div className='flex justify-between items-center gap-3'>
           <TextInput

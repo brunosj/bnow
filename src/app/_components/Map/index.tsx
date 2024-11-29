@@ -350,7 +350,7 @@ const MapView = ({
         onCenterChange={handleCenterChange}
         onLocationDrag={handleLocationDrag}
         onLocationDragEnd={handleLocationDragEnd}
-        onInfoClick={() => handleInfoClick('how-to-use-this-site')}
+        onInfoClick={() => handleInfoClick('how-to-add-your-soundbite')}
         isLeftPanelOpen={isLeftPanelOpen}
         isAddingLocation={isAddingLocation}
         setIsAddingLocation={setIsAddingLocation}

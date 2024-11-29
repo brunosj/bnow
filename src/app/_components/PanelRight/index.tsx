@@ -20,9 +20,8 @@ const PanelRight: React.FC<PanelRightProps> = ({
   isOpen = true,
   setIsAddingLocation,
 }) => {
+  // Dragging is currently disabled to prevent accidental closing of the panel when using audio player
 
-  // Dragging is currently disabled to prevent accidental closing of the panel when using audio player 
-  
   // const x = useMotionValue(0);
   // const [isDragging, setIsDragging] = useState(false);
 
@@ -46,9 +45,9 @@ const PanelRight: React.FC<PanelRightProps> = ({
 
   // Original close function
   const handleClose = () => {
-      onClose();
+    onClose();
   };
-  
+
   return (
     <AnimatePresence mode='wait'>
       {isOpen && (
@@ -86,7 +85,7 @@ const PanelRight: React.FC<PanelRightProps> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className='mx-6 lg:mx-8 overflow-hidden mt-8 md:mt-12 mb-6'
+              className='mx-6 lg:mx-8 overflow-hidden mt-8 md:mt-16 mb-6'
             >
               {children}
             </motion.div>

@@ -50,7 +50,6 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
   mapRef,
   selectedSoundbiteId,
 }) => {
-
   /* Info click */
   const handleInfoClick = () => {
     const howToUsePage = pages.find((p) => p.slug === 'how-to-use-this-site')!;

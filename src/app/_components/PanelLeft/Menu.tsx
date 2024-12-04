@@ -28,7 +28,7 @@ const PanelLeftMenu: React.FC<PanelLeftMenuProps> = ({
           {menu.navItems.map((item) => (
             <li key={item.id}>
               <button
-                className='text-lg md:text-base py-2 md:py-0'
+                className='text-left text-lg md:text-base py-2 md:py-0'
                 onClick={() =>
                   handlePageClick(
                     (item.link.reference.value as { slug: string }).slug

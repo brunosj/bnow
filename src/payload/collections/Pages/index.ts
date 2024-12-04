@@ -59,6 +59,8 @@ export const Pages: CollectionConfig = {
     //   },
     // },
 
-    slugField(),
+    slugField(
+      'Please do not change the slugs once they are defined, as they are used for navigation items.'
+    ),
   ],
 };

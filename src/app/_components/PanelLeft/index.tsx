@@ -52,7 +52,9 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
 }) => {
   /* Info click */
   const handleInfoClick = () => {
-    const howToUsePage = pages.find((p) => p.slug === 'how-to-use-this-site')!;
+    const howToUsePage = pages.find(
+      (p) => p.slug === 'how-to-listen-to-the-latest-sounds'
+    )!;
     onInfoClick(howToUsePage.slug);
     setIsAddingLocation(false);
   };

@@ -25,7 +25,7 @@ const SoundbiteCard: React.FC<SoundbiteCardProps> = ({
   return (
     <div
       onClick={handleClick}
-      className={`cursor-pointer transition-all duration-300  rounded-[2rem] overflow-y-auto  shadow-lg p-2 border-[1px] ${
+      className={`cursor-pointer transition-all duration-300  rounded-[2rem] overflow-y-auto  shadow-lg py-2 px-4 border-[1px] ${
         isSelected ? 'border-white' : 'border-bnowPurple'
       }`}
     >

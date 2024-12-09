@@ -8,15 +8,25 @@ export async function POST(req: Request) {
     const file = formData.get('file') as File;
     const title = formData.get('title') as string;
 
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: 'File size exceeds the 50MB limit' },
+        { status: 400 }
+      );
+    }
+
     const audioUploadFormData = new FormData();
     audioUploadFormData.append('title', title);
-    audioUploadFormData.append('file', file); // Directly append the file
+    audioUploadFormData.append('file', file);
 
     const response = await fetch(
       `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/audio/upload`,
       {
-        method: 'POST',
-        body: audioUploadFormData, // Send as FormData
+        method: 'POST', // Send as FormData
         headers: {
           Authorization: `Bearer ${process.env.PAYLOAD_API_TOKEN}`,
         },
@@ -24,7 +34,8 @@ export async function POST(req: Request) {
     );
 
     if (!response.ok) {
-      throw new Error('Audio file upload failed');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Audio - Audio file upload failed');
     }
 
     const result = await response.json();
@@ -32,7 +43,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(
-      { error: 'Error uploading audio file' },
+      { error: error.message || 'Error uploading audio file' },
       { status: 500 }
     );
   }

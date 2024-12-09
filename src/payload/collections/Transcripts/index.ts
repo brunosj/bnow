@@ -8,6 +8,7 @@ const ALLOWED_MIME_TYPES = [
   'application/rtf',
   'text/plain',
   'application/msword',
+  'application/pdf',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ];
 
@@ -36,14 +37,17 @@ const Transcripts: CollectionConfig = {
 
           // Validate file type
           if (!ALLOWED_MIME_TYPES.includes(file.mimetype)) {
-            return res.status(400).json({ error: 'Invalid file type' });
+            return res.status(400).json({
+              error:
+                'Error - Invalid transcript file type. Only text files and PDFs are allowed.',
+            });
           }
 
           // Validate file size
           if (file.size > MAX_FILE_SIZE) {
-            return res
-              .status(400)
-              .json({ error: 'File size exceeds the 5MB limit' });
+            return res.status(400).json({
+              error: 'Error - Transcript file size exceeds the 5MB limit',
+            });
           }
 
           // Validate file duration

@@ -13,9 +13,11 @@ interface SidebarNewLocationProps {
   setIsAddingLocation: (value: boolean) => void;
   isOpen: boolean;
   setShowMobileBottomSheet: (value: boolean) => void;
-  onSubmit: () => Promise<void>;
+  onSubmit: () => Promise<boolean>;
   onSubmitSuccess: (newSoundbite: any) => void;
   isSubmitting: boolean;
+  message: string | null;
+  setMessage: (message: string | null) => void;
 }
 
 const SidebarNewLocation = ({
@@ -27,6 +29,8 @@ const SidebarNewLocation = ({
   setShowMobileBottomSheet,
   onSubmit,
   isSubmitting,
+  message,
+  setMessage,
 }: SidebarNewLocationProps) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<any>(null);
@@ -64,10 +68,29 @@ const SidebarNewLocation = ({
   };
 
   const handleFormSave = (data: any) => {
-    console.log('Form data received:', data);
+    // console.log('Form data received:', data);
     setFormData(data);
     onSave(data);
     setStep(2);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const isSuccess = await onSubmit();
+      if (isSuccess) {
+        setStep(3);
+      } else {
+        console.error('Submission failed');
+        // console.log(message);
+      }
+    } catch (error) {
+      console.error('Error submitting:', error);
+    }
+  };
+
+  const handleBack = () => {
+    setStep(1);
+    setMessage(null);
   };
 
   return (
@@ -90,6 +113,7 @@ const SidebarNewLocation = ({
               lat={lat}
               lng={lng}
               onNextStep={() => setStep(2)}
+              initialData={formData}
             />
           </div>
         ) : step === 2 ? (
@@ -98,24 +122,20 @@ const SidebarNewLocation = ({
               Using the map, please drag the marker to confirm the location of
               your soundbite.
             </p>
+            {message && message.toLowerCase().includes('error') && (
+              <p className='text-sm text-bnowRed font-semibold'>{message}</p>
+            )}
             <div className='flex space-x-3'>
               <button
-                onClick={() => setStep(1)}
+                onClick={handleBack}
                 className='flex-1 bg-black text-bnowGreen border-2 border-bnowGreen py-2 px-4 rounded-md'
               >
                 Back
               </button>
               <button
-                onClick={async () => {
-                  try {
-                    await onSubmit();
-                    setStep(3);
-                  } catch (error) {
-                    console.error('Error:', error);
-                    alert(error.message || 'An unknown error occurred');
-                  }
-                }}
+                onClick={handleSubmit}
                 className='flex-1 bg-bnowGreen text-black dark:text-white py-2 px-4 rounded-md'
+                disabled={isSubmitting}
               >
                 {isSubmitting ? (
                   <div className='flex items-center justify-center space-x-3'>
@@ -125,7 +145,7 @@ const SidebarNewLocation = ({
                       <div></div>
                       <div></div>
                     </div>
-                    <span>Uploading...</span>
+                    <span>Submitting...</span>
                   </div>
                 ) : (
                   <span>Submit</span>
@@ -144,7 +164,7 @@ const SidebarNewLocation = ({
               </p>
             </div>
           </div>
-        ) : (
+        ) : step === 3 ? (
           <div className='space-y-6'>
             <p className='text-sm'>
               Thanks! Your Soundbite has been added for approval.
@@ -154,6 +174,18 @@ const SidebarNewLocation = ({
               className='w-full bg-bnowGreen text-black dark:text-white py-2 px-4 rounded-md'
             >
               Close
+            </button>
+          </div>
+        ) : (
+          <div className='space-y-6'>
+            <p className='text-sm text-bnowRed'>
+              {message || 'An error occurred while uploading your soundbite.'}
+            </p>
+            <button
+              onClick={() => setStep(2)}
+              className='w-full bg-bnowGreen text-black dark:text-white py-2 px-4 rounded-md'
+            >
+              Try Again
             </button>
           </div>
         )}

@@ -24,9 +24,9 @@ export async function POST(req: Request) {
     payloadData.append('file', file as any, (file as File).name);
 
     // Log payload data
-    payloadData.forEach((value, key) => {
-      console.log(`${key}: ${value}`);
-    });
+    // payloadData.forEach((value, key) => {
+    //   console.log(`${key}: ${value}`);
+    // });
 
     const response = await fetch(
       `${process.env.PAYLOAD_PUBLIC_SERVER_URL}/api/soundbites`,
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     }
 
     const newSoundbite = await response.json();
-    console.log('New soundbite:', newSoundbite);
+    // console.log('New soundbite:', newSoundbite);
     return NextResponse.json(newSoundbite, { status: 200 });
   } catch (error) {
     console.error('Error:', error);

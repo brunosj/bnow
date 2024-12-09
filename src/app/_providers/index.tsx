@@ -22,7 +22,7 @@ export const Providers: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   return (
-    <ThemeProvider enableSystem={true} attribute='class' defaultTheme='system'>
+    <ThemeProvider enableSystem={true} attribute='class' defaultTheme='light'>
       <ClientOnlyWrapper>{children}</ClientOnlyWrapper>
     </ThemeProvider>
   );

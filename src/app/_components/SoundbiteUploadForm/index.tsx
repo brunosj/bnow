@@ -28,6 +28,16 @@ interface SoundbiteUploadFormProps {
   lat: number;
   lng: number;
   onNextStep: () => void;
+  initialData?: {
+    title: string;
+    description: string;
+    year: number | null;
+    category: SoundbiteCategory | null;
+    license: 'cc' | 'public_domain' | 'all_rights_reserved' | null;
+    author: string;
+    file: File | null;
+    transcriptFile: File | null;
+  };
 }
 
 const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
@@ -36,17 +46,24 @@ const SoundbiteUploadForm: React.FC<SoundbiteUploadFormProps> = ({
   lat,
   lng,
   onNextStep,
+  initialData,
 }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [year, setYear] = useState<number | null>(null);
-  const [category, setCategory] = useState<SoundbiteCategory | null>(null);
+  const [title, setTitle] = useState(initialData?.title || '');
+  const [description, setDescription] = useState(
+    initialData?.description || ''
+  );
+  const [year, setYear] = useState<number | null>(initialData?.year || null);
+  const [category, setCategory] = useState<SoundbiteCategory | null>(
+    initialData?.category || null
+  );
   const [license, setLicense] = useState<
     'cc' | 'public_domain' | 'all_rights_reserved' | null
-  >(null);
-  const [author, setAuthor] = useState('');
-  const [file, setFile] = useState<File | null>(null);
-  const [transcriptFile, setTranscriptFile] = useState<File | null>(null);
+  >(initialData?.license || null);
+  const [author, setAuthor] = useState(initialData?.author || '');
+  const [file, setFile] = useState<File | null>(initialData?.file || null);
+  const [transcriptFile, setTranscriptFile] = useState<File | null>(
+    initialData?.transcriptFile || null
+  );
   const [agreedToPrivacyPolicy, setAgreedToPrivacyPolicy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

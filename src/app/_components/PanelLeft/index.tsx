@@ -31,6 +31,7 @@ interface PanelLeftProps {
   setIsAddingLocation: (value: boolean) => void;
   mapRef?: React.RefObject<MapRef>;
   selectedSoundbiteId?: string;
+  showMobileCategories: boolean;
 }
 
 const PanelLeft: React.FC<PanelLeftProps> = ({
@@ -49,6 +50,7 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
   setIsAddingLocation,
   mapRef,
   selectedSoundbiteId,
+  showMobileCategories = true,
 }) => {
   /* Info click */
   const handleInfoClick = () => {
@@ -129,34 +131,36 @@ const PanelLeft: React.FC<PanelLeftProps> = ({
         </div>
       </aside>
 
-      {/* Mobile Bottom Sheet */}
-      <motion.div
-        className='lg:hidden fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-20'
-        style={{
-          height: 'calc(60vh + var(--safe-area-inset-bottom)',
-          paddingBottom: 'var(--safe-area-inset-bottom',
-        }}
-        drag='y'
-        dragConstraints={{ top: 150, bottom: 350 }}
-        dragElastic={0.2}
-        initial={{ y: '35%' }}
-        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-      >
-        <div className='w-16 h-1 bg-lighterGray rounded-full mx-auto my-3' />
-        <div className=''>
-          <PanelLeftSoundbites
-            {...{
-              soundbites,
-              categories,
-              selectedCategories,
-              onSelectCategory,
-              onSelectSoundbite,
-              mapRef,
-              selectedSoundbiteId,
-            }}
-          />
-        </div>
-      </motion.div>
+      {/* Mobile Categories */}
+      {showMobileCategories && (
+        <motion.div
+          className='lg:hidden fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-20'
+          style={{
+            height: 'calc(60vh + var(--safe-area-inset-bottom)',
+            paddingBottom: 'var(--safe-area-inset-bottom',
+          }}
+          drag='y'
+          dragConstraints={{ top: 150, bottom: 350 }}
+          dragElastic={0.2}
+          initial={{ y: '35%' }}
+          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        >
+          <div className='w-16 h-1 bg-lighterGray rounded-full mx-auto my-3' />
+          <div className=''>
+            <PanelLeftSoundbites
+              {...{
+                soundbites,
+                categories,
+                selectedCategories,
+                onSelectCategory,
+                onSelectSoundbite,
+                mapRef,
+                selectedSoundbiteId,
+              }}
+            />
+          </div>
+        </motion.div>
+      )}
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence mode='wait'>

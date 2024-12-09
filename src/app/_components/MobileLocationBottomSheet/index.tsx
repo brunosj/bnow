@@ -3,9 +3,9 @@ import { AnimatePresence, motion } from 'motion/react';
 interface MobileLocationBottomSheetProps {
   isOpen: boolean;
   onBack: () => void;
-  onConfirm: () => Promise<void>;
+  onConfirm: () => Promise<boolean>;
   isSubmitting: boolean;
-  formData?: any;
+  message?: string | null;
 }
 
 const MobileLocationBottomSheet = ({
@@ -13,24 +13,26 @@ const MobileLocationBottomSheet = ({
   onBack,
   onConfirm,
   isSubmitting,
-  formData,
+  message,
 }: MobileLocationBottomSheetProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className='fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-30 '
+          className='fixed bottom-0 left-0 right-0 bg-black rounded-t-3xl shadow-lg z-30'
           initial={{ y: '100%' }}
           animate={{ y: '0%' }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
         >
-          {/* <div className='w-12 h-1 bg-gray-300 rounded-full mx-auto my-3 ' /> */}
-          <div className='p-6 space-y-4'>
+          <div className='p-6 space-y-4 my-auto h-full flex flex-col justify-center'>
             <h2>Please confirm marker location</h2>
             <p className='text-sm text-white'>
               Drag the marker to confirm the location of your soundbite.
             </p>
+            {message && message.toLowerCase().includes('error') && (
+              <p className='text-sm text-bnowRed font-semibold'>{message}</p>
+            )}
             <div className='flex space-x-3'>
               <button
                 onClick={onBack}

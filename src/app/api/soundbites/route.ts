@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const audioFile = formData.get('audioFile') as File; // Get the audio file
     const transcriptFile = formData.get('transcriptFile') as File; // Get the transcript file
 
-    console.log('Form Data:', formData.entries());
+    // console.log('Form Data:', formData.entries());
 
     // Create a new FormData instance for audio upload
     const audioUploadFormData = new FormData();
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     }
 
     const { fileId } = await audioUploadResponse.json();
-    console.log('Audio Upload Response:', { fileId });
+    // console.log('Audio Upload Response:', { fileId });
 
     // Create a new FormData instance for transcript upload
     const transcriptUploadFormData = new FormData();
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     }
 
     const { transcriptId } = await transcriptUploadResponse.json();
-    console.log('Transcript Upload Response:', { transcriptId });
+    // console.log('Transcript Upload Response:', { transcriptId });
 
     // Create the soundbite with the uploaded audio file and transcript
     const payloadData = new FormData();
@@ -97,7 +97,7 @@ export async function POST(req: Request) {
     }
 
     const newSoundbite = await response.json();
-    console.log('New Soundbite Response:', newSoundbite);
+    // console.log('New Soundbite Response:', newSoundbite);
     return NextResponse.json(newSoundbite, { status: 200 });
   } catch (error) {
     console.error('Error:', error);

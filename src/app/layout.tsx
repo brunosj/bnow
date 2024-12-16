@@ -25,7 +25,7 @@ export default async function RootLayout({
       <head>
         <link rel='icon' href='/favicon.ico' sizes='32x32' />
         <link rel='icon' href='/favicon.svg' type='image/svg+xml' />
-        <PlausibleProvider domain="brumnow-plausible.birminghammuseums.org.uk" />
+        <PlausibleProvider domain="brumnow.birminghammuseums.org.uk" />
       </head>
       <body>
         <Providers>{children}</Providers>

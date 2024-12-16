@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 
 const siteMetadata: Metadata = {
-  metadataBase: new URL('https://birminghamnow.co.uk'),
+  metadataBase: new URL('https://brumnow.birminghammuseums.org.uk'),
   title: 'Birmingham Now',
   description:
     'Birmingham Now - An interactive map of Birmingham’s sonic history.',
 
   // Basic metadata
   applicationName: 'Birmingham Now',
-  authors: [{ name: 'Birmingham Now', url: 'https://birminghamnow.co.uk' }],
+  authors: [{ name: 'Birmingham Now', url: 'https://brumnow.birminghammuseums.org.uk' }],
   keywords: ['dance', 'berlin', 'underground'],
   referrer: 'origin-when-cross-origin',
   creator: 'landozone',
@@ -18,11 +18,11 @@ const siteMetadata: Metadata = {
   openGraph: {
     title: 'Birmingham Now',
     description: 'Birmingham Now',
-    url: 'https://birminghamnow.co.uk',
+    url: 'https://brumnow.birminghammuseums.org.uk',
     siteName: 'Birmingham Now',
     images: [
       {
-        url: 'https://birminghamnow.co.uk/og-image.png',
+        url: 'https://brumnow.birminghammuseums.org.uk/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Birmingham NOW Sound Map Image',
@@ -37,7 +37,7 @@ const siteMetadata: Metadata = {
     card: 'summary_large_image',
     title: 'Birmingham Now',
     description: 'Birmingham Now',
-    images: ['https://birminghamnow.co.uk/og-image.png'],
+    images: ['https://brumnow.birminghammuseums.org.uk/og-image.png'],
   },
 
   // Verification for search engines
@@ -49,9 +49,9 @@ const siteMetadata: Metadata = {
 
   // Alternate languages
   alternates: {
-    canonical: 'https://birminghamnow.co.uk',
+    canonical: 'https://brumnow.birminghammuseums.org.uk',
     languages: {
-      'en-US': 'https://birminghamnow.co.uk',
+      'en-US': 'https://brumnow.birminghammuseums.org.uk',
     },
   },
 

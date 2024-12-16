@@ -1,8 +1,8 @@
-![BNOW Logo](https://4b7w13oy.birminghammuseums.org.uk/og-image.png)
+![BNOW Logo](https://brumnow.birminghammuseums.org.uk/og-image.png)
 
 ## Description
 
-This repo contains the website of [Birmingham Now](https://birminghamnow.co.uk), an interactive digital map developed by Birmingham Museums which brings together the sounds clips from the past and present from across Birmingham.
+This repo contains the website of [Birmingham Now](https://brumnow.birminghammuseums.org.uk), an interactive digital map developed by Birmingham Museums which brings together the sounds clips from the past and present from across Birmingham.
 
 Birmingham Now was created and curated by Candice Nembhard as part of The Woven Foundation Curatorial Fellowship. The project was made possible with support and funding from The Woven Foundation and developed and facilitated by Birmingham Museums Trust. The platform was developed by Bruno St-Jacques (Landozone) and designed by Devision.
 

@@ -19,13 +19,13 @@ export const createRichTextField = ({
     admin: {
       elements: ['h1', 'h2', 'h3', 'h4', 'link', 'blockquote', 'ol', 'ul'],
       leaves: ['bold', 'italic'],
-      link: {
-        fields: [
-          link({
-            appearances: false,
-          }),
-        ],
-      },
+      // link: {
+      //   fields: [
+      //     link({
+      //       appearances: false,
+      //     }),
+      //   ],
+      // },
     },
   }),
 });

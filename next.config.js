@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const ContentSecurityPolicy = require('./csp');
 const redirects = require('./redirects');
+const { withPlausibleProxy } = require('next-plausible')
 
 const allowedDomains = [
   process.env.NEXT_PUBLIC_PAYLOAD_URL,
@@ -79,4 +80,6 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withPlausibleProxy()({
+  ...nextConfig,
+});

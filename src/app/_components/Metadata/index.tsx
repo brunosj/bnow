@@ -4,7 +4,7 @@ const siteMetadata: Metadata = {
   metadataBase: new URL('https://brumnow.birminghammuseums.org.uk'),
   title: 'Birmingham Now',
   description:
-    'Birmingham Now - An interactive map of Birmingham’s sonic history.',
+    'An interactive digital map which brings together sound clips from the past and present from across Birmingham',
 
   // Basic metadata
   applicationName: 'Birmingham Now',
@@ -12,12 +12,12 @@ const siteMetadata: Metadata = {
   keywords: ['dance', 'berlin', 'underground'],
   referrer: 'origin-when-cross-origin',
   creator: 'landozone',
-  publisher: 'Birmingham Now',
+  publisher: 'Birmingham Museums',
 
   // Open Graph metadata
   openGraph: {
     title: 'Birmingham Now',
-    description: 'Birmingham Now',
+    description: 'An interactive digital map which brings together sound clips from the past and present from across Birmingham',
     url: 'https://brumnow.birminghammuseums.org.uk',
     siteName: 'Birmingham Now',
     images: [
@@ -36,7 +36,7 @@ const siteMetadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Birmingham Now',
-    description: 'Birmingham Now',
+    description: 'An interactive digital map which brings together sound clips from the past and present from across Birmingham',
     images: ['https://brumnow.birminghammuseums.org.uk/og-image.png'],
   },
 

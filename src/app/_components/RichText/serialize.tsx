@@ -81,7 +81,7 @@ const serialize = (children: Children): React.ReactNode[] =>
         return <li key={i}>{serialize(node.children)}</li>;
       case 'link':
         return (
-          <a href={escapeHTML(node.url)} key={i}>
+          <a href={escapeHTML(node.url)} key={i} className='underline hover:opacity-80 duration-300'>
             {serialize(node.children)}
           </a>
         );

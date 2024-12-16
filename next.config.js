@@ -80,6 +80,7 @@ const nextConfig = {
   },
 };
 
-module.exports = withPlausibleProxy()({
+module.exports = withPlausibleProxy({  customDomain: 'https://brumnow-plausible.birminghammuseums.org.uk',
+})({
   ...nextConfig,
 });

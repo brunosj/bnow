@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import { siteMetadata } from './_components/Metadata';
 import { Providers } from './_providers';
 import type { Viewport } from 'next';
+import PlausibleProvider from 'next-plausible'
 
 import './_css/globals.css';
 
@@ -24,6 +25,7 @@ export default async function RootLayout({
       <head>
         <link rel='icon' href='/favicon.ico' sizes='32x32' />
         <link rel='icon' href='/favicon.svg' type='image/svg+xml' />
+        <PlausibleProvider domain="brumnow-plausible.birminghammuseums.org.uk" />
       </head>
       <body>
         <Providers>{children}</Providers>
